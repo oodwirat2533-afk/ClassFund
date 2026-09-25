@@ -25,17 +25,18 @@ const API = {
 
   async hashPassword(password) { if (!password) return ''; const msgUint8 = new TextEncoder().encode(String(password).trim()); const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); },
 
-  async login(studentId, pin) {
-    const usersSnap = await db.collection('users').where('student_id', '==', studentId).where('password', '==', String(pin)).get();
+    async login(studentId, pin) {
+    const hashedPin = await this.hashPassword(pin);
+    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
     if (usersSnap.empty) {
-      // Try string vs number pin
-      const usersSnapNum = await db.collection('users').where('student_id', '==', studentId).where('password', '==', Number(pin)).get();
-      if(usersSnapNum.empty) {
-         return { success: false, message: '���ʻ�Шӵ���������ʼ�ҹ���١��ͧ' };
-      }
-      return { success: true, user: usersSnapNum.docs[0].data() };
+      return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
     }
-    return { success: true, user: usersSnap.docs[0].data() };
+    const user = usersSnap.docs[0].data();
+    if (user.password_hash === hashedPin) {
+      return { success: true, user: user };
+    } else {
+      return { success: false, message: '���ʼ�ҹ���١��ͧ' };
+    }
   },
 
   async addTransaction(txObj) {
