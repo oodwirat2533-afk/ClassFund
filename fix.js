@@ -1,20 +1,9 @@
 const fs = require('fs');
-let content = fs.readFileSync('js/firebase-db.js', 'utf8');
-
-const newLogin = "  async login(studentId, pin) {\n" +
-"    const hashedPin = await this.hashPassword(pin);\n" +
-"    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();\n" +
-"    if (usersSnap.empty) {\n" +
-"      return { success: false, message: '‰¡Ëæ∫√À— ª√–®”µ—«π’È„π√–∫∫' };\n" +
-"    }\n" +
-"    const user = usersSnap.docs[0].data();\n" +
-"    if (user.password_hash === hashedPin) {\n" +
-"      return { success: true, user: user };\n" +
-"    } else {\n" +
-"      return { success: false, message: '√À— ºË“π‰¡Ë∂Ÿ°µÈÕß' };\n" +
-"    }\n" +
-"  },";
-
-content = content.replace(/async login\(studentId, pin\) \{[\s\S]*?\},/, newLogin);
-fs.writeFileSync('js/firebase-db.js', content, 'utf8');
-console.log('Fixed login');
+let lines = fs.readFileSync('js/app.js', 'utf8').split(/\r?\n/);
+for(let i=0; i<lines.length; i++) {
+  if (lines[i].includes('const fullClassStr = ${clsName} ‡∏†‡∏≤‡∏Ñ‡πÄ‡∏£‡∏µ‡∏¢‡∏ô‡∏ó‡∏µ‡πà /;')) {
+    lines[i] = '      const fullClassStr = `${clsName} ‡∏†‡∏≤‡∏Ñ‡πÄ‡∏£‡∏µ‡∏¢‡∏ô‡∏ó‡∏µ‡πà ${semStr}/${yrStr}`;';
+  }
+}
+fs.writeFileSync('js/app.js', lines.join('\n'));
+console.log('Fixed fullClassStr');

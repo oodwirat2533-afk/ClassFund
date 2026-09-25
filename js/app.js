@@ -780,16 +780,18 @@
     function renderHeaderInfo() {
       const clsName = (appData.settings && appData.settings.class_name) ? appData.settings.class_name : 'ม.4/7';
       const schName = (appData.settings && appData.settings.school_name) ? appData.settings.school_name : 'โรงเรียนบรรหารแจ่มใสวิทยา 3';
-      const yearStr = (appData.settings && appData.settings.current_academic_year) ? ` ปีการศึกษา ${appData.settings.current_academic_year}` : '';
+      const semStr = (appData.settings && appData.settings.current_semester) ? appData.settings.current_semester : "1";
+      const yrStr = (appData.settings && appData.settings.current_academic_year) ? appData.settings.current_academic_year : "2569";
+      const fullClassStr = `${clsName} ภาคเรียนที่ ${semStr}/${yrStr}`;
 
       const lblClass = document.getElementById('lblHeaderClassRoom');
-      if (lblClass) lblClass.textContent = clsName + yearStr;
+      if (lblClass) lblClass.textContent = fullClassStr;
 
       const lblSchool = document.getElementById('lblHeaderSchoolName');
       if (lblSchool) lblSchool.textContent = schName;
 
       const lblManage = document.getElementById('lblClassRoomManage');
-      if (lblManage) lblManage.textContent = clsName + yearStr;
+      if (lblManage) lblManage.textContent = fullClassStr;
 
       const lblFooterClass = document.getElementById('lblFooterClassRoom');
       if (lblFooterClass) lblFooterClass.textContent = clsName;
