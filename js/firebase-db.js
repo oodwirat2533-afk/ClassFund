@@ -1,4 +1,4 @@
-﻿const db = firebase.firestore();
+const db = firebase.firestore();
 
 const API = {
   async getDashboardData(role, studentId) {
@@ -23,9 +23,15 @@ const API = {
     };
   },
 
-  async hashPassword(password) { if (!password) return ''; const msgUint8 = new TextEncoder().encode(String(password).trim()); const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); },
+  async hashPassword(password) {
+    if (!password) return '';
+    const msgUint8 = new TextEncoder().encode(String(password).trim());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  },
 
-      async login(studentId, pin) {
+  async login(studentId, pin) {
     const hashedPin = await this.hashPassword(pin);
     let usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
     if (usersSnap.empty) {
@@ -56,14 +62,13 @@ const API = {
         current_balance: firebase.firestore.FieldValue.increment(-parseFloat(txObj.amount))
       }, { merge: true });
     }
-
-    return { success: true, message: '�ѹ�֡��¡�������', tx_id: txObj.tx_id };
+    return { success: true, message: 'Success', tx_id: txObj.tx_id };
   },
 
   async deleteTransaction(txId) {
     const docRef = db.collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: '��辺��¡�ù��' };
+    if (!doc.exists) return { success: false, message: 'Not found' };
     const txObj = doc.data();
 
     if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
@@ -75,25 +80,24 @@ const API = {
         current_balance: firebase.firestore.FieldValue.increment(parseFloat(txObj.amount))
       }, { merge: true });
     }
-
     await docRef.delete();
-    return { success: true, message: 'ź��¡�������' };
+    return { success: true, message: 'Deleted' };
   },
   
   async addWeek(weekObj) {
     weekObj.week_id = 'W' + Date.now();
     await db.collection('weeks').doc(weekObj.week_id).set(weekObj);
-    return { success: true, message: '�����ѻ�������������' };
+    return { success: true, message: 'Success' };
   },
 
   async deleteWeek(weekId) {
     await db.collection('weeks').doc(weekId).delete();
-    return { success: true, message: 'ź�ѻ���������' };
+    return { success: true, message: 'Deleted' };
   },
 
   async updateClassSettings(settings) {
     await db.collection('settings').doc('global').set(settings, { merge: true });
-    return { success: true, message: '�ѹ�֡��õ�駤����ͧ���¹�����', settings: settings };
+    return { success: true, message: 'Success', settings: settings };
   },
   
   async addBatchIncome(payload) {
@@ -119,7 +123,6 @@ const API = {
        batch.set(docRef, tx);
        totalAmt += parseFloat(amount);
        
-       // Update student total_paid
        const userSnap = await db.collection('users').where('student_id', '==', sid).get();
        if(!userSnap.empty) {
          const userRef = db.collection('users').doc(userSnap.docs[0].id);
@@ -135,16 +138,15 @@ const API = {
     }, { merge: true });
 
     await batch.commit();
-    return { success: true, message: '�ѹ�֡���������Թ�����' };
+    return { success: true, message: 'Success' };
   },
   
   async cancelStudentWeekPayment(studentId, weekId, txId) {
     const docRef = db.collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: '��辺��¡�÷���ͧ���¡��ԡ' };
+    if (!doc.exists) return { success: false, message: 'Not found' };
     
     const docData = doc.data();
-    
     const batch = db.batch();
     batch.delete(docRef);
     
@@ -160,26 +162,37 @@ const API = {
     }
     
     await batch.commit();
-    return { success: true, message: '¡��ԡ��¡�������' };
+    return { success: true, message: 'Cancelled' };
   },
   
   async deleteStudent(studentId) {
     const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
     if (!usersSnap.empty) {
       await db.collection('users').doc(usersSnap.docs[0].id).delete();
-      return { success: true, message: 'ź�����Źѡ���¹�����' };
+      return { success: true, message: 'Deleted' };
     }
-    return { success: false, message: '��辺�ѡ���¹' };
+    return { success: false, message: 'Not found' };
   },
   
-  async addUser(payload) { const hashed = await this.hashPassword(payload.password || '1234'); payload.password_hash = hashed; delete payload.password; await db.collection('users').add({ ...payload, total_paid: 0 }); return { success: true, message: 'เพิ่มนักเรียนสำเร็จ' }; });
-    return { success: true, message: '�����ѡ���¹�����' };
+  async addUser(payload) {
+    const hashed = await this.hashPassword(payload.password || '1234');
+    payload.password_hash = hashed;
+    delete payload.password;
+    await db.collection('users').add({ ...payload, total_paid: 0 });
+    return { success: true, message: 'Success' };
   },
 
-  async setUserRole(studentId, role, pwd) { const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get(); if (!usersSnap.empty) { const updateData = { role: role }; if (pwd) { updateData.password_hash = await this.hashPassword(pwd); } await db.collection('users').doc(usersSnap.docs[0].id).update(updateData); return { success: true, message: 'อัปเดตสิทธิ์สำเร็จ' }; } return { success: false, message: 'ไม่พบผู้ใช้' }; });
-      return { success: true, message: '�ѻവ�Է��������' };
+  async setUserRole(studentId, role, pwd) {
+    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
+    if (!usersSnap.empty) {
+      const updateData = { role: role };
+      if (pwd) {
+         updateData.password_hash = await this.hashPassword(pwd);
+      }
+      await db.collection('users').doc(usersSnap.docs[0].id).update(updateData);
+      return { success: true, message: 'Success' };
     }
-    return { success: false, message: '��辺�����' };
+    return { success: false, message: 'Not found' };
   }
 };
 
@@ -215,8 +228,4 @@ function createRunProxy(successHandler, failureHandler) {
 }
 
 window.google.script.run = createRunProxy(null, null);
-
 console.log('Firebase backend bridge initialized.');
-
-
-
