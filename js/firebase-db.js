@@ -52,44 +52,51 @@ const API = {
   },
 
   async addTransaction(txObj) {
-    txObj.tx_id = 'TX' + Date.now();
-    txObj.timestamp = new Date().toISOString();
-    
-    // Clean up undefined
-    Object.keys(txObj).forEach(key => {
-      if (txObj[key] === undefined) delete txObj[key];
-    });
-
-    const batch = db.batch();
-    batch.set(db.collection('transactions').doc(txObj.tx_id), txObj);
-
-    const amt = parseFloat(txObj.amount) || 0;
-    
-    // Update global balance
-    const settingsRef = db.collection('settings').doc('global');
-    const settingsDoc = await settingsRef.get();
-    let current_balance = 0;
-    if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
-    
-    if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
-      batch.set(settingsRef, { current_balance: current_balance + amt }, { merge: true });
+    try {
+      txObj.tx_id = 'TX' + Date.now();
+      txObj.timestamp = new Date().toISOString();
       
-      // Update student total_paid
-      if (txObj.student_id && txObj.student_id !== 'ROOM') {
-        const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
-        if (!usersSnap.empty) {
-          const uDoc = usersSnap.docs[0];
-          const uData = uDoc.data();
-          const curPaid = parseFloat(uData.total_paid) || 0;
-          batch.set(db.collection('users').doc(uDoc.id), { total_paid: curPaid + amt }, { merge: true });
-        }
+      // Clean up undefined values
+      Object.keys(txObj).forEach(key => {
+        if (txObj[key] === undefined || txObj[key] === null) delete txObj[key];
+      });
+
+      const amt = parseFloat(txObj.amount) || 0;
+
+      // Step 1: Save the transaction
+      await db.collection('transactions').doc(txObj.tx_id).set(txObj);
+
+      // Step 2: Read current balance
+      const settingsRef = db.collection('settings').doc('global');
+      const settingsDoc = await settingsRef.get();
+      let current_balance = 0;
+      if (settingsDoc.exists && settingsDoc.data()) {
+        current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
       }
-    } else if (txObj.type === 'expense') {
-      batch.set(settingsRef, { current_balance: current_balance - amt }, { merge: true });
+
+      // Step 3: Update balance
+      if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
+        await settingsRef.set({ current_balance: current_balance + amt }, { merge: true });
+        
+        // Step 4: Update student total_paid
+        if (txObj.student_id && txObj.student_id !== 'ROOM') {
+          const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
+          if (!usersSnap.empty) {
+            const uDoc = usersSnap.docs[0];
+            const uData = uDoc.data();
+            const curPaid = parseFloat(uData.total_paid) || 0;
+            await db.collection('users').doc(uDoc.id).set({ total_paid: curPaid + amt }, { merge: true });
+          }
+        }
+      } else if (txObj.type === 'expense') {
+        await settingsRef.set({ current_balance: current_balance - amt }, { merge: true });
+      }
+
+      return { success: true, message: 'Success', tx_id: txObj.tx_id };
+    } catch (err) {
+      console.error('addTransaction error detail:', err);
+      throw new Error('บันทึกไม่สำเร็จ: ' + (err.code || '') + ' ' + (err.message || String(err)));
     }
-    
-    await batch.commit();
-    return { success: true, message: 'Success', tx_id: txObj.tx_id };
   },
 
   async deleteTransaction(txId) {
