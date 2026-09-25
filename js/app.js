@@ -80,7 +80,7 @@
 
     // === View Switcher (Dashboard, Students Management, Collect Checklist) ===
     function switchMainView(view) {
-      if (view === 'students' && (!currentUser || currentUser.role !== 'teacher')) {
+      if (view === 'students' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'super_admin'))) {
         Swal.fire({
           icon: 'warning',
           title: 'จำกัดสิทธิ์การเข้าถึง',
@@ -89,7 +89,7 @@
         return;
       }
 
-      if (view === 'collect' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'treasurer'))) {
+      if (view === 'collect' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'treasurer' && currentUser.role !== 'super_admin'))) {
         Swal.fire({
           icon: 'warning',
           title: 'จำกัดสิทธิ์การเข้าถึง',
