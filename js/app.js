@@ -3092,6 +3092,9 @@
               <button onclick="enterRoom('${room.room_id}', '${room.name}')" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:bg-blue-200 mr-1">
                 เข้าห้อง ➡
               </button>
+              <button onclick="promptEditTeacher('${room.room_id}', '${room.teacher_name}')" class="px-2 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold hover:bg-amber-200 mr-1" title="แก้ไขชื่อครูประจำชั้น">
+                ✏️
+              </button>
               <button onclick="confirmDeleteRoom('${room.room_id}', '${room.name}')" class="px-2 py-1.5 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold hover:bg-rose-200" title="ลบห้องเรียนนี้">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -3155,6 +3158,39 @@
 
     window.exitRoom = function() {
       window.location.href = window.location.pathname;
+    };
+
+    
+    window.promptEditTeacher = function(roomId, oldName) {
+      Swal.fire({
+        title: '✏️ แก้ไขชื่อครูประจำชั้น',
+        input: 'text',
+        inputValue: oldName === 'undefined' ? '' : oldName,
+        inputPlaceholder: 'กรอกชื่อคุณครูคนใหม่',
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: 'ยกเลิก',
+        inputValidator: (value) => {
+          if (!value) {
+            return 'กรุณากรอกชื่อคุณครู!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          showLoader(true);
+          google.script.run
+            .withSuccessHandler(res => {
+              showLoader(false);
+              if (res.success) {
+                Swal.fire('สำเร็จ', res.message, 'success');
+                loadAdminData();
+              } else {
+                Swal.fire('Error', res.message, 'error');
+              }
+            })
+            .updateRoomTeacher(roomId, result.value.trim());
+        }
+      });
     };
 
     window.confirmDeleteRoom = function(roomId, roomName) {
