@@ -637,8 +637,38 @@
               closeModal('loginModal');
               document.getElementById('loginForm').reset();
               updateUserNavUI();
-              renderDashboard();
-              renderManageStudentsTable();
+              
+              if (currentUser.role === 'super_admin') {
+                 const urlParams = new URLSearchParams(window.location.search);
+                 if (urlParams.get('room')) {
+                    loadData();
+                 } else {
+                   document.getElementById('viewDashboard').classList.add('hidden-view');
+                   const vAdmin = document.getElementById('viewAdminDashboard');
+                   if (vAdmin) vAdmin.classList.remove('hidden-view');
+                   loadAdminData();
+                 }
+              } else if (currentUser.room_id) {
+                 const urlParams = new URLSearchParams(window.location.search);
+                 if (urlParams.get('room') && urlParams.get('room') !== currentUser.room_id) {
+                   Swal.fire('ข้อผิดพลาด', 'คุณไม่มีสิทธิ์เข้าถึงห้องนี้', 'error');
+                   logout();
+                   return;
+                 }
+                 if (!urlParams.get('room')) {
+                   window.location.href = '?room=' + currentUser.room_id;
+                   return;
+                 }
+                 
+                 const vAdmin = document.getElementById('viewAdminDashboard');
+                 if (vAdmin) vAdmin.classList.add('hidden-view');
+                 document.getElementById('viewDashboard').classList.remove('hidden-view');
+                 google.script.run.withSuccessHandler(() => {
+                    loadData();
+                 }).setRoomId(currentUser.room_id);
+              } else {
+                 loadData();
+              }
             } else {
               showCenterLoader('error', 'เข้าสู่ระบบไม่สำเร็จ', res.message);
             }
