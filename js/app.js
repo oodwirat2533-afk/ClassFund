@@ -32,35 +32,46 @@
 
     // === Initialization ===
     window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlRoomId = urlParams.get('room');
+      
       const savedUser = sessionStorage.getItem('cf_user');
       if (savedUser) {
-        try {
-          currentUser = JSON.parse(savedUser);
-          updateUserNavUI();
+        try { currentUser = JSON.parse(savedUser); } catch(e) { currentUser = null; }
+      }
+
+      if (urlRoomId) {
+        // --- ROOM MODE ---
+        google.script.run.withSuccessHandler(() => {
+          document.getElementById('viewDashboard').classList.remove('hidden-view');
+          const vAdmin = document.getElementById('viewAdminDashboard');
+          if (vAdmin) vAdmin.classList.add('hidden-view');
           
-          if (currentUser.role === 'super_admin') {
-             document.getElementById('viewDashboard').classList.add('hidden-view');
-             const vAdmin = document.getElementById('viewAdminDashboard');
-             if (vAdmin) vAdmin.classList.remove('hidden-view');
-             loadAdminData();
-          } else if (currentUser.room_id) {
-             const vAdmin = document.getElementById('viewAdminDashboard');
-             if (vAdmin) vAdmin.classList.add('hidden-view');
-             document.getElementById('viewDashboard').classList.remove('hidden-view');
-             google.script.run.withSuccessHandler(() => {
-                loadData();
-             }).setRoomId(currentUser.room_id);
-          } else {
-             loadData();
+          if (currentUser && currentUser.role !== 'super_admin' && currentUser.room_id !== urlRoomId) {
+             // Wrong room for teacher
+             currentUser = null;
+             sessionStorage.removeItem('cf_user');
           }
-        } catch(e) {
-          currentUser = null;
           updateUserNavUI();
           loadData();
-        }
+        }).setRoomId(urlRoomId);
       } else {
-        updateUserNavUI();
-        loadData();
+        // --- SUPER ADMIN PORTAL MODE ---
+        document.getElementById('viewDashboard').classList.add('hidden-view');
+        
+        if (currentUser && currentUser.role === 'super_admin') {
+           const vAdmin = document.getElementById('viewAdminDashboard');
+           if (vAdmin) vAdmin.classList.remove('hidden-view');
+           updateUserNavUI();
+           loadAdminData();
+        } else {
+           currentUser = null;
+           sessionStorage.removeItem('cf_user');
+           updateUserNavUI();
+           // Force login
+           const loginModal = document.getElementById('loginModal');
+           if (loginModal) loginModal.classList.remove('hidden-view');
+        }
       }
     };
 
