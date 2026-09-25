@@ -379,6 +379,9 @@
         if (currentUser.role === 'teacher') {
           badgeText = 'ครูประจำชั้น';
           badgeClass = 'text-[11px] px-2 py-0.5 rounded-full font-semibold bg-purple-50 text-purple-700 border border-purple-200';
+        } else if (currentUser.role === 'super_admin') {
+          badgeText = 'Super Admin';
+          badgeClass = 'text-[11px] px-2 py-0.5 rounded-full font-semibold bg-amber-50 text-amber-700 border border-amber-200';
         } else if (currentUser.role === 'treasurer') {
           badgeText = 'เหรัญญิก';
           badgeClass = 'text-[11px] px-2 py-0.5 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
@@ -396,7 +399,7 @@
           dropBadge.className = badgeClass;
         }
 
-        if (currentUser.role === 'teacher' || currentUser.role === 'treasurer') {
+        if ((currentUser.role === 'teacher' || currentUser.role === 'super_admin' || currentUser.role === 'treasurer')) {
           if (navMenuAdminGroup) navMenuAdminGroup.classList.remove('hidden-view');
           if (btnExportExcel) btnExportExcel.classList.remove('hidden-view');
         } else {
@@ -423,7 +426,7 @@
           }
         }
 
-        if (currentUser.role === 'teacher' || currentUser.role === 'treasurer') {
+        if ((currentUser.role === 'teacher' || currentUser.role === 'super_admin' || currentUser.role === 'treasurer')) {
           if (navBtnChangePwd) navBtnChangePwd.classList.remove('hidden-view');
           if (navBtnChangePwdDivider) navBtnChangePwdDivider.classList.remove('hidden-view');
         } else {
@@ -1258,7 +1261,7 @@
         item.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70 transition-colors gap-2';
 
         let adminActions = '';
-        if (currentUser && currentUser.role === 'teacher') {
+        if (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin')) {
           adminActions = `
             <div class="flex items-center gap-1.5 shrink-0">
               <button type="button" onclick="handleEditWeek('${w.week_id}')" class="text-xs text-blue-700 bg-blue-100 hover:bg-blue-200 px-2.5 py-1 rounded-lg font-semibold transition-colors cursor-pointer">✏️ แก้ไข</button>
@@ -1406,7 +1409,7 @@
         return;
       }
 
-      const isTeacher = (currentUser && currentUser.role === 'teacher');
+      const isTeacher = (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin'));
 
       filtered.forEach(s => {
         const totalPaid = parseFloat(s.total_paid) || 0;
@@ -1540,7 +1543,7 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const isTeacher = currentUser && currentUser.role === 'teacher' && window.isCurrentTerm !== false;
+      const isTeacher = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin') && window.isCurrentTerm !== false;
       const thActions = document.getElementById('thTxActions');
       if (thActions) {
         if (isTeacher) thActions.classList.remove('hidden-view');
@@ -2740,7 +2743,7 @@
         return;
       }
 
-      const isTeacher = (currentUser && currentUser.role === 'teacher');
+      const isTeacher = (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin'));
 
       filtered.forEach(s => {
         const sId = String(s.student_id).trim();
