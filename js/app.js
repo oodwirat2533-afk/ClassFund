@@ -344,6 +344,17 @@
     }
 
     function updateUserNavUI() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const inRoom = !!urlParams.get('room');
+  const btnReturn = document.getElementById('btnReturnAdmin');
+  if (btnReturn) { 
+    if (currentUser && currentUser.role === 'super_admin' && inRoom) { 
+      btnReturn.classList.remove('hidden-view'); 
+    } else { 
+      btnReturn.classList.add('hidden-view'); 
+    } 
+  }
+
       const navGuest = document.getElementById('navGuestState');
       const navUser = document.getElementById('navUserState');
       const studentBanner = document.getElementById('studentPersonalBanner');
