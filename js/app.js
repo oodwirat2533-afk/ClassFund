@@ -1,4 +1,4 @@
-﻿
+
     // === Global State ===
     let currentUser = null;
     
@@ -1548,13 +1548,14 @@
 
         const tr = document.createElement('tr');
         tr.className = 'block sm:table-row hover:bg-slate-50/80 transition-colors border-b border-slate-100 sm:border-0 p-3.5 sm:p-0';
+        const recNameParts = (t.recorded_by || '-').split(' ').map(p => `<span class="whitespace-nowrap">${p}</span>`).join(' ');
         tr.innerHTML = `
           <!-- Desktop Layout -->
           <td class="hidden sm:table-cell px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${formatThaiDateTimeBE(t.timestamp)}</td>
           <td class="hidden sm:table-cell px-5 py-3 text-sm text-slate-800 font-medium">${descText}</td>
           <td class="hidden sm:table-cell px-5 py-3">${typeBadge}</td>
           <td class="hidden sm:table-cell px-5 py-3 text-right font-bold text-sm ${amountClass}">${prefix}${formatCurrency(t.amount)}</td>
-          <td class="hidden sm:table-cell px-5 py-3 text-xs text-slate-400 text-right">${t.recorded_by || '-'}</td>
+          <td class="hidden sm:table-cell px-5 py-3 text-xs text-slate-400 text-right">${recNameParts}</td>
           ${actionCellDesktop}
           
           <!-- Mobile Card Layout -->
@@ -1571,7 +1572,7 @@
                 <div class="text-right font-bold text-sm shrink-0 mt-0.5 ${amountClass}">${prefix}${formatCurrency(t.amount)}</div>
               </div>
               <div class="flex justify-between items-center mt-1 pt-2 border-t border-slate-50/50">
-                <div class="text-[10px] text-slate-400">บันทึกโดย: ${t.recorded_by || '-'}</div>
+                <div class="text-[10px] text-slate-400">บันทึกโดย: ${recNameParts}</div>
                 ${actionCellMobile}
               </div>
             </div>
