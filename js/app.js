@@ -709,12 +709,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           sessionStorage.removeItem('cf_user');
-          currentUser = null;
-          updateUserNavUI();
-          renderDashboard();
-          renderManageStudentsTable();
-          switchMainView('dashboard');
-          Swal.fire({ icon: 'success', title: 'ออกจากระบบเรียบร้อย', timer: 1200, showConfirmButton: false });
+          window.location.reload();
         }
       });
     }
