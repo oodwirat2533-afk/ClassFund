@@ -167,16 +167,20 @@ const API = {
        
        const userSnap = await db.collection('users').where('student_id', '==', sid).get();
        if(!userSnap.empty) {
-         const userRef = db.collection('users').doc(userSnap.docs[0].id);
-         batch.set(userRef, {
-           total_paid: firebase.firestore.FieldValue.increment(parseFloat(amount))
+         const uDoc = userSnap.docs[0];
+         const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+         batch.set(db.collection('users').doc(uDoc.id), {
+           total_paid: curPaid + parseFloat(amount)
          }, { merge: true });
        }
     }
     
     const settingsRef = db.collection('settings').doc('global');
+    const settingsDoc = await settingsRef.get();
+    let current_balance = 0;
+    if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
     batch.set(settingsRef, {
-      current_balance: firebase.firestore.FieldValue.increment(totalAmt)
+      current_balance: current_balance + totalAmt
     }, { merge: true });
 
     await batch.commit();
@@ -189,17 +193,24 @@ const API = {
     if (!doc.exists) return { success: false, message: 'Not found' };
     
     const docData = doc.data();
+    const amt = parseFloat(docData.amount) || 0;
     const batch = db.batch();
     batch.delete(docRef);
     
-    batch.set(db.collection('settings').doc('global'), {
-      current_balance: firebase.firestore.FieldValue.increment(-parseFloat(docData.amount))
+    const settingsRef = db.collection('settings').doc('global');
+    const settingsDoc = await settingsRef.get();
+    let current_balance = 0;
+    if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
+    batch.set(settingsRef, {
+      current_balance: current_balance - amt
     }, { merge: true });
     
     const userSnap = await db.collection('users').where('student_id', '==', studentId).get();
     if(!userSnap.empty) {
-      batch.set(db.collection('users').doc(userSnap.docs[0].id), {
-        total_paid: firebase.firestore.FieldValue.increment(-parseFloat(docData.amount))
+      const uDoc = userSnap.docs[0];
+      const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+      batch.set(db.collection('users').doc(uDoc.id), {
+        total_paid: Math.max(0, curPaid - amt)
       }, { merge: true });
     }
     
