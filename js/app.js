@@ -517,7 +517,7 @@
     function handleResetData(type) {
       const msg = type === 'all' 
         ? 'คุณกำลังจะลบข้อมูล "ทั้งหมด"<br>(รวมรายชื่อนักเรียน)<br><span class="text-rose-600 font-bold">ข้อมูลจะไม่สามารถกู้คืนได้!</span> ยืนยันหรือไม่?' 
-        : 'คุณกำลังจะลบข้อมูล "การเงินและสัปดาห์ทั้งหมด"<br>(รายชื่อนักเรียนจะคงอยู่)<br><span class="text-rose-600 font-bold">ข้อมูลจะไม่สามารถกู้คืนได้!</span> ยืนยันหรือไม่?';
+        : 'คุณกำลังจะลบข้อมูล "การเงินและรอบทั้งหมด"<br>(รายชื่อนักเรียนจะคงอยู่)<br><span class="text-rose-600 font-bold">ข้อมูลจะไม่สามารถกู้คืนได้!</span> ยืนยันหรือไม่?';
       
       Swal.fire({
         title: 'ยืนยันการลบข้อมูล',
@@ -656,7 +656,7 @@
           appData = {
             settings: { current_balance: 320, current_academic_year: '2569', fine_presets: [{id:1, title:'ไม่ทำเขตพื้นที่', amount:20}, {id:2, title:'เล่นโทรศัพท์ในแถว', amount:5}] },
             transactions: [
-              { tx_id: 'TX-1', timestamp: '2026-08-26 08:30', student_id: '54321', type: 'income', amount: 20, description: 'สัปดาห์ที่ 1', recorded_by: 'นายสมชาย' },
+              { tx_id: 'TX-1', timestamp: '2026-08-26 08:30', student_id: '54321', type: 'income', amount: 20, description: 'ครั้งที่ 1', recorded_by: 'นายสมชาย' },
               { tx_id: 'TX-2', timestamp: '2026-08-26 09:00', student_id: 'ROOM', type: 'expense', amount: 60, description: 'ซื้อแปลงลบกระดาน', recorded_by: 'คุณครูประจำชั้น' }
             ],
             users: [
@@ -719,9 +719,9 @@
       const lblCollectTitle = document.getElementById('lblCollectTitle');
       if (lblCollectTitle) {
         if (appData.settings && appData.settings.current_semester && appData.settings.current_academic_year) {
-          lblCollectTitle.textContent = `เช็คชื่อเก็บเงินประจำสัปดาห์ ภาคเรียนที่ ${appData.settings.current_semester}/${appData.settings.current_academic_year}`;
+          lblCollectTitle.textContent = `เช็คชื่อเก็บเงินประจำงวด ภาคเรียนที่ ${appData.settings.current_semester}/${appData.settings.current_academic_year}`;
         } else {
-          lblCollectTitle.textContent = 'เช็คชื่อเก็บเงินประจำสัปดาห์';
+          lblCollectTitle.textContent = 'เช็คชื่อเก็บเงินประจำงวด';
         }
       }
 
@@ -1000,11 +1000,11 @@
       }
 
       const titleEl = document.getElementById('lblWeekModalTitle');
-      if (titleEl) titleEl.textContent = `✏️ แก้ไขสัปดาห์ที่ ${w.week_number}`;
+      if (titleEl) titleEl.textContent = `✏️ แก้ไขครั้งที่ ${w.week_number}`;
       const subEl = document.getElementById('lblWeekModalSubtitle');
-      if (subEl) subEl.textContent = 'แก้ไขช่วงวันที่ของสัปดาห์นี้ (ล็อกยอดเงินเป้าหมาย)';
+      if (subEl) subEl.textContent = 'แก้ไขช่วงวันที่ของรอบนี้ (ล็อกยอดเงินเป้าหมาย)';
       const btnSub = document.getElementById('btnSubmitWeek');
-      if (btnSub) btnSub.textContent = `บันทึกการแก้ไขสัปดาห์ที่ ${w.week_number}`;
+      if (btnSub) btnSub.textContent = `บันทึกการแก้ไขครั้งที่ ${w.week_number}`;
       const btnCancel = document.getElementById('btnCancelEditWeek');
       if (btnCancel) btnCancel.classList.remove('hidden-view');
       
@@ -1049,11 +1049,11 @@
       }
 
       const titleEl = document.getElementById('lblWeekModalTitle');
-      if (titleEl) titleEl.textContent = 'เพิ่มรอบสัปดาห์ใหม่';
+      if (titleEl) titleEl.textContent = 'เพิ่มรอบเก็บเงินใหม่';
       const subEl = document.getElementById('lblWeekModalSubtitle');
       if (subEl) subEl.textContent = 'กำหนดรอบการเก็บเงินห้องเรียน';
       const btnSub = document.getElementById('btnSubmitWeek');
-      if (btnSub) btnSub.textContent = 'บันทึกสัปดาห์ใหม่';
+      if (btnSub) btnSub.textContent = 'บันทึกรอบใหม่';
       const btnCancel = document.getElementById('btnCancelEditWeek');
       if (btnCancel) btnCancel.classList.add('hidden-view');
     }
@@ -1068,7 +1068,7 @@
       const currentSem = appData.settings?.current_semester || '1';
       const currentWeeks = (appData.weeks || []).filter(w => String(w.academic_year) === String(currentAcdYear) && String(w.semester || "1") === String(currentSem));
 
-      if (countEl) countEl.textContent = `${currentWeeks.length} สัปดาห์`;
+      if (countEl) countEl.textContent = `${currentWeeks.length} รอบ`;
 
       // Auto update next week number and default amount if in create mode
       if (!currentEditWeekId) {
@@ -1091,7 +1091,7 @@
       }
 
       if (currentWeeks.length === 0) {
-        modalList.innerHTML = '<p class="text-xs text-slate-400 py-4 text-center">ยังไม่มีข้อมูลรอบสัปดาห์ในเทอมนี้</p>';
+        modalList.innerHTML = '<p class="text-xs text-slate-400 py-4 text-center">ยังไม่มีข้อมูลรอบเก็บเงินในเทอมนี้</p>';
         return;
       }
 
@@ -1114,7 +1114,7 @@
         item.innerHTML = `
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-slate-800">สัปดาห์ที่ ${w.week_number}</span>
+              <span class="text-xs font-bold text-slate-800">ครั้งที่ ${w.week_number}</span>
               <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">฿${w.amount_target} / คน</span>
             </div>
             <p class="text-[11px] text-slate-500 mt-0.5 truncate">🗓️ ${formatThaiDateBE(w.start_date)} ถึง ${formatThaiDateBE(w.end_date)}</p>
@@ -1127,8 +1127,8 @@
 
     function handleDeleteWeek(weekId) {
       Swal.fire({
-        title: 'ยืนยันการลบสัปดาห์?',
-        text: "ลบสัปดาห์นี้และข้อมูลการเก็บเงินทั้งหมดที่เกี่ยวข้องหรือไม่?",
+        title: 'ยืนยันการลบรอบ?',
+        text: "ลบรอบนี้และข้อมูลการเก็บเงินทั้งหมดที่เกี่ยวข้องหรือไม่?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
@@ -1137,7 +1137,7 @@
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
-          showSyncToast('loading', 'กำลังลบรอบสัปดาห์...');
+          showSyncToast('loading', 'กำลังลบรอบเก็บเงิน...');
           
           if (isMock) {
             setTimeout(() => {
@@ -1145,7 +1145,7 @@
               cancelEditWeek();
               renderModalWeeksList();
               renderDashboard();
-              showSyncToast('success', 'ลบรอบสัปดาห์เรียบร้อยแล้ว');
+              showSyncToast('success', 'ลบรอบเก็บเงินเรียบร้อยแล้ว');
             }, 400);
             return;
           }
@@ -1156,10 +1156,10 @@
                 appData.weeks = (appData.weeks || []).filter(w => w.week_id !== weekId);
                 cancelEditWeek();
                 renderModalWeeksList();
-                showSyncToast('success', res.message || 'ลบรอบสัปดาห์เรียบร้อยแล้ว');
+                showSyncToast('success', res.message || 'ลบรอบเก็บเงินเรียบร้อยแล้ว');
                 loadData(true);
               } else {
-                showSyncToast('error', res.message || 'เกิดข้อผิดพลาดในการลบสัปดาห์');
+                showSyncToast('error', res.message || 'เกิดข้อผิดพลาดในการลบรอบ');
               }
             })
             .withFailureHandler(err => {
@@ -1363,7 +1363,7 @@
 
       if (filter === 'income') {
         titleEl.textContent = 'รายการรายรับทั้งหมด';
-        subtitleEl.textContent = 'รายการเงินห้องประจำสัปดาห์ และรายรับอื่นๆ';
+        subtitleEl.textContent = 'รายการเงินห้องประจำงวด และรายรับอื่นๆ';
         iconEl.innerHTML = '📈';
         iconEl.className = 'w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg shadow-xs';
       } else if (filter === 'expense') {
@@ -1840,7 +1840,7 @@
         .sort((a, b) => (parseInt(b.week_number) || 0) - (parseInt(a.week_number) || 0)); // Newest / Latest week on top!
 
       if (weeks.length === 0 || students.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-400 py-6 text-center">ไม่มีข้อมูลรอบสัปดาห์หรือรายชื่อนักเรียน</p>';
+        container.innerHTML = '<p class="text-xs text-slate-400 py-6 text-center">ไม่มีข้อมูลรอบเก็บเงินหรือรายชื่อนักเรียน</p>';
         if (lblCount) lblCount.textContent = 'ไม่มีข้อมูล';
         return;
       }
@@ -1894,7 +1894,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 mb-3.5 pb-3 border-b border-slate-200/60">
             <div class="flex items-center gap-2.5 flex-wrap">
               <span class="px-3 py-1 bg-rose-600 text-white text-xs font-extrabold rounded-xl shadow-sm shadow-rose-600/20">
-                สัปดาห์ที่ ${w.week_number}
+                ครั้งที่ ${w.week_number}
               </span>
               <span class="text-xs text-slate-500 font-semibold">
                 📅 ${dStart} ถึง ${dEnd}
@@ -1917,10 +1917,10 @@
       if (lblCount) {
         if (unpaidWeeksCount > 0) {
           lblCount.className = 'self-start sm:self-auto text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-full';
-          lblCount.textContent = `ค้างชำระ ${unpaidWeeksCount} สัปดาห์ (${totalUnpaidStudentsCount} คน)`;
+          lblCount.textContent = `ค้างชำระ ${unpaidWeeksCount} รอบ (${totalUnpaidStudentsCount} คน)`;
         } else {
           lblCount.className = 'self-start sm:self-auto text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full';
-          lblCount.textContent = `✓ ชำระครบทุกสัปดาห์แล้ว`;
+          lblCount.textContent = `✓ ชำระครบทุกรอบแล้ว`;
         }
       }
 
@@ -1930,7 +1930,7 @@
             <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl font-bold border border-emerald-200 shadow-sm">
               ✓
             </div>
-            <h3 class="text-base font-bold text-emerald-800 mt-2">ยอดเยี่ยมมาก! นักเรียนทุกคนจ่ายเงินครบทุกรอบสัปดาห์แล้ว</h3>
+            <h3 class="text-base font-bold text-emerald-800 mt-2">ยอดเยี่ยมมาก! นักเรียนทุกคนจ่ายเงินครบทุกรอบเก็บเงินแล้ว</h3>
             <p class="text-xs text-slate-400">ไม่มีรายการค้างชำระในระบบ</p>
           </div>
         `;
@@ -1958,14 +1958,14 @@
 
       const wkSelect = document.getElementById('incWeekId');
       if (wkSelect) {
-        let wkOptions = '<option value="">-- เลือกรอบสัปดาห์ --</option>';
+        let wkOptions = '<option value="">-- เลือกรอบเก็บเงิน --</option>';
         const currentAcdYear = appData.settings?.current_academic_year || '2569';
         const currentSem = appData.settings?.current_semester || '1';
         const currentWeeks = (appData.weeks || []).filter(w => String(w.academic_year) === String(currentAcdYear) && String(w.semester || "1") === String(currentSem));
         const sortedWeeks = [...currentWeeks]
           .sort((a, b) => (parseInt(b.week_number) || 0) - (parseInt(a.week_number) || 0));
         sortedWeeks.forEach(w => {
-          wkOptions += `<option value="${w.week_id}" data-amount="${w.amount_target}">สัปดาห์ที่ ${w.week_number} (${w.amount_target} บาท)</option>`;
+          wkOptions += `<option value="${w.week_id}" data-amount="${w.amount_target}">ครั้งที่ ${w.week_number} (${w.amount_target} บาท)</option>`;
         });
         wkSelect.innerHTML = wkOptions;
       }
@@ -2335,7 +2335,7 @@
         payload.student_id = document.getElementById('incStudentId').value;
         payload.week_id = document.getElementById('incWeekId').value;
         payload.amount = document.getElementById('incAmount').value;
-        payload.description = document.getElementById('incDesc').value || 'จ่ายเงินประจำสัปดาห์';
+        payload.description = document.getElementById('incDesc').value || 'จ่ายเงินประจำงวด';
         typeName = 'รายรับ';
       } else if (type === 'expense') {
         payload.student_id = 'ROOM';
@@ -2406,7 +2406,7 @@
       };
 
       closeModal('weekModal');
-      showSyncToast('loading', 'กำลังบันทึกรอบสัปดาห์...');
+      showSyncToast('loading', 'กำลังบันทึกรอบเก็บเงิน...');
 
       if (isMock) {
         setTimeout(() => {
@@ -2431,7 +2431,7 @@
           populateSelects();
           initCollectView();
           switchMainView('collect');
-          showSyncToast('success', 'บันทึกรอบสัปดาห์เรียบร้อยแล้ว');
+          showSyncToast('success', 'บันทึกรอบเก็บเงินเรียบร้อยแล้ว');
         }, 300);
         return;
       }
@@ -2454,10 +2454,10 @@
             populateSelects();
             initCollectView();
             switchMainView('collect');
-            showSyncToast('success', res.message || 'บันทึกรอบสัปดาห์เรียบร้อยแล้ว');
+            showSyncToast('success', res.message || 'บันทึกรอบเก็บเงินเรียบร้อยแล้ว');
             loadData(true);
           } else {
-            showSyncToast('error', res.message || 'เกิดข้อผิดพลาดในการบันทึกสัปดาห์');
+            showSyncToast('error', res.message || 'เกิดข้อผิดพลาดในการบันทึกรอบ');
           }
         })
         .withFailureHandler(err => {
@@ -2515,7 +2515,7 @@
       const currentWeeks = (appData.weeks || []).filter(w => String(w.academic_year) === String(currentAcdYear) && String(w.semester || "1") === String(currentSem));
 
       if (currentWeeks.length === 0) {
-        wkSelect.innerHTML = '<option value="">-- ยังไม่มีข้อมูลรอบสัปดาห์สำหรับเทอมนี้ --</option>';
+        wkSelect.innerHTML = '<option value="">-- ยังไม่มีข้อมูลรอบเก็บเงินสำหรับเทอมนี้ --</option>';
         renderCollectTable();
         return;
       }
@@ -2527,7 +2527,7 @@
       sortedWeeks.forEach((w) => {
         const dStart = formatThaiDateBE(w.start_date);
         const dEnd = formatThaiDateBE(w.end_date);
-        options += `<option value="${w.week_id}" data-amount="${w.amount_target}">สัปดาห์ที่ ${w.week_number} (${dStart} ถึง ${dEnd})</option>`;
+        options += `<option value="${w.week_id}" data-amount="${w.amount_target}">ครั้งที่ ${w.week_number} (${dStart} ถึง ${dEnd})</option>`;
       });
       wkSelect.innerHTML = options;
 
@@ -2682,7 +2682,7 @@
         html: `
           <div class="text-sm text-slate-600 text-left bg-slate-50 p-4 rounded-2xl space-y-1.5 border border-slate-200/80">
             <p>👤 <strong>นักเรียน:</strong> ${studentName} (${studentId})</p>
-            <p>📅 <strong>รอบสัปดาห์:</strong> ${weekId}</p>
+            <p>📅 <strong>รอบเก็บเงิน:</strong> ${weekId}</p>
             <p>💰 <strong>ยอดเงินที่บันทึกไว้:</strong> <span class="text-emerald-600 font-bold">${formatCurrency(amount)}</span></p>
           </div>
           <p class="text-xs text-rose-600 mt-3 font-medium">⚠️ หากกดยืนยัน ยอดเงินจะถูกหักออกจากกองกลาง และเปลี่ยนสถานะกลับเป็น "ยังไม่จ่าย" เพื่อให้ติ๊กเก็บเงินใหม่ได้</p>
@@ -2767,7 +2767,7 @@
       }
 
       if (!selectedCollectWeekId) {
-        Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรอบสัปดาห์' });
+        Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรอบเก็บเงิน' });
         return;
       }
 
@@ -2777,7 +2777,7 @@
       const amountPerStudent = parseFloat(document.getElementById('colAmountInput').value) || 20;
       const totalAmount = studentIds.length * amountPerStudent;
       const selectedWeekObj = appData.weeks.find(w => w.week_id === selectedCollectWeekId);
-      const weekLabel = selectedWeekObj ? `สัปดาห์ที่ ${selectedWeekObj.week_number}` : selectedCollectWeekId;
+      const weekLabel = selectedWeekObj ? `ครั้งที่ ${selectedWeekObj.week_number}` : selectedCollectWeekId;
       const termStr = (appData.settings && appData.settings.current_semester && appData.settings.current_academic_year) ? ` ภาคเรียนที่ ${appData.settings.current_semester}/${appData.settings.current_academic_year}` : '';
       const note = `เงินห้องประจำ${weekLabel}${termStr}`;
 
@@ -2785,7 +2785,7 @@
         title: 'ยืนยันการบันทึกเก็บเงิน?',
         html: `
           <div class="text-sm text-slate-600 text-left bg-slate-50 p-4 rounded-2xl space-y-1.5 border border-slate-200/60">
-            <p>📅 <strong>รอบสัปดาห์:</strong> ${weekLabel}</p>
+            <p>📅 <strong>รอบเก็บเงิน:</strong> ${weekLabel}</p>
             <p>👥 <strong>จำนวนที่เลือก:</strong> <span class="text-blue-600 font-bold">${studentIds.length} คน</span></p>
             <p>💰 <strong>ยอดเงินรวม:</strong> <span class="text-emerald-600 font-bold">${formatCurrency(totalAmount)}</span></p>
           </div>

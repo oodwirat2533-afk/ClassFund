@@ -142,7 +142,31 @@ const API = {
   },
 
   async deleteWeek(weekId) {
-    await db.collection('weeks').doc(weekId).delete();
+    const weekRef = db.collection('weeks').doc(weekId);
+    const weekDoc = await weekRef.get();
+    
+    if (!weekDoc.exists) return { success: false, message: 'ไม่พบรอบเก็บเงินที่ต้องการลบ' };
+    
+    const deletedWeek = weekDoc.data();
+    const deletedNum = parseInt(deletedWeek.week_number) || 0;
+    
+    // Find weeks that need shifting
+    const weeksToShift = await db.collection('weeks')
+      .where('academic_year', '==', deletedWeek.academic_year)
+      .where('semester', '==', deletedWeek.semester)
+      .where('week_number', '>', deletedNum)
+      .get();
+      
+    const batch = db.batch();
+    batch.delete(weekRef);
+    
+    // Shift remaining weeks
+    weeksToShift.docs.forEach(doc => {
+      const currentNum = parseInt(doc.data().week_number);
+      batch.update(doc.ref, { week_number: currentNum - 1 });
+    });
+    
+    await batch.commit();
     return { success: true, message: 'Deleted' };
   },
 

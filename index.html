@@ -153,7 +153,7 @@
 
                     <button onclick="handleMenuAction('week')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2.5 transition-colors cursor-pointer">
                       <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">📅</span>
-                      <span>เพิ่มสัปดาห์</span>
+                      <span>เพิ่มรอบ</span>
                     </button>
 
                     <button id="navBtnManageStudents" onclick="handleMenuAction('students')" class="hidden-view w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2.5 transition-colors cursor-pointer">
@@ -220,7 +220,7 @@
           </div>
           <p id="lblIncome" class="text-lg sm:text-3xl font-extrabold text-emerald-600 tracking-tight truncate">0 บาท</p>
           <div class="mt-1 sm:mt-3 flex items-center justify-between text-[10px] sm:text-xs">
-            <span class="text-slate-400 font-medium truncate">รวมเงินสัปดาห์ & อื่นๆ</span>
+            <span class="text-slate-400 font-medium truncate">รวมเงินรอบ & อื่นๆ</span>
             <span class="text-emerald-600 font-semibold group-hover:underline shrink-0 flex items-center gap-0.5">
               ดูรายรับ <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </span>
@@ -280,10 +280,10 @@
               <span class="text-xl">⚠️</span>
               <h2 class="text-lg font-bold text-slate-800 leading-tight">
                 รายชื่อผู้ที่ยังไม่จ่ายเงิน<br>
-                <span class="text-sm font-medium text-slate-500">(แยกตามรอบสัปดาห์)</span>
+                <span class="text-sm font-medium text-slate-500">(แยกตามรอบเก็บเงิน)</span>
               </h2>
             </div>
-            <p class="text-xs text-slate-400 mt-1">แสดงเฉพาะรอบสัปดาห์ที่ยังมีนักเรียนค้างชำระ (เรียงจากรอบล่าสุดอยู่บนสุด)</p>
+            <p class="text-xs text-slate-400 mt-1">แสดงเฉพาะรอบเก็บเงินที่ยังมีนักเรียนค้างชำระ (เรียงจากรอบล่าสุดอยู่บนสุด)</p>
           </div>
           <span id="lblUnpaidWeeksCount" class="self-start sm:self-auto text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full"></span>
         </div>
@@ -374,7 +374,7 @@
                 📥
               </div>
               <div>
-                <h1 id="lblCollectTitle" class="text-2xl font-bold text-slate-800">เช็คชื่อเก็บเงินประจำสัปดาห์</h1>
+                <h1 id="lblCollectTitle" class="text-2xl font-bold text-slate-800">เช็คชื่อเก็บเงินประจำงวด</h1>
                 <p class="text-xs text-slate-500 mt-0.5">ติ๊กถูกที่กล่องหน้ารายชื่อนักเรียนเพื่อบันทึกการชำระเงินพร้อมกันหลายคน</p>
               </div>
             </div>
@@ -395,7 +395,7 @@
         <!-- Week & Amount Selector Row -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-3 border-t border-slate-100">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">เลือกรอบสัปดาห์ที่เก็บเงิน</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">เลือกรอบเก็บเงินที่เก็บเงิน</label>
             <select id="colWeekSelect" onchange="handleCollectWeekChange()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-semibold text-slate-800">
               <!-- JS Render -->
             </select>
@@ -686,7 +686,7 @@
         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">📥</div>
         <div>
           <h2 class="text-lg font-bold text-slate-800">เก็บเงินนักเรียน</h2>
-          <p class="text-xs text-slate-400">บันทึกรายรับประจำสัปดาห์</p>
+          <p class="text-xs text-slate-400">บันทึกรายรับประจำงวด</p>
         </div>
       </div>
 
@@ -698,7 +698,7 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">รอบสัปดาห์</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">รอบเก็บเงิน</label>
           <select id="incWeekId" required onchange="updateIncomeAmountByWeek()" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
             <!-- JS Render -->
           </select>
@@ -806,7 +806,7 @@
     </div>
   </div>
 
-  <!-- Modal: เพิ่ม/แก้ไขรอบสัปดาห์ (Week) -->
+  <!-- Modal: เพิ่ม/แก้ไขรอบเก็บเงิน (Week) -->
   <div id="weekModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg p-6 border border-slate-100 relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('weekModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
@@ -814,7 +814,7 @@
       <div class="flex items-center gap-3 mb-6">
         <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">📅</div>
         <div>
-          <h2 id="lblWeekModalTitle" class="text-lg font-bold text-slate-800">เพิ่มรอบสัปดาห์ใหม่</h2>
+          <h2 id="lblWeekModalTitle" class="text-lg font-bold text-slate-800">เพิ่มรอบเก็บเงินใหม่</h2>
           <p id="lblWeekModalSubtitle" class="text-xs text-slate-400">กำหนดรอบการเก็บเงินห้องเรียน</p>
         </div>
       </div>
@@ -898,7 +898,7 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">สัปดาห์ที่</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ครั้งที่</label>
             <input id="wkNumber" type="number" min="1" required readonly class="w-full px-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none text-sm font-bold text-blue-600 cursor-not-allowed">
           </div>
           <div>
@@ -909,10 +909,10 @@
 
         <div class="space-y-2 pt-1">
           <button id="btnSubmitWeek" type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 cursor-pointer">
-            บันทึกสัปดาห์ใหม่
+            บันทึกรอบใหม่
           </button>
           <button id="btnCancelEditWeek" type="button" onclick="cancelEditWeek()" class="hidden-view w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold py-2.5 px-4 rounded-xl text-xs transition-all cursor-pointer">
-            ยกเลิกการแก้ไข (สร้างสัปดาห์ใหม่)
+            ยกเลิกการแก้ไข (สร้างรอบใหม่)
           </button>
         </div>
       </form>
@@ -921,8 +921,8 @@
       <div class="mt-6 pt-5 border-t border-slate-100">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span>📋 รอบสัปดาห์ในเทอมนี้</span>
-            <span id="lblModalWeekCount" class="text-[11px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold border border-blue-200/60">0 สัปดาห์</span>
+            <span>📋 รอบเก็บเงินในเทอมนี้</span>
+            <span id="lblModalWeekCount" class="text-[11px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold border border-blue-200/60">0 รอบ</span>
           </h3>
         </div>
         <div id="modalWeeksList" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
@@ -1161,8 +1161,8 @@
 
 
   <!-- ==================== LOGIC & SCRIPTS ==================== -->
-  <script src="js/firebase-db.js?v=20260925e"></script>
-<script src="js/app.js?v=20260925e"></script>
+  <script src="js/firebase-db.js?v=20260925f"></script>
+<script src="js/app.js?v=20260925f"></script>
 
 </body>
 </html>
