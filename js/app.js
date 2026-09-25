@@ -833,6 +833,20 @@
     }
 
     function renderHeaderInfo() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isRoom = !!urlParams.get('room');
+      
+      if (!isRoom) {
+        const lblClass = document.getElementById('lblHeaderClassRoom');
+        if (lblClass) lblClass.textContent = 'ClassFund System';
+        const lblSchool = document.getElementById('lblHeaderSchoolName');
+        if (lblSchool) lblSchool.textContent = 'แผงควบคุมหลัก (Super Admin)';
+        const lblManage = document.getElementById('lblClassRoomManage');
+        if (lblManage) lblManage.textContent = 'ClassFund System';
+        document.title = 'ClassFund System - Super Admin';
+        return;
+      }
+
       const clsName = (appData.settings && appData.settings.class_name) ? appData.settings.class_name : 'ม.4/7';
       const schName = (appData.settings && appData.settings.school_name) ? appData.settings.school_name : 'โรงเรียนบรรหารแจ่มใสวิทยา 3';
       const semStr = (appData.settings && appData.settings.current_semester) ? appData.settings.current_semester : "1";
@@ -853,15 +867,6 @@
 
       const lblFooterSchool = document.getElementById('lblFooterSchoolName');
       if (lblFooterSchool) lblFooterSchool.textContent = schName;
-
-      const lblCollectTitle = document.getElementById('lblCollectTitle');
-      if (lblCollectTitle) {
-        if (appData.settings && appData.settings.current_semester && appData.settings.current_academic_year) {
-          lblCollectTitle.textContent = `เช็คชื่อเก็บเงินประจำงวด ภาคเรียนที่ ${appData.settings.current_semester}/${appData.settings.current_academic_year}`;
-        } else {
-          lblCollectTitle.textContent = 'เช็คชื่อเก็บเงินประจำงวด';
-        }
-      }
 
       document.title = `ClassFund System - ${clsName} ${schName}`;
     }
