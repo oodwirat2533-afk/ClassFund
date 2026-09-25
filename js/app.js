@@ -3086,8 +3086,13 @@
               <button onclick="copyRoomLink('${room.room_id}')" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 mr-1">
                 📋 ก๊อปลิงก์
               </button>
-              <button onclick="enterRoom('${room.room_id}', '${room.name}')" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:bg-blue-200">
+              <button onclick="enterRoom('${room.room_id}', '${room.name}')" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:bg-blue-200 mr-1">
                 เข้าห้อง ➡
+              </button>
+              <button onclick="confirmDeleteRoom('${room.room_id}', '${room.name}')" class="px-2 py-1.5 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold hover:bg-rose-200" title="ลบห้องเรียนนี้">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
               </button>
             </td>
           </tr>
@@ -3147,4 +3152,32 @@
 
     window.exitRoom = function() {
       window.location.href = window.location.pathname;
+    };
+
+    window.confirmDeleteRoom = function(roomId, roomName) {
+      Swal.fire({
+        title: '⚠️ ลบห้องเรียนถาวร?',
+        html: `คุณต้องการลบห้อง <b>${roomName}</b> ใช่หรือไม่?<br><br><span class="text-rose-600 text-sm">การลบจะทำให้รายชื่อนักเรียน บิลรายรับรายจ่าย และข้อมูลทุกอย่างของห้องนี้ <b>หายไปทั้งหมดและไม่สามารถกู้คืนได้</b></span>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: 'ใช่, ลบห้องนี้',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          showLoader(true);
+          google.script.run
+            .withSuccessHandler(res => {
+              showLoader(false);
+              if (res.success) {
+                Swal.fire('ลบสำเร็จ', res.message, 'success');
+                loadAdminData();
+              } else {
+                Swal.fire('Error', res.message, 'error');
+              }
+            })
+            .deleteRoom(roomId);
+        }
+      });
     };
