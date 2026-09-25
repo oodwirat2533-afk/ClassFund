@@ -53,6 +53,9 @@ const API = {
   },
 
   async getDashboardData(role, studentId) {
+    if (!DBState.currentRoomId && role !== 'super_admin') {
+      return { success: true, data: { transactions: [], users: [], weeks: [], settings: {} } };
+    }
     const [usersSnap, weeksSnap, txSnap, settingsSnap] = await Promise.all([
       db.collection('users').where('room_id', '==', DBState.currentRoomId).get(),
       db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').orderBy('week_number', 'asc').get(),
