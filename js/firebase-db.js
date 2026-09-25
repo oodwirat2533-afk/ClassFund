@@ -2,10 +2,12 @@
 
 const API = {
   async getDashboardData(role, studentId) {
-    const usersSnap = await db.collection('users').get();
-    const weeksSnap = await db.collection('weeks').orderBy('week_number', 'asc').get();
-    const txSnap = await db.collection('transactions').orderBy('timestamp', 'desc').get();
-    const settingsSnap = await db.collection('settings').doc('global').get();
+    const [usersSnap, weeksSnap, txSnap, settingsSnap] = await Promise.all([
+      db.collection('users').get(),
+      db.collection('weeks').orderBy('week_number', 'asc').get(),
+      db.collection('transactions').orderBy('timestamp', 'desc').get(),
+      db.collection('settings').doc('global').get()
+    ]);
     
     let settings = { current_balance: 0, current_week: 1, current_semester: 1, current_academic_year: 2569 };
     if (settingsSnap.exists) {
@@ -230,4 +232,5 @@ function createRunProxy(successHandler, failureHandler) {
 
 window.google.script.run = createRunProxy(null, null);
 console.log('Firebase backend bridge initialized.');
+
 
