@@ -168,15 +168,11 @@ const API = {
     return { success: false, message: '��辺�ѡ���¹' };
   },
   
-  async addUser(payload) {
-    await db.collection('users').add({ ...payload, total_paid: 0 });
+  async addUser(payload) { const hashed = await this.hashPassword(payload.password || '1234'); payload.password_hash = hashed; delete payload.password; await db.collection('users').add({ ...payload, total_paid: 0 }); return { success: true, message: 'เพิ่มนักเรียนสำเร็จ' }; });
     return { success: true, message: '�����ѡ���¹�����' };
   },
 
-  async setUserRole(studentId, role, pwd) {
-    const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
-    if (!usersSnap.empty) {
-      await db.collection('users').doc(usersSnap.docs[0].id).update({ role: role, password: pwd });
+  async setUserRole(studentId, role, pwd) { const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get(); if (!usersSnap.empty) { const updateData = { role: role }; if (pwd) { updateData.password_hash = await this.hashPassword(pwd); } await db.collection('users').doc(usersSnap.docs[0].id).update(updateData); return { success: true, message: 'อัปเดตสิทธิ์สำเร็จ' }; } return { success: false, message: 'ไม่พบผู้ใช้' }; });
       return { success: true, message: '�ѻവ�Է��������' };
     }
     return { success: false, message: '��辺�����' };
@@ -217,5 +213,6 @@ function createRunProxy(successHandler, failureHandler) {
 window.google.script.run = createRunProxy(null, null);
 
 console.log('Firebase backend bridge initialized.');
+
 
 
