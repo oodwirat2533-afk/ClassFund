@@ -443,6 +443,10 @@
     }
 
     function handleMenuAction(action) {
+      if (window.isCurrentTerm === false) {
+        Swal.fire({ icon: 'warning', title: 'ไม่สามารถทำรายการได้', text: 'คุณกำลังอยู่ในโหมดดูประวัติย้อนหลัง (Read-Only) หากต้องการเพิ่มหรือแก้ไขข้อมูล กรุณาเลือกเทอมปัจจุบันครับ' });
+        return;
+      }
       closeNavDropdown();
       if (action === 'collect') switchMainView('collect');
       else if (action === 'students') switchMainView('students');
@@ -745,12 +749,12 @@
       const parts = window.currentViewTerm.split('/');
       const vSem = parts[0];
       const vYear = parts[1];
-      const isCurrentTerm = (vSem === String(appData.settings.current_semester) && vYear === String(appData.settings.current_academic_year));
+      window.isCurrentTerm = (vSem === String(appData.settings.current_semester) && vYear === String(appData.settings.current_academic_year));
       
       appData.transactions = appData.transactions.filter(t => String(t.semester) === vSem && String(t.academic_year) === vYear);
       appData.weeks = appData.weeks.filter(w => String(w.semester) === vSem && String(w.academic_year) === vYear);
       
-      if (!isCurrentTerm) {
+      if (!window.isCurrentTerm) {
          let histBal = 0;
          appData.transactions.forEach(t => {
            let amt = parseFloat(t.amount) || 0;
@@ -1461,7 +1465,7 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const isTeacher = currentUser && currentUser.role === 'teacher';
+      const isTeacher = currentUser && currentUser.role === 'teacher' && window.isCurrentTerm !== false;
       const thActions = document.getElementById('thTxActions');
       if (thActions) {
         if (isTeacher) thActions.classList.remove('hidden-view');
@@ -2703,11 +2707,12 @@
         } else {
           switchHtml = `
             <div class="flex items-center justify-center">
-              <label class="relative inline-flex items-center cursor-pointer select-none" onclick="event.stopPropagation()">
+              <label class="relative inline-flex items-center ${window.isCurrentTerm !== false ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'} select-none" onclick="event.stopPropagation()">
                 <input type="checkbox" 
                        class="sr-only peer collect-student-cb" 
                        data-id="${s.student_id}" 
-                       onchange="updateCollectSummary()">
+                       onchange="updateCollectSummary()"
+                       ${window.isCurrentTerm !== false ? '' : 'disabled'}>
                 <div class="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-emerald-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow peer-checked:after:translate-x-6 shadow-inner"></div>
               </label>
             </div>
