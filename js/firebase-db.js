@@ -51,7 +51,8 @@ const API = {
   async createRoom(payload) {
     try {
       const batch = db.batch();
-      const roomId = 'room_' + Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 10);
+      const roomId = 'rm_' + Date.now().toString(36) + '_' + randomStr;
       
       batch.set(db.collection('rooms').doc(roomId), {
         room_id: roomId,
