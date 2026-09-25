@@ -57,12 +57,14 @@
         }).setRoomId(urlRoomId);
       } else {
         // --- SUPER ADMIN PORTAL MODE ---
+        renderHeaderInfo();
         document.getElementById('viewDashboard').classList.add('hidden-view');
         
         if (currentUser && currentUser.role === 'super_admin') {
            const vAdmin = document.getElementById('viewAdminDashboard');
            if (vAdmin) vAdmin.classList.remove('hidden-view');
            updateUserNavUI();
+           renderHeaderInfo();
            loadAdminData();
         } else {
            currentUser = null;
