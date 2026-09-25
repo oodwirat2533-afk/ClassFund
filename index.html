@@ -84,7 +84,9 @@
             <div class="min-w-0">
               <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                 <span class="text-base sm:text-xl font-bold text-slate-800 tracking-tight leading-tight">ClassFund</span>
-                <span id="lblHeaderClassRoom" class="text-xs sm:text-sm font-semibold text-blue-600 leading-tight mt-0.5 sm:mt-0">ม.4/7 ปีการศึกษา 2569</span>
+                <span id="lblHeaderClassRoom" class="text-xs sm:text-sm font-semibold text-blue-600 leading-tight mt-0.5 sm:mt-0">ม.4/7 เทอม 1/2569</span>
+                <select id="selHistoryTerm" onchange="loadHistoryTerm()" class="hidden-view mt-0.5 sm:mt-0 ml-0 sm:ml-2 text-[11px] sm:text-xs bg-blue-50 text-blue-700 font-bold border border-blue-200 rounded-lg px-2 py-0.5 outline-none cursor-pointer focus:ring-2 focus:ring-blue-400/50 hover:bg-blue-100 transition-colors shrink-0">
+                </select>
               </div>
               <p id="lblHeaderSchoolName" class="text-[11px] sm:text-xs text-slate-500 font-medium truncate leading-tight mt-0.5">โรงเรียนบรรหารแจ่มใสวิทยา 3</p>
             </div>
@@ -511,7 +513,7 @@
           <span class="text-xl">🎓</span>
           <div>
             <h4 class="text-xs font-bold text-indigo-900">เลื่อนชั้นเรียน หรือ สิ้นสุดภาคเรียน</h4>
-            <p class="text-[11px] text-indigo-700 mt-0.5 leading-relaxed">สำรองข้อมูลเดิมเป็นชีตย้อนหลังใน Google Sheets อัตโนมัติ พร้อมยกยอดเงินคงเหลือไปภาคเรียนใหม่</p>
+            <p class="text-[11px] text-indigo-700 mt-0.5 leading-relaxed">จัดเก็บข้อมูลประวัติย้อนหลังไว้บนระบบ Cloud ถาวร พร้อมยกยอดเงินคงเหลือไปภาคเรียนใหม่</p>
           </div>
         </div>
         <button type="button" onclick="closeModal('classSettingsModal'); openRolloverModal();" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md shadow-indigo-500/20 cursor-pointer flex items-center justify-center gap-2">
@@ -544,7 +546,7 @@
         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">🎓</div>
         <div>
           <h2 class="text-lg font-bold text-slate-800">เลื่อนชั้นเรียน / สิ้นสุดภาคเรียน</h2>
-          <p class="text-xs text-slate-400">สร้างชีทสำรองข้อมูลประวัติย้อนหลัง & ยกยอดเงินคงเหลืออัตโนมัติ</p>
+          <p class="text-xs text-slate-400">เก็บบันทึกประวัติย้อนหลังบน Cloud & ยกยอดเงินคงเหลืออัตโนมัติ</p>
         </div>
       </div>
 
@@ -587,7 +589,7 @@
             <span>✨ สิ่งที่ระบบจะดำเนินการให้อัตโนมัติ:</span>
           </div>
           <ul class="list-disc list-inside space-y-1 text-[11px] leading-relaxed text-emerald-800/90">
-            <li>สร้างแท็บชีตใหม่ใน Google Sheet เช่น <code id="roPreviewSheetName" class="font-mono bg-white px-1.5 py-0.5 rounded border border-emerald-300 font-bold">ประวัติ_ม4-7_ปี2569_เทอม1</code> เพื่อเก็บประวัติรายรับ-รายจ่ายและยอดจ่ายของนักเรียนทุกคนย้อนหลังถาวร</li>
+            <li><b>จัดเก็บข้อมูลย้อนหลัง</b> ประวัติรายรับ-รายจ่ายและยอดสะสมของนักเรียนทุกคนไว้บนระบบ Cloud ถาวร (สามารถเลือกดูเทอมเก่าย้อนหลังได้ที่หน้าแรก)</li>
             <li><b>ยกยอดเงินคงเหลือ</b> จากเทอมปัจจุบัน ไปเป็นรายรับเริ่มต้นของภาคเรียนใหม่อัตโนมัติ</li>
             <li>รีเซ็ตตารางรับ-จ่าย และยอดจ่ายสะสมรายคนเป็น 0 บาท สำหรับภาคเรียนใหม่</li>
             <li><b>คงรายชื่อนักเรียน รหัสผ่าน และเหรัญญิกไว้ครบถ้วน 100%</b> ไม่ต้องกรอกใหม่</li>
@@ -1161,8 +1163,8 @@
 
 
   <!-- ==================== LOGIC & SCRIPTS ==================== -->
-  <script src="js/firebase-db.js?v=20260925h"></script>
-<script src="js/app.js?v=20260925h"></script>
+  <script src="js/firebase-db.js?v=20260925i"></script>
+<script src="js/app.js?v=20260925i"></script>
 
 </body>
 </html>

@@ -469,7 +469,7 @@
       Swal.fire({
         icon: 'info',
         title: 'ลืมรหัสผ่าน?',
-        html: '<div class="text-sm text-left"><p class="mb-2"><strong>สำหรับครู (แอดมิน):</strong></p><p class="mb-4">กรุณาเปิดไฟล์ Google Sheets ของคุณ ไปที่แท็บ <b>Users</b> แล้วลบข้อมูลในช่อง <b>password_hash</b> ของแถวแอดมิน จากนั้นคุณจะสามารถล็อกอินได้ด้วยรหัส <b>123456</b></p><p class="mb-2"><strong>สำหรับเหรัญญิก:</strong></p><p>กรุณาติดต่อคุณครูเพื่อทำการรีเซ็ตรหัสผ่านให้คุณใหม่</p></div>',
+        html: '<div class="text-sm text-left"><p class="mb-2"><strong>สำหรับครู (แอดมิน):</strong></p><p class="mb-4">กรุณาจัดการรหัสผ่านในฐานข้อมูล <b>Firebase Console</b> หรือติดต่อผู้พัฒนาระบบ</p><p class="mb-2"><strong>สำหรับเหรัญญิก:</strong></p><p>กรุณาติดต่อคุณครูเพื่อทำการรีเซ็ตรหัสผ่านให้คุณใหม่</p></div>',
         confirmButtonText: 'เข้าใจแล้ว',
         confirmButtonColor: '#3b82f6'
       });
@@ -680,8 +680,40 @@
         .withSuccessHandler(res => {
           if (!silent) showLoader(false);
           if (res.success) {
-            appData = res.data;
-            renderDashboard();
+            window.rawAppData = JSON.parse(JSON.stringify(res.data));
+            
+            const termsSet = new Set();
+            termsSet.add((res.data.settings.current_semester || '1') + '/' + (res.data.settings.current_academic_year || '2569'));
+            
+            res.data.transactions.forEach(t => {
+              if (t.semester && t.academic_year) termsSet.add(t.semester + '/' + t.academic_year);
+            });
+            res.data.weeks.forEach(w => {
+              if (w.semester && w.academic_year) termsSet.add(w.semester + '/' + w.academic_year);
+            });
+            
+            window.availableTerms = Array.from(termsSet).sort((a,b) => {
+               const [semA, yearA] = a.split('/');
+               const [semB, yearB] = b.split('/');
+               if (yearA !== yearB) return parseInt(yearB) - parseInt(yearA);
+               return parseInt(semB) - parseInt(semA);
+            });
+            
+            const sel = document.getElementById('selHistoryTerm');
+            if (sel) {
+              if (window.availableTerms.length > 1) {
+                sel.classList.remove('hidden-view');
+                sel.innerHTML = window.availableTerms.map(t => '<option value="' + t + '">เทอม ' + t + '</option>').join('');
+                if (!window.currentViewTerm) window.currentViewTerm = window.availableTerms[0];
+                sel.value = window.currentViewTerm;
+              } else {
+                sel.classList.add('hidden-view');
+                window.currentViewTerm = window.availableTerms[0];
+              }
+            }
+            
+            applyHistoryFilter();
+            
             renderManageStudentsTable();
             populateSelects();
             initCollectView();
@@ -694,6 +726,51 @@
           Swal.fire({ icon: 'error', title: 'Server Error', text: err.message });
         })
         .getDashboardData(currentUser ? currentUser.role : 'guest', currentUser ? currentUser.student_id : '');
+    }
+
+    window.loadHistoryTerm = function() {
+      const sel = document.getElementById('selHistoryTerm');
+      if (sel) {
+        window.currentViewTerm = sel.value;
+        applyHistoryFilter();
+      }
+    };
+
+    function applyHistoryFilter() {
+      if (!window.rawAppData) return;
+      appData = JSON.parse(JSON.stringify(window.rawAppData));
+      
+      if (!window.currentViewTerm) return;
+      
+      const parts = window.currentViewTerm.split('/');
+      const vSem = parts[0];
+      const vYear = parts[1];
+      const isCurrentTerm = (vSem === String(appData.settings.current_semester) && vYear === String(appData.settings.current_academic_year));
+      
+      appData.transactions = appData.transactions.filter(t => String(t.semester) === vSem && String(t.academic_year) === vYear);
+      appData.weeks = appData.weeks.filter(w => String(w.semester) === vSem && String(w.academic_year) === vYear);
+      
+      if (!isCurrentTerm) {
+         let histBal = 0;
+         appData.transactions.forEach(t => {
+           let amt = parseFloat(t.amount) || 0;
+           if (t.type === 'income' || t.type === 'fine' || t.type === 'other') histBal += amt;
+           if (t.type === 'expense') histBal -= amt;
+         });
+         appData.settings.current_balance = histBal;
+         
+         appData.users.forEach(u => {
+           let paid = 0;
+           appData.transactions.forEach(t => {
+             if (t.type === 'income' && String(t.student_id) === String(u.student_id) && !t.isRollover) {
+               paid += parseFloat(t.amount) || 0;
+             }
+           });
+           u.total_paid = paid;
+         });
+      }
+      
+      renderDashboard();
     }
 
     function renderHeaderInfo() {
@@ -846,7 +923,7 @@
             <p>📅 <strong>ภาคเรียนใหม่:</strong> ภาคเรียนที่ ${newSem}/${newYear}</p>
             <p>💰 <strong>ยกยอดเงินคงเหลือไป:</strong> <span class="text-emerald-600 font-bold">${formatCurrency(curBal)}</span> (อัตโนมัติ 100%)</p>
             <div class="pt-2 border-t border-slate-200 text-xs text-slate-500 space-y-1">
-              <p>📁 <strong>สำรองข้อมูล:</strong> จะสร้างชีตประวัติเก็บข้อมูลเดิมไว้ใน Google Sheets ถาวร</p>
+              <p>📁 <strong>ประวัติย้อนหลัง:</strong> ข้อมูลเทอมนี้จะถูกเก็บไว้บน Cloud ถาวร (สามารถเลือกดูทีหลังได้)</p>
               <p>👥 <strong>รายชื่อนักเรียน:</strong> จะคงอยู่ครบทุกคน ไม่ต้องกรอกใหม่</p>
             </div>
           </div>
@@ -860,7 +937,7 @@
       }).then(result => {
         if (result.isConfirmed) {
           closeModal('rolloverModal');
-          showCenterLoader('loading', 'กำลังสำรองข้อมูลและเริ่มภาคเรียนใหม่...', 'กำลังสร้างชีตประวัติและยกยอดเงิน...');
+          showCenterLoader('loading', 'กำลังจัดเก็บข้อมูลและเริ่มภาคเรียนใหม่...', 'กำลังยกยอดเงินและรีเซ็ตตาราง...');
 
           if (isMock) {
             setTimeout(() => {
@@ -889,7 +966,7 @@
               Swal.fire({
                 icon: 'success',
                 title: 'เลื่อนชั้น/ขึ้นภาคเรียนใหม่สำเร็จ! (Mock)',
-                text: `สำรองข้อมูลลงชีตเรียบร้อย และยกยอดเงินคงเหลือ ${formatCurrency(curBal)} ไปเป็นยอดเริ่มต้นให้อัตโนมัติ`
+                text: `จัดเก็บข้อมูลลงระบบ Cloud เรียบร้อย และยกยอดเงินคงเหลือ ${formatCurrency(curBal)} ไปเป็นยอดเริ่มต้นให้อัตโนมัติ`
               });
             }, 1000);
             return;
@@ -905,7 +982,7 @@
                   html: `
                     <p class="text-sm text-slate-600 mb-3">${res.message}</p>
                     <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs text-indigo-900 text-left space-y-1.5">
-                      <p>📁 <strong>ชื่อแท็บชีตสำรอง:</strong> <code class="bg-white px-1.5 py-0.5 rounded border border-indigo-200 font-bold">${res.archiveSheetName}</code></p>
+                      <p>📁 <strong>ประวัติย้อนหลัง:</strong> ถูกจัดเก็บแยกเป็นหมวดหมู่ <b>${newSem}/${newYear}</b> บน Cloud อย่างปลอดภัย</p>
                       <p>💰 <strong>ยอดยกมาเริ่มต้น:</strong> <span class="text-emerald-700 font-bold">${formatCurrency(res.carriedBalance)}</span> (บันทึกเป็นรายรับให้อัตโนมัติ)</p>
                       <p>👥 <strong>รายชื่อนักเรียน:</strong> คงอยู่ครบทั้งหมด และตั้งต้นยอดสะสมใหม่เรียบร้อย</p>
                     </div>
@@ -2851,9 +2928,42 @@
         return;
       }
       
-      const ws = XLSX.utils.json_to_sheet(appData.transactions);
+      const formattedData = appData.transactions.map(t => {
+        let typeText = 'รายรับ';
+        if (t.type === 'expense') typeText = 'รายจ่าย';
+        else if (t.type === 'fine') typeText = 'ค่าปรับ';
+        
+        let txDate = t.timestamp;
+        try {
+          const d = new Date(t.timestamp);
+          if (!isNaN(d.getTime())) {
+            txDate = d.toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+          }
+        } catch(e) {}
+
+        return {
+          'รหัสอ้างอิง': t.tx_id,
+          'วันที่-เวลา': txDate,
+          'ประเภท': typeText,
+          'รายการ': t.description || (t.isBatch ? 'เก็บเงินรายครั้ง' : ''),
+          'รหัสผู้จ่าย/ผู้รับ': t.student_id === 'ROOM' ? 'เงินกองกลาง' : t.student_id,
+          'จำนวนเงิน (บาท)': parseFloat(t.amount) || 0,
+          'ผู้บันทึก': t.recorded_by || '-',
+          'เทอม': t.semester || '1',
+          'ปีการศึกษา': t.academic_year || '-'
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(formattedData);
+      
+      // Auto-size columns slightly
+      const wscols = [
+        {wch: 15}, {wch: 20}, {wch: 10}, {wch: 25}, {wch: 20}, {wch: 15}, {wch: 20}, {wch: 8}, {wch: 12}
+      ];
+      ws['!cols'] = wscols;
+
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+      XLSX.utils.book_append_sheet(wb, ws, "ประวัติการเงิน");
       const cleanClass = (appData.settings && appData.settings.class_name ? appData.settings.class_name : 'ม4_7').replace(/[^a-zA-Z0-9ก-๙]/g, '_');
       XLSX.writeFile(wb, `ClassFund_${cleanClass}_${new Date().toISOString().split('T')[0]}.xlsx`);
     }
