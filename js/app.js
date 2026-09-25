@@ -74,6 +74,12 @@
            // Force login
            const loginModal = document.getElementById('loginModal');
            if (loginModal) loginModal.classList.remove('hidden-view');
+           
+           // Change text for Super Admin portal
+           const sub = document.getElementById('loginModalSubtitle');
+           if (sub) sub.textContent = 'สำหรับผู้ดูแลระบบ (Super Admin) เท่านั้น';
+           const info = document.getElementById('loginModalInfo');
+           if (info) info.innerHTML = 'ℹ️ หน้านี้สำหรับ <b>Super Admin</b> เท่านั้น (คุณครูและเหรัญญิกกรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียน)';
         }
       }
     };
