@@ -1,4 +1,4 @@
-
+﻿
     // === Global State ===
     let currentUser = null;
     
@@ -1554,7 +1554,7 @@
           <td class="hidden sm:table-cell px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${formatThaiDateTimeBE(t.timestamp)}</td>
           <td class="hidden sm:table-cell px-5 py-3 text-sm text-slate-800 font-medium">${descText}</td>
           <td class="hidden sm:table-cell px-5 py-3">${typeBadge}</td>
-          <td class="hidden sm:table-cell px-5 py-3 text-right font-bold text-sm ${amountClass}">${prefix}${formatCurrency(t.amount)}</td>
+          <td class="hidden sm:table-cell px-5 py-3 text-right font-bold text-sm whitespace-nowrap ${amountClass}">${prefix}${formatCurrency(t.amount)}</td>
           <td class="hidden sm:table-cell px-5 py-3 text-xs text-slate-400 text-right">${recNameParts}</td>
           ${actionCellDesktop}
           
@@ -2869,3 +2869,4 @@
     }
 
   
+
