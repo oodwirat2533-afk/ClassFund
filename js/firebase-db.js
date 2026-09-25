@@ -55,43 +55,45 @@ const API = {
     try {
       txObj.tx_id = 'TX' + Date.now();
       txObj.timestamp = new Date().toISOString();
-      
-      // Clean up undefined values
       Object.keys(txObj).forEach(key => {
         if (txObj[key] === undefined || txObj[key] === null) delete txObj[key];
       });
 
       const amt = parseFloat(txObj.amount) || 0;
-
-      // Step 1: Save the transaction
-      await db.collection('transactions').doc(txObj.tx_id).set(txObj);
-
-      // Step 2: Read current balance
       const settingsRef = db.collection('settings').doc('global');
-      const settingsDoc = await settingsRef.get();
+      let userQuery = null;
+      
+      if (txObj.student_id && txObj.student_id !== 'ROOM') {
+        userQuery = db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
+      }
+
+      // Fetch concurrently
+      const [settingsDoc, usersSnap] = await Promise.all([
+        settingsRef.get(),
+        userQuery || Promise.resolve(null)
+      ]);
+
       let current_balance = 0;
       if (settingsDoc.exists && settingsDoc.data()) {
         current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
       }
 
-      // Step 3: Update balance
+      const batch = db.batch();
+      batch.set(db.collection('transactions').doc(txObj.tx_id), txObj);
+
       if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
-        await settingsRef.set({ current_balance: current_balance + amt }, { merge: true });
+        batch.set(settingsRef, { current_balance: current_balance + amt }, { merge: true });
         
-        // Step 4: Update student total_paid
-        if (txObj.student_id && txObj.student_id !== 'ROOM') {
-          const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
-          if (!usersSnap.empty) {
-            const uDoc = usersSnap.docs[0];
-            const uData = uDoc.data();
-            const curPaid = parseFloat(uData.total_paid) || 0;
-            await db.collection('users').doc(uDoc.id).set({ total_paid: curPaid + amt }, { merge: true });
-          }
+        if (usersSnap && !usersSnap.empty) {
+          const uDoc = usersSnap.docs[0];
+          const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+          batch.set(db.collection('users').doc(uDoc.id), { total_paid: curPaid + amt }, { merge: true });
         }
       } else if (txObj.type === 'expense') {
-        await settingsRef.set({ current_balance: current_balance - amt }, { merge: true });
+        batch.set(settingsRef, { current_balance: current_balance - amt }, { merge: true });
       }
 
+      await batch.commit(); // Single network request for all writes!
       return { success: true, message: 'Success', tx_id: txObj.tx_id };
     } catch (err) {
       console.error('addTransaction error detail:', err);
@@ -150,48 +152,62 @@ const API = {
   },
   
   async addBatchIncome(payload) {
-    const batch = db.batch();
-    let totalAmt = 0;
-    const weekId = payload.week_id || payload.weekId;
-    const studentIds = payload.student_ids || payload.studentIds;
-    const amount = payload.amount || payload.amountPerStudent;
-    const recordedBy = payload.recorded_by || payload.recordedBy;
-    
-    for (let sid of studentIds) {
-       let tx = {
-         tx_id: 'TX' + Date.now() + Math.floor(Math.random()*1000),
-         timestamp: new Date().toISOString(),
-         type: 'income',
-         week_id: weekId,
-         student_id: sid,
-         amount: parseFloat(amount),
-         recorded_by: recordedBy,
-         isBatch: true
-       };
-       const docRef = db.collection('transactions').doc(tx.tx_id);
-       batch.set(docRef, tx);
-       totalAmt += parseFloat(amount);
-       
-       const userSnap = await db.collection('users').where('student_id', '==', sid).get();
-       if(!userSnap.empty) {
-         const uDoc = userSnap.docs[0];
-         const curPaid = parseFloat(uDoc.data().total_paid) || 0;
-         batch.set(db.collection('users').doc(uDoc.id), {
-           total_paid: curPaid + parseFloat(amount)
-         }, { merge: true });
-       }
-    }
-    
-    const settingsRef = db.collection('settings').doc('global');
-    const settingsDoc = await settingsRef.get();
-    let current_balance = 0;
-    if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
-    batch.set(settingsRef, {
-      current_balance: current_balance + totalAmt
-    }, { merge: true });
+    try {
+      const batch = db.batch();
+      let totalAmt = 0;
+      const weekId = payload.week_id || payload.weekId;
+      const studentIds = payload.student_ids || payload.studentIds;
+      const amount = payload.amount || payload.amountPerStudent;
+      const recordedBy = payload.recorded_by || payload.recordedBy;
+      
+      // Fetch settings and ALL users concurrently to avoid N queries in loop
+      const [settingsDoc, allUsersSnap] = await Promise.all([
+        db.collection('settings').doc('global').get(),
+        db.collection('users').get()
+      ]);
 
-    await batch.commit();
-    return { success: true, message: 'Success' };
+      // Create a map of student_id -> userDoc
+      const userMap = {};
+      allUsersSnap.docs.forEach(doc => {
+        userMap[String(doc.data().student_id)] = doc;
+      });
+
+      for (let sid of studentIds) {
+         let tx = {
+           tx_id: 'TX' + Date.now() + Math.floor(Math.random()*1000),
+           timestamp: new Date().toISOString(),
+           type: 'income',
+           week_id: weekId,
+           student_id: sid,
+           amount: parseFloat(amount),
+           recorded_by: recordedBy,
+           isBatch: true
+         };
+         batch.set(db.collection('transactions').doc(tx.tx_id), tx);
+         totalAmt += parseFloat(amount);
+         
+         const uDoc = userMap[String(sid)];
+         if(uDoc) {
+           const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+           batch.set(db.collection('users').doc(uDoc.id), {
+             total_paid: curPaid + parseFloat(amount)
+           }, { merge: true });
+         }
+      }
+      
+      let current_balance = 0;
+      if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
+      
+      batch.set(db.collection('settings').doc('global'), {
+        current_balance: current_balance + totalAmt
+      }, { merge: true });
+
+      await batch.commit(); // ONE massive write for everything
+      return { success: true, message: 'Success' };
+    } catch (err) {
+      console.error('addBatchIncome error:', err);
+      throw new Error('บันทึกไม่สำเร็จ: ' + err.message);
+    }
   },
   
   async cancelStudentWeekPayment(studentId, weekId, txId) {
