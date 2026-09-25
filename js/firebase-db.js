@@ -25,17 +25,20 @@ const API = {
 
   async hashPassword(password) { if (!password) return ''; const msgUint8 = new TextEncoder().encode(String(password).trim()); const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); },
 
-    async login(studentId, pin) {
+      async login(studentId, pin) {
     const hashedPin = await this.hashPassword(pin);
-    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
+    let usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
     if (usersSnap.empty) {
-      return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
+      usersSnap = await db.collection('users').where('student_id', '==', Number(studentId)).get();
+    }
+    if (usersSnap.empty) {
+      return { success: false, message: 'Invalid ID' };
     }
     const user = usersSnap.docs[0].data();
     if (user.password_hash === hashedPin) {
       return { success: true, user: user };
     } else {
-      return { success: false, message: '���ʼ�ҹ���١��ͧ' };
+      return { success: false, message: 'Invalid Password' };
     }
   },
 
