@@ -1,4 +1,4 @@
-const db = firebase.firestore();
+﻿const db = firebase.firestore();
 
 const API = {
   async getDashboardData(role, studentId) {
@@ -41,9 +41,7 @@ const API = {
       return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
     }
     const user = usersSnap.docs[0].data();
-    if (user.role === 'student') {
-      return { success: false, message: '�ѡ���¹���������ͧ��͡�Թ��Ѻ ����ö�٢����ŷ��˹����ѡ�����!' };
-    }
+    if (user.role === 'student') { return { success: false, message: 'ไม่มีสิทธิ์เข้าถึง' }; }
     if (user.password_hash === hashedPin) {
       return { success: true, user: user };
     } else {
@@ -232,3 +230,4 @@ function createRunProxy(successHandler, failureHandler) {
 
 window.google.script.run = createRunProxy(null, null);
 console.log('Firebase backend bridge initialized.');
+
