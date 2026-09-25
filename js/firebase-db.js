@@ -205,6 +205,8 @@ const API = {
            student_id: sid,
            amount: parseFloat(amount),
            recorded_by: recordedBy,
+           academic_year: payload.academic_year || '2569',
+           semester: payload.semester || '1',
            isBatch: true
          };
          batch.set(db.collection('transactions').doc(tx.tx_id), tx);
@@ -293,6 +295,63 @@ const API = {
       return { success: true, message: 'Success' };
     }
     return { success: false, message: 'Not found' };
+  },
+  
+  async rollOverSemester(newClass, newYear, newSem, userName) {
+    try {
+      const settingsRef = db.collection('settings').doc('global');
+      const settingsDoc = await settingsRef.get();
+      let curBal = 0;
+      if (settingsDoc.exists && settingsDoc.data()) {
+        curBal = parseFloat(settingsDoc.data().current_balance) || 0;
+      }
+
+      // Reset all students' total_paid
+      const usersSnap = await db.collection('users').get();
+      const batch = db.batch();
+      
+      usersSnap.docs.forEach(doc => {
+        if (doc.data().role === 'student' || doc.data().role === 'treasurer') {
+          batch.update(doc.ref, { total_paid: 0 });
+        }
+      });
+
+      // Insert opening balance transaction
+      if (curBal > 0) {
+        const tx_id = 'TX' + Date.now();
+        batch.set(db.collection('transactions').doc(tx_id), {
+          tx_id: tx_id,
+          student_id: 'ROOM',
+          week_id: '',
+          academic_year: String(newYear),
+          semester: String(newSem),
+          amount: curBal,
+          type: 'income',
+          description: 'ยอดยกมาจากเทอมเดิม',
+          timestamp: new Date().toISOString(),
+          recorded_by: userName,
+          isRollover: true
+        });
+      }
+
+      // Update global settings
+      batch.update(settingsRef, {
+        class_name: newClass,
+        current_academic_year: String(newYear),
+        current_semester: String(newSem)
+      });
+
+      await batch.commit();
+      return { 
+        success: true, 
+        message: 'เลื่อนชั้น/ขึ้นภาคเรียนใหม่เรียบร้อยแล้ว',
+        archiveSheetName: `ประวัติ_${newClass}_ปี${newYear}_เทอม${newSem}`,
+        carriedBalance: curBal
+      };
+    } catch (err) {
+      console.error('rollOverSemester error:', err);
+      throw new Error('ไม่สามารถเลื่อนชั้นได้: ' + err.message);
+    }
   }
 };
 

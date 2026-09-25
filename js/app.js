@@ -2327,6 +2327,7 @@
       let payload = {
         type: type,
         academic_year: appData.settings.current_academic_year || '2569',
+        semester: appData.settings.current_semester || '1',
         recorded_by: currentUser.name
       };
 
@@ -2792,6 +2793,7 @@
           const payload = {
             week_id: selectedCollectWeekId,
             academic_year: appData.settings.current_academic_year || '2569',
+            semester: appData.settings.current_semester || '1',
             amount: amountPerStudent,
             recorded_by: currentUser ? currentUser.name : 'ผู้ดูแลระบบ',
             description: note,
