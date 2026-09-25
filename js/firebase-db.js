@@ -1,4 +1,4 @@
-const db = firebase.firestore();
+ï»¿const db = firebase.firestore();
 
 const API = {
   async getDashboardData(role, studentId) {
@@ -23,13 +23,15 @@ const API = {
     };
   },
 
+  async hashPassword(password) { if (!password) return ''; const msgUint8 = new TextEncoder().encode(String(password).trim()); const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); const hashArray = Array.from(new Uint8Array(hashBuffer)); return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); },
+
   async login(studentId, pin) {
     const usersSnap = await db.collection('users').where('student_id', '==', studentId).where('password', '==', String(pin)).get();
     if (usersSnap.empty) {
       // Try string vs number pin
       const usersSnapNum = await db.collection('users').where('student_id', '==', studentId).where('password', '==', Number(pin)).get();
       if(usersSnapNum.empty) {
-         return { success: false, message: 'ÃËÑÊ»ÃĞ¨ÓµÑÇËÃ×ÍÃËÑÊ¼èÒ¹äÁè¶Ù¡µéÍ§' };
+         return { success: false, message: 'ï¿½ï¿½ï¿½Ê»ï¿½Ğ¨Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Ò¹ï¿½ï¿½ï¿½Ù¡ï¿½ï¿½Í§' };
       }
       return { success: true, user: usersSnapNum.docs[0].data() };
     }
@@ -51,13 +53,13 @@ const API = {
       }, { merge: true });
     }
 
-    return { success: true, message: 'ºÑ¹·Ö¡ÃÒÂ¡ÒÃÊÓàÃç¨', tx_id: txObj.tx_id };
+    return { success: true, message: 'ï¿½Ñ¹ï¿½Ö¡ï¿½ï¿½Â¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', tx_id: txObj.tx_id };
   },
 
   async deleteTransaction(txId) {
     const docRef = db.collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: 'äÁè¾ºÃÒÂ¡ÒÃ¹Õé' };
+    if (!doc.exists) return { success: false, message: 'ï¿½ï¿½è¾ºï¿½ï¿½Â¡ï¿½Ã¹ï¿½ï¿½' };
     const txObj = doc.data();
 
     if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
@@ -71,23 +73,23 @@ const API = {
     }
 
     await docRef.delete();
-    return { success: true, message: 'ÅºÃÒÂ¡ÒÃÊÓàÃç¨' };
+    return { success: true, message: 'Åºï¿½ï¿½Â¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
   
   async addWeek(weekObj) {
     weekObj.week_id = 'W' + Date.now();
     await db.collection('weeks').doc(weekObj.week_id).set(weekObj);
-    return { success: true, message: 'à¾ÔèÁÊÑ»´ÒËìãËÁèÊÓàÃç¨' };
+    return { success: true, message: 'ï¿½ï¿½ï¿½ï¿½ï¿½Ñ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
 
   async deleteWeek(weekId) {
     await db.collection('weeks').doc(weekId).delete();
-    return { success: true, message: 'ÅºÊÑ»´ÒËìÊÓàÃç¨' };
+    return { success: true, message: 'Åºï¿½Ñ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
 
   async updateClassSettings(settings) {
     await db.collection('settings').doc('global').set(settings, { merge: true });
-    return { success: true, message: 'ºÑ¹·Ö¡¡ÒÃµÑé§¤èÒËéÍ§àÃÕÂ¹ÊÓàÃç¨', settings: settings };
+    return { success: true, message: 'ï¿½Ñ¹ï¿½Ö¡ï¿½ï¿½Ãµï¿½é§¤ï¿½ï¿½ï¿½ï¿½Í§ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½', settings: settings };
   },
   
   async addBatchIncome(payload) {
@@ -129,13 +131,13 @@ const API = {
     }, { merge: true });
 
     await batch.commit();
-    return { success: true, message: 'ºÑ¹·Ö¡¢éÍÁÙÅà¡çºà§Ô¹ÊÓàÃç¨' };
+    return { success: true, message: 'ï¿½Ñ¹ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
   
   async cancelStudentWeekPayment(studentId, weekId, txId) {
     const docRef = db.collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: 'äÁè¾ºÃÒÂ¡ÒÃ·ÕèµéÍ§¡ÒÃÂ¡àÅÔ¡' };
+    if (!doc.exists) return { success: false, message: 'ï¿½ï¿½è¾ºï¿½ï¿½Â¡ï¿½Ã·ï¿½ï¿½ï¿½Í§ï¿½ï¿½ï¿½Â¡ï¿½ï¿½Ô¡' };
     
     const docData = doc.data();
     
@@ -154,30 +156,30 @@ const API = {
     }
     
     await batch.commit();
-    return { success: true, message: 'Â¡àÅÔ¡ÃÒÂ¡ÒÃÊÓàÃç¨' };
+    return { success: true, message: 'Â¡ï¿½ï¿½Ô¡ï¿½ï¿½Â¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
   
   async deleteStudent(studentId) {
     const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
     if (!usersSnap.empty) {
       await db.collection('users').doc(usersSnap.docs[0].id).delete();
-      return { success: true, message: 'Åº¢éÍÁÙÅ¹Ñ¡àÃÕÂ¹ÊÓàÃç¨' };
+      return { success: true, message: 'Åºï¿½ï¿½ï¿½ï¿½ï¿½Å¹Ñ¡ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½' };
     }
-    return { success: false, message: 'äÁè¾º¹Ñ¡àÃÕÂ¹' };
+    return { success: false, message: 'ï¿½ï¿½è¾ºï¿½Ñ¡ï¿½ï¿½ï¿½Â¹' };
   },
   
   async addUser(payload) {
     await db.collection('users').add({ ...payload, total_paid: 0 });
-    return { success: true, message: 'à¾ÔèÁ¹Ñ¡àÃÕÂ¹ÊÓàÃç¨' };
+    return { success: true, message: 'ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½' };
   },
 
   async setUserRole(studentId, role, pwd) {
     const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
     if (!usersSnap.empty) {
       await db.collection('users').doc(usersSnap.docs[0].id).update({ role: role, password: pwd });
-      return { success: true, message: 'ÍÑ»à´µÊÔ·¸ÔìÊÓàÃç¨' };
+      return { success: true, message: 'ï¿½Ñ»à´µï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½' };
     }
-    return { success: false, message: 'äÁè¾º¼Ùéãªé' };
+    return { success: false, message: 'ï¿½ï¿½è¾ºï¿½ï¿½ï¿½ï¿½ï¿½' };
   }
 };
 
@@ -215,3 +217,4 @@ function createRunProxy(successHandler, failureHandler) {
 window.google.script.run = createRunProxy(null, null);
 
 console.log('Firebase backend bridge initialized.');
+
