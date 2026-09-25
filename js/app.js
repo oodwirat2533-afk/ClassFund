@@ -413,7 +413,7 @@
         const navBtnChangePwd = document.getElementById('navBtnChangePwd');
         const navBtnChangePwdDivider = document.getElementById('navBtnChangePwdDivider');
 
-        if (currentUser.role === 'teacher' || currentUser.role === 'super_admin') {
+        if (currentUser.role === 'teacher' || (currentUser.role === 'super_admin' && inRoom)) {
           if (navBtnManageStudents) navBtnManageStudents.classList.remove('hidden-view');
           const navBtnClassSettings = document.getElementById('navBtnClassSettings');
           if (navBtnClassSettings) navBtnClassSettings.classList.remove('hidden-view');
