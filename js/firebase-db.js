@@ -152,10 +152,10 @@ const API = {
   async addBatchIncome(payload) {
     const batch = db.batch();
     let totalAmt = 0;
-    const weekId = payload.weekId;
-    const studentIds = payload.studentIds;
-    const amount = payload.amountPerStudent;
-    const recordedBy = payload.recordedBy;
+    const weekId = payload.week_id || payload.weekId;
+    const studentIds = payload.student_ids || payload.studentIds;
+    const amount = payload.amount || payload.amountPerStudent;
+    const recordedBy = payload.recorded_by || payload.recordedBy;
     
     for (let sid of studentIds) {
        let tx = {
