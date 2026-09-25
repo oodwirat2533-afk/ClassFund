@@ -399,10 +399,10 @@
           dropBadge.className = badgeClass;
         }
 
-        if ((currentUser.role === 'teacher' || currentUser.role === 'super_admin' || currentUser.role === 'treasurer')) {
-          if (navMenuAdminGroup) navMenuAdminGroup.classList.remove('hidden-view');
-          if (btnExportExcel) btnExportExcel.classList.remove('hidden-view');
-        } else {
+        if ((currentUser.role === 'teacher' || currentUser.role === 'treasurer' || (currentUser.role === 'super_admin' && inRoom))) {
+            if (navMenuAdminGroup) navMenuAdminGroup.classList.remove('hidden-view');
+            if (btnExportExcel) btnExportExcel.classList.remove('hidden-view');
+          } else {
           if (navMenuAdminGroup) navMenuAdminGroup.classList.add('hidden-view');
           if (btnExportExcel) btnExportExcel.classList.add('hidden-view');
           if (currentMainView === 'collect' || currentMainView === 'students') {
