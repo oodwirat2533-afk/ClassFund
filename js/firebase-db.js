@@ -31,20 +31,23 @@ const API = {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   },
 
-  async login(studentId, pin) {
+    async login(studentId, pin) {
     const hashedPin = await this.hashPassword(pin);
     let usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
     if (usersSnap.empty) {
       usersSnap = await db.collection('users').where('student_id', '==', Number(studentId)).get();
     }
     if (usersSnap.empty) {
-      return { success: false, message: 'Invalid ID' };
+      return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
     }
     const user = usersSnap.docs[0].data();
+    if (user.role === 'student') {
+      return { success: false, message: '�ѡ���¹���������ͧ��͡�Թ��Ѻ ����ö�٢����ŷ��˹����ѡ�����!' };
+    }
     if (user.password_hash === hashedPin) {
       return { success: true, user: user };
     } else {
-      return { success: false, message: 'Invalid Password' };
+      return { success: false, message: '���ʼ�ҹ���١��ͧ' };
     }
   },
 
