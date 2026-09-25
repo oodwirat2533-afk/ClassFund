@@ -75,6 +75,15 @@
            const loginModal = document.getElementById('loginModal');
            if (loginModal) loginModal.classList.remove('hidden-view');
            
+           const sub = document.getElementById('loginModalSubtitle');
+           if (sub) sub.textContent = 'สำหรับผู้ดูแลระบบ (Super Admin) เท่านั้น';
+           
+           const info = document.getElementById('loginModalInfo');
+           if (info) info.innerHTML = 'ℹ️ หน้านี้สำหรับ <b>Super Admin</b> เท่านั้น (คุณครูและเหรัญญิกกรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียนของท่าน)';
+           
+           const uInput = document.getElementById('username');
+           if (uInput) uInput.placeholder = 'กรอก Username (เช่น superadmin)';
+           
            // Change text for Super Admin portal
            const sub = document.getElementById('loginModalSubtitle');
            if (sub) sub.textContent = 'สำหรับผู้ดูแลระบบ (Super Admin) เท่านั้น';
@@ -653,8 +662,16 @@
         google.script.run
           .withSuccessHandler(res => {
             if (res.success) {
+              const u = res.user;
+              const urlParams = new URLSearchParams(window.location.search);
+              const isRoom = !!urlParams.get('room');
+              if (!isRoom && u.role !== 'super_admin') {
+                showCenterLoader('error', 'ถูกปฏิเสธ', 'สำหรับ Super Admin เท่านั้น! กรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียนของท่าน');
+                setTimeout(() => closeModal('loginModal'), 2500);
+                return;
+              }
               showCenterLoader('success', 'เข้าสู่ระบบสำเร็จ!');
-              currentUser = res.user;
+              currentUser = u;
               sessionStorage.setItem('cf_user', JSON.stringify(currentUser));
               closeModal('loginModal');
               document.getElementById('loginForm').reset();
