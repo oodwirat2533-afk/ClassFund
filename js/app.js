@@ -1,4 +1,4 @@
-﻿
+
     // === Global State ===
     let currentUser = null;
     
@@ -2636,7 +2636,7 @@
           `;
         }
 
-        let trClass = isPaid ? 'bg-slate-50/50 opacity-90' : 'hover:bg-emerald-50/20 transition-colors cursor-pointer';
+        let trClass = isPaid ? 'bg-slate-50/50 opacity-90' : 'hover:bg-slate-50/60 transition-colors';
 
         let roleTag = s.role === 'treasurer' ? '<span class="hidden sm:inline-flex text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-medium ml-1">💼 เหรัญญิก</span>' : '';
 
@@ -2652,18 +2652,6 @@
           <td class="px-2 sm:px-6 py-2 sm:py-4 text-center whitespace-nowrap">${statusHtml}</td>
           <td class="px-2 sm:px-6 py-2 sm:py-4 text-center">${switchHtml}</td>
         `;
-
-        if (!isPaid) {
-          tr.onclick = (e) => {
-            if (e.target.tagName !== 'INPUT' && !e.target.closest('label')) {
-              const cb = tr.querySelector('.collect-student-cb');
-              if (cb) {
-                cb.checked = !cb.checked;
-                updateCollectSummary();
-              }
-            }
-          };
-        }
 
         tbody.appendChild(tr);
       });
