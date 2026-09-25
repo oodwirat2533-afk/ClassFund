@@ -83,12 +83,6 @@
            
            const uInput = document.getElementById('username');
            if (uInput) uInput.placeholder = 'กรอก Username (เช่น superadmin)';
-           
-           // Change text for Super Admin portal
-           const sub = document.getElementById('loginModalSubtitle');
-           if (sub) sub.textContent = 'สำหรับผู้ดูแลระบบ (Super Admin) เท่านั้น';
-           const info = document.getElementById('loginModalInfo');
-           if (info) info.innerHTML = 'ℹ️ หน้านี้สำหรับ <b>Super Admin</b> เท่านั้น (คุณครูและเหรัญญิกกรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียน)';
         }
       }
     };
@@ -3085,6 +3079,11 @@
           } else {
             Swal.fire('Error', 'ไม่สามารถโหลดข้อมูลห้องได้', 'error');
           }
+        })
+        .withFailureHandler(err => {
+          showLoader(false);
+          console.error(err);
+          Swal.fire('Error', err.message || 'เกิดข้อผิดพลาดในการโหลด', 'error');
         })
         .getAllRooms();
     };
