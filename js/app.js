@@ -68,6 +68,7 @@
            currentUser = null;
            sessionStorage.removeItem('cf_user');
            updateUserNavUI();
+           showLoader(false);
            // Force login
            const loginModal = document.getElementById('loginModal');
            if (loginModal) loginModal.classList.remove('hidden-view');
