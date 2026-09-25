@@ -193,7 +193,40 @@
       </div>
     </header>
 
+    
+    <!-- ==================== VIEW: SUPER ADMIN DASHBOARD ==================== -->
+    <main id="viewAdminDashboard" class="hidden-view w-full px-2 sm:px-8 lg:px-12 py-4 sm:py-8 space-y-6 sm:space-y-8">
+      <div class="flex justify-between items-center bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">แผงควบคุมระบบ (Super Admin)</h2>
+          <p class="text-sm text-slate-500 mt-1">จัดการห้องเรียนและครูที่ปรึกษาทั้งหมดในโรงเรียน</p>
+        </div>
+        <button onclick="openCreateRoomModal()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
+          + สร้างห้องเรียนใหม่
+        </button>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500 font-bold">
+                <th class="px-4 py-3">ห้องเรียน</th>
+                <th class="px-4 py-3">ครูประจำห้อง</th>
+                <th class="px-4 py-3">วันที่สร้าง</th>
+                <th class="px-4 py-3 text-right">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="adminRoomsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
     <!-- ==================== VIEW 1: DASHBOARD VIEW ==================== -->
+
     <main id="viewDashboard" class="w-full px-2 sm:px-8 lg:px-12 py-4 sm:py-8 space-y-6 sm:space-y-8">
 
       <!-- Overview Cards (3 Cards Responsive) -->
@@ -1163,8 +1196,8 @@
 
 
   <!-- ==================== LOGIC & SCRIPTS ==================== -->
-  <script src="js/firebase-db.js?v=20260925l"></script>
-<script src="js/app.js?v=20260925l"></script>
+  <script src="js/firebase-db.js?v=20260925m"></script>
+<script src="js/app.js?v=20260925m"></script>
 
 </body>
 </html>

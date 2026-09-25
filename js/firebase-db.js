@@ -1,12 +1,63 @@
 const db = firebase.firestore();
 
+const DBState = { currentRoomId: null };
+
 const API = {
+
+  async getAllRooms() {
+    const snap = await db.collection('rooms').orderBy('created_at', 'desc').get();
+    return { success: true, data: snap.docs.map(d => d.data()) };
+  },
+  
+  async createRoom(payload) {
+    try {
+      const batch = db.batch();
+      const roomId = 'room_' + Date.now();
+      
+      batch.set(db.collection('rooms').doc(roomId), {
+        room_id: roomId,
+        name: payload.room_name,
+        teacher_name: payload.teacher_name,
+        created_at: new Date().toISOString(),
+        status: 'active'
+      });
+      
+      const hashed = await this.hashPassword(payload.password || '123456');
+      batch.set(db.collection('users').doc(payload.username), {
+        student_id: payload.username,
+        name: payload.teacher_name,
+        role: 'teacher',
+        password_hash: hashed,
+        room_id: roomId,
+        total_paid: 0
+      });
+      
+      batch.set(db.collection('rooms').doc(roomId).collection('settings').doc('global'), {
+        current_balance: 0,
+        class_name: payload.room_name,
+        current_academic_year: payload.academic_year || '2569',
+        current_semester: payload.semester || '1'
+      });
+      
+      await batch.commit();
+      return { success: true, message: 'สร้างห้องเรียนสำเร็จ' };
+    } catch(e) {
+      console.error(e);
+      throw new Error('ไม่สามารถสร้างห้องได้');
+    }
+  },
+
+  setRoomId(roomId) {
+    DBState.currentRoomId = roomId;
+    return { success: true };
+  },
+
   async getDashboardData(role, studentId) {
     const [usersSnap, weeksSnap, txSnap, settingsSnap] = await Promise.all([
-      db.collection('users').get(),
-      db.collection('weeks').orderBy('week_number', 'asc').get(),
-      db.collection('transactions').orderBy('timestamp', 'desc').get(),
-      db.collection('settings').doc('global').get()
+      db.collection('users').where('room_id', '==', DBState.currentRoomId).get(),
+      db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').orderBy('week_number', 'asc').get(),
+      db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').orderBy('timestamp', 'desc').get(),
+      db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').get()
     ]);
     
     let settings = { current_balance: 0, current_week: 1, current_semester: 1, current_academic_year: 2569 };
@@ -60,7 +111,7 @@ const API = {
       });
 
       const amt = parseFloat(txObj.amount) || 0;
-      const settingsRef = db.collection('settings').doc('global');
+      const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
       let userQuery = null;
       
       if (txObj.student_id && txObj.student_id !== 'ROOM') {
@@ -79,7 +130,7 @@ const API = {
       }
 
       const batch = db.batch();
-      batch.set(db.collection('transactions').doc(txObj.tx_id), txObj);
+      batch.set(db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txObj.tx_id), txObj);
 
       if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
         batch.set(settingsRef, { current_balance: current_balance + amt }, { merge: true });
@@ -102,13 +153,13 @@ const API = {
   },
 
   async deleteTransaction(txId) {
-    const docRef = db.collection('transactions').doc(txId);
+    const docRef = db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txId);
     const doc = await docRef.get();
     if (!doc.exists) return { success: false, message: 'Not found' };
     const txObj = doc.data();
 
     const amt = parseFloat(txObj.amount) || 0;
-    const settingsRef = db.collection('settings').doc('global');
+    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
     const settingsDoc = await settingsRef.get();
     let current_balance = 0;
     if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
@@ -137,12 +188,12 @@ const API = {
   
   async addWeek(weekObj) {
     weekObj.week_id = 'W' + Date.now();
-    await db.collection('weeks').doc(weekObj.week_id).set(weekObj);
+    await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').doc(weekObj.week_id).set(weekObj);
     return { success: true, message: 'Success' };
   },
 
   async deleteWeek(weekId) {
-    const weekRef = db.collection('weeks').doc(weekId);
+    const weekRef = db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').doc(weekId);
     const weekDoc = await weekRef.get();
     
     if (!weekDoc.exists) return { success: false, message: 'ไม่พบรอบเก็บเงินที่ต้องการลบ' };
@@ -151,7 +202,7 @@ const API = {
     const deletedNum = parseInt(deletedWeek.week_number) || 0;
     
     // Find weeks that need shifting
-    const weeksToShift = await db.collection('weeks')
+    const weeksToShift = await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks')
       .where('academic_year', '==', deletedWeek.academic_year)
       .where('semester', '==', deletedWeek.semester)
       .where('week_number', '>', deletedNum)
@@ -171,7 +222,7 @@ const API = {
   },
 
   async updateClassSettings(settings) {
-    await db.collection('settings').doc('global').set(settings, { merge: true });
+    await db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').set(settings, { merge: true });
     return { success: true, message: 'Success', settings: settings };
   },
   
@@ -186,7 +237,7 @@ const API = {
       
       // Fetch settings and ALL users concurrently to avoid N queries in loop
       const [settingsDoc, allUsersSnap] = await Promise.all([
-        db.collection('settings').doc('global').get(),
+        db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').get(),
         db.collection('users').get()
       ]);
 
@@ -209,7 +260,7 @@ const API = {
            semester: payload.semester || '1',
            isBatch: true
          };
-         batch.set(db.collection('transactions').doc(tx.tx_id), tx);
+         batch.set(db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(tx.tx_id), tx);
          totalAmt += parseFloat(amount);
          
          const uDoc = userMap[String(sid)];
@@ -224,7 +275,7 @@ const API = {
       let current_balance = 0;
       if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
       
-      batch.set(db.collection('settings').doc('global'), {
+      batch.set(db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global'), {
         current_balance: current_balance + totalAmt
       }, { merge: true });
 
@@ -237,7 +288,7 @@ const API = {
   },
   
   async cancelStudentWeekPayment(studentId, weekId, txId) {
-    const docRef = db.collection('transactions').doc(txId);
+    const docRef = db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txId);
     const doc = await docRef.get();
     if (!doc.exists) return { success: false, message: 'Not found' };
     
@@ -246,7 +297,7 @@ const API = {
     const batch = db.batch();
     batch.delete(docRef);
     
-    const settingsRef = db.collection('settings').doc('global');
+    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
     const settingsDoc = await settingsRef.get();
     let current_balance = 0;
     if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
@@ -280,7 +331,7 @@ const API = {
     const hashed = await this.hashPassword(payload.password || '1234');
     payload.password_hash = hashed;
     delete payload.password;
-    await db.collection('users').add({ ...payload, total_paid: 0 });
+    await db.collection('users').add({ ...payload, total_paid: 0, room_id: DBState.currentRoomId });
     return { success: true, message: 'Success' };
   },
 
@@ -299,7 +350,7 @@ const API = {
   
   async rollOverSemester(newClass, newYear, newSem, userName) {
     try {
-      const settingsRef = db.collection('settings').doc('global');
+      const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
       const settingsDoc = await settingsRef.get();
       let curBal = 0;
       if (settingsDoc.exists && settingsDoc.data()) {
@@ -307,7 +358,7 @@ const API = {
       }
 
       // Reset all students' total_paid
-      const usersSnap = await db.collection('users').get();
+      const usersSnap = await db.collection('users').where('room_id', '==', DBState.currentRoomId).get();
       const batch = db.batch();
       
       usersSnap.docs.forEach(doc => {
@@ -319,7 +370,7 @@ const API = {
       // Insert opening balance transaction
       if (curBal > 0) {
         const tx_id = 'TX' + Date.now();
-        batch.set(db.collection('transactions').doc(tx_id), {
+        batch.set(db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(tx_id), {
           tx_id: tx_id,
           student_id: 'ROOM',
           week_id: '',
