@@ -218,3 +218,4 @@ window.google.script.run = createRunProxy(null, null);
 
 console.log('Firebase backend bridge initialized.');
 
+
