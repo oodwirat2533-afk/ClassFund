@@ -1,4 +1,4 @@
-
+﻿
     // === Global State ===
     let currentUser = null;
     
@@ -1195,8 +1195,8 @@
       filtered.forEach(s => {
         const totalPaid = parseFloat(s.total_paid) || 0;
         let statusBadge = totalPaid > 0 
-          ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">จ่ายแล้ว</span>`
-          : `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">ยังไม่มียอด</span>`;
+          ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200">จ่ายแล้ว</span>`
+          : `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200">ยังไม่มียอด</span>`;
 
         const sNumber = s.student_number ? s.student_number : '-';
         
@@ -1505,15 +1505,15 @@
         let prefix = '';
 
         if (t.type === 'income') {
-          typeBadge = '<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-semibold">รายรับ</span>';
+          typeBadge = '<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-semibold whitespace-nowrap">รายรับ</span>';
           amountClass = 'text-emerald-600';
           prefix = '';
         } else if (t.type === 'expense') {
-          typeBadge = '<span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-full text-xs font-semibold">รายจ่าย</span>';
+          typeBadge = '<span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-full text-xs font-semibold whitespace-nowrap">รายจ่าย</span>';
           amountClass = 'text-rose-600';
           prefix = '';
         } else {
-          typeBadge = '<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-xs font-semibold">รายรับอื่นๆ</span>';
+          typeBadge = '<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-xs font-semibold whitespace-nowrap">รายรับอื่นๆ</span>';
           amountClass = 'text-amber-600';
           prefix = '';
         }
@@ -2591,7 +2591,7 @@
 
         let statusHtml = isPaid
           ? `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">จ่ายแล้ว</span>`
-          : `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">ยังไม่จ่าย</span>`;
+          : `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">ยังไม่จ่าย</span>`;
 
         let switchHtml = '';
         if (isPaid) {
