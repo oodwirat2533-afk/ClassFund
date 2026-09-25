@@ -23,7 +23,7 @@ const API = {
       });
       
       const hashed = await this.hashPassword(payload.password || '123456');
-      batch.set(db.collection('users').doc(payload.username), {
+      batch.set(db.collection('users').doc(roomId + '_' + payload.username), {
         student_id: payload.username,
         name: payload.teacher_name,
         role: 'teacher',
@@ -89,10 +89,21 @@ const API = {
 
     async login(studentId, pin) {
     const hashedPin = await this.hashPassword(pin);
-    let usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
-    if (usersSnap.empty) {
-      usersSnap = await db.collection('users').where('student_id', '==', Number(studentId)).get();
-    }
+          const urlParams = new URLSearchParams(window.location.search);
+      const currentRoom = urlParams.get('room');
+      
+      let queryStr = db.collection('users').where('student_id', '==', String(studentId));
+      let queryNum = db.collection('users').where('student_id', '==', Number(studentId));
+      
+      if (studentId !== 'superadmin' && currentRoom) {
+         queryStr = queryStr.where('room_id', '==', currentRoom);
+         queryNum = queryNum.where('room_id', '==', currentRoom);
+      }
+      
+      let usersSnap = await queryStr.get();
+      if (usersSnap.empty) {
+        usersSnap = await queryNum.get();
+      }
     if (usersSnap.empty) {
       return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
     }
@@ -330,6 +341,32 @@ const API = {
     return { success: false, message: 'Not found' };
   },
   
+  
+  async addUsersBatch(usersArray) {
+    try {
+      const batch = db.batch();
+      for (const u of usersArray) {
+        // Document ID is roomId_studentId to prevent overwrites across rooms
+        const docRef = db.collection('users').doc(DBState.currentRoomId + '_' + String(u.student_id));
+        
+        let pwdHash = u.password_hash;
+        if (!pwdHash) {
+           pwdHash = await this.hashPassword('1234');
+        }
+        
+        batch.set(docRef, {
+          ...u,
+          password_hash: pwdHash,
+          room_id: DBState.currentRoomId,
+          total_paid: 0
+        });
+      }
+      await batch.commit();
+      return { success: true, message: 'นำเข้ารายชื่อสำเร็จ' };
+    } catch(e) {
+      return { success: false, message: e.message };
+    }
+  },
   async addUser(payload) {
     const hashed = await this.hashPassword(payload.password || '1234');
     payload.password_hash = hashed;
