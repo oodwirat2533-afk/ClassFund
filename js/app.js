@@ -176,8 +176,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         `;
-        subEl.textContent = subtitle || 'กรุณาลองใหม่อีกครั้ง';
-        subEl.classList.remove('hidden-view');
+        if (subtitle) {
+          subEl.textContent = subtitle;
+          subEl.classList.remove('hidden-view');
+        } else {
+          subEl.textContent = '';
+          subEl.classList.add('hidden-view');
+        }
         autoHideMs = autoHideMs || 2500;
       }
 
@@ -232,17 +237,22 @@
         const sub = document.getElementById('loginModalSubtitle');
         const info = document.getElementById('loginModalInfo');
         const uInput = document.getElementById('username');
+        const pInput = document.getElementById('password');
         const btnClose = document.getElementById('btnCloseLoginModal');
+        
+        if (uInput) uInput.placeholder = '';
+        if (pInput) pInput.placeholder = '';
         
         if (inRoom) {
           if (sub) sub.textContent = 'สำหรับคุณครูและเหรัญญิกประจำห้อง';
-          if (info) info.innerHTML = 'ℹ️ สำหรับ<b>คุณครู</b>และ<b>เหรัญญิก</b>เท่านั้น (นักเรียนทั่วไปสามารถดูยอดเงินและประวัติการชำระได้ที่หน้าหลัก)';
-          if (uInput) uInput.placeholder = 'เช่น admin หรือ รหัสเหรัญญิก';
+          if (info) {
+            info.classList.remove('hidden-view');
+            info.innerHTML = 'ℹ️ สำหรับ<strong>คุณครู</strong>และ<strong>เหรัญญิก</strong>เท่านั้น (นักเรียนทั่วไปสามารถดูยอดเงินและประวัติการชำระได้ที่หน้าหลัก)';
+          }
           if (btnClose) btnClose.classList.remove('hidden-view');
         } else {
           if (sub) sub.textContent = 'สำหรับผู้ดูแลระบบ (Super Admin) เท่านั้น';
-          if (info) info.innerHTML = 'ℹ️ หน้านี้สำหรับ <b>Super Admin</b> เท่านั้น (คุณครูและเหรัญญิกกรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียนของท่าน)';
-          if (uInput) uInput.placeholder = 'กรอกชื่อผู้ใช้ Super Admin';
+          if (info) info.classList.add('hidden-view');
           if (btnClose) btnClose.classList.add('hidden-view');
         }
       }
@@ -672,7 +682,7 @@
               if (!isRoom && u.role !== 'super_admin') {
                 currentUser = null;
                 sessionStorage.removeItem('cf_user');
-                showCenterLoader('error', 'ถูกปฏิเสธ', 'หน้านี้สำหรับ Super Admin เท่านั้น! กรุณาเข้าสู่ระบบผ่านลิงก์ห้องเรียนของท่าน', 2500);
+                showCenterLoader('error', 'คุณไม่มีสิทธิ์เข้าสู่ระบบ', '', 2500);
                 
                 const pwdInput = document.getElementById('password');
                 if (pwdInput) pwdInput.value = '';
