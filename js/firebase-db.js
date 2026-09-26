@@ -5,8 +5,13 @@ const DBState = { currentRoomId: null };
 const API = {
 
   async getAllRooms() {
-    const snap = await db.collection('rooms').orderBy('created_at', 'desc').get();
-    const rooms = await Promise.all(snap.docs.map(async d => {
+    const snap = await db.collection('rooms').get();
+    const sortedDocs = [...snap.docs].sort((a, b) => {
+      const da = (a.data() && a.data().created_at) || '';
+      const dbDate = (b.data() && b.data().created_at) || '';
+      return dbDate.localeCompare(da);
+    });
+    const rooms = await Promise.all(sortedDocs.map(async d => {
       const data = d.data();
       try {
         const setSnap = await db.collection('rooms').doc(d.id).collection('settings').doc('global').get();
@@ -600,7 +605,10 @@ const API = {
   
   async rollOverSemester(newClass, newYear, newSem, userName) {
     try {
-      const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
+      const roomId = DBState.currentRoomId;
+      if (!roomId) throw new Error('ไม่พบ Room ID ปัจจุบัน');
+      const roomRef = db.collection('rooms').doc(roomId);
+      const settingsRef = roomRef.collection('settings').doc('global');
       const settingsDoc = await settingsRef.get();
       let curBal = 0;
       if (settingsDoc.exists && settingsDoc.data()) {
