@@ -1,6 +1,14 @@
 
     // === Global State ===
     let currentUser = null;
+
+    // SweetAlert2 Global Thai Defaults
+    if (typeof Swal !== 'undefined') {
+      window.Swal = Swal.mixin({
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก'
+      });
+    }
     
     // Catch HTML5 validation failures globally
     document.addEventListener('invalid', (function () {
@@ -503,7 +511,7 @@
         icon: 'info',
         title: 'ลืมรหัสผ่าน?',
         html: '<div class="text-sm text-left"><p class="mb-2"><strong>สำหรับครู (แอดมิน):</strong></p><p class="mb-4">กรุณาจัดการรหัสผ่านในฐานข้อมูล <b>Firebase Console</b> หรือติดต่อผู้พัฒนาระบบ</p><p class="mb-2"><strong>สำหรับเหรัญญิก:</strong></p><p>กรุณาติดต่อคุณครูเพื่อทำการรีเซ็ตรหัสผ่านให้คุณใหม่</p></div>',
-        confirmButtonText: 'เข้าใจแล้ว',
+        confirmButtonText: 'ตกลง',
         confirmButtonColor: '#3b82f6'
       });
     }
@@ -559,7 +567,7 @@
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'ยืนยัน',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -750,7 +758,7 @@
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'ออกจากระบบ',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -1055,7 +1063,7 @@
         showCancelButton: true,
         confirmButtonColor: '#4f46e5',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: '🚀 ยืนยันและดำเนินการ',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then(result => {
         if (result.isConfirmed) {
@@ -1333,7 +1341,7 @@
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'ลบข้อมูล',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -1869,7 +1877,7 @@
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'ลบรายการ',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -2385,7 +2393,7 @@
         showCancelButton: true,
         confirmButtonColor: '#3b82f6',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ใช่, รีเซ็ตเลย',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -2421,7 +2429,7 @@
         showCancelButton: true,
         confirmButtonColor: '#e11d48',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ใช่, ลบเลย',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -2881,8 +2889,8 @@
         showCancelButton: true,
         confirmButtonColor: '#e11d48',
         cancelButtonColor: '#64748b',
-        confirmButtonText: '🗑️ ยกเลิกการจ่ายเงิน (คืนสถานะ)',
-        cancelButtonText: 'ปิด'
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
           showSyncToast('loading', 'กำลังยกเลิกรายการ...');
@@ -2984,7 +2992,7 @@
         showCancelButton: true,
         confirmButtonColor: '#10b981',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ยืนยันบันทึก',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then(result => {
         if (result.isConfirmed) {
@@ -3212,7 +3220,7 @@
         inputValue: oldName === 'undefined' ? '' : oldName,
         inputPlaceholder: 'กรอกชื่อคุณครูคนใหม่',
         showCancelButton: true,
-        confirmButtonText: 'บันทึก',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก',
         inputValidator: (value) => {
           if (!value) {
@@ -3243,7 +3251,7 @@
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'ใช่, ลบห้องนี้',
+        confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
