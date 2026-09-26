@@ -122,11 +122,37 @@
     let centerSyncTimeout = null;
 
     function showCenterLoader(type, title, subtitle, autoHideMs) {
-      if (type === 'error' || type === 'warning' || type === 'info') {
-        const overlay = document.getElementById('centerSyncOverlay');
+      const overlay = document.getElementById('centerSyncOverlay');
+      const card = document.getElementById('centerSyncCard');
+      const iconBox = document.getElementById('centerSyncIconBox');
+      const titleEl = document.getElementById('centerSyncTitle');
+      const subEl = document.getElementById('centerSyncSubtitle');
+
+      if (centerSyncTimeout) {
+        clearTimeout(centerSyncTimeout);
+        centerSyncTimeout = null;
+      }
+
+      if (type === 'hide' || !type) {
         if (overlay) {
           overlay.classList.remove('opacity-100', 'pointer-events-auto');
           overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+        if (card) {
+          card.classList.remove('scale-100');
+          card.classList.add('scale-90');
+        }
+        return;
+      }
+
+      if (type === 'error' || type === 'warning' || type === 'info') {
+        if (overlay) {
+          overlay.classList.remove('opacity-100', 'pointer-events-auto');
+          overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+        if (card) {
+          card.classList.remove('scale-100');
+          card.classList.add('scale-90');
         }
         Swal.fire({
           icon: type,
@@ -138,25 +164,7 @@
         return;
       }
 
-      const overlay = document.getElementById('centerSyncOverlay');
-      const card = document.getElementById('centerSyncCard');
-      const iconBox = document.getElementById('centerSyncIconBox');
-      const titleEl = document.getElementById('centerSyncTitle');
-      const subEl = document.getElementById('centerSyncSubtitle');
       if (!overlay || !card || !iconBox || !titleEl || !subEl) return;
-
-      if (centerSyncTimeout) {
-        clearTimeout(centerSyncTimeout);
-        centerSyncTimeout = null;
-      }
-
-      if (type === 'hide' || !type) {
-        overlay.classList.remove('opacity-100', 'pointer-events-auto');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        card.classList.remove('scale-100');
-        card.classList.add('scale-90');
-        return;
-      }
 
       titleEl.textContent = title || 'กำลังดำเนินการ...';
 
@@ -648,13 +656,33 @@
       const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value.trim();
       
-      showCenterLoader('loading', 'กำลังเข้าสู่ระบบ...', 'กำลังตรวจสอบข้อมูล...');
+      const submitBtn = document.getElementById('btnLoginSubmit');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'ยืนยันการเข้าสู่ระบบ';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        submitBtn.innerHTML = `
+          <svg class="animate-spin h-4 w-4 text-white inline-block mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span>กำลังตรวจสอบ...</span>
+        `;
+      }
+
+      const resetLoginBtn = () => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      };
 
       if (isMock) {
         setTimeout(() => {
-          showCenterLoader('hide');
+          resetLoginBtn();
           if (u !== 'admin' && u !== '54322') {
-            Swal.fire({ icon: 'warning', title: 'เข้าสู่ระบบไม่สำเร็จ', text: 'ระบบเปิดให้เข้าสู่ระบบเฉพาะคุณครูและเหรัญญิกเท่านั้น (นักเรียนสามารถดูข้อมูลได้ที่หน้าหลัก)' });
+            Swal.fire({ icon: 'warning', title: 'เข้าสู่ระบบไม่สำเร็จ', text: 'ระบบเปิดให้เข้าสู่ระบบเฉพาะคุณครูและเหรัญญิกเท่านั้น (นักเรียนสามารถดูข้อมูลได้ที่หน้าหลัก)', confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
             return;
           }
           currentUser = { 
@@ -676,6 +704,7 @@
       setTimeout(() => {
         google.script.run
           .withSuccessHandler(res => {
+            resetLoginBtn();
             if (res.success) {
               const u = res.user;
               const urlParams = new URLSearchParams(window.location.search);
@@ -683,7 +712,6 @@
               if (!isRoom && u.role !== 'super_admin') {
                 currentUser = null;
                 sessionStorage.removeItem('cf_user');
-                showCenterLoader('hide');
                 
                 Swal.fire({
                   icon: 'warning',
@@ -703,7 +731,6 @@
                 });
                 return;
               }
-              showCenterLoader('success', 'เข้าสู่ระบบสำเร็จ!');
               currentUser = u;
               sessionStorage.setItem('cf_user', JSON.stringify(currentUser));
               closeModal('loginModal');
@@ -742,11 +769,24 @@
                  loadData();
               }
             } else {
-              showCenterLoader('error', 'เข้าสู่ระบบไม่สำเร็จ', res.message);
+              Swal.fire({
+                icon: 'warning',
+                title: 'เข้าสู่ระบบไม่สำเร็จ',
+                text: res.message || 'รหัสผ่านไม่ถูกต้อง',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#2563eb'
+              });
             }
           })
           .withFailureHandler(err => {
-            showCenterLoader('error', 'เกิดข้อผิดพลาด', err.message);
+            resetLoginBtn();
+            Swal.fire({
+              icon: 'error',
+              title: 'เกิดข้อผิดพลาด',
+              text: err.message || 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#2563eb'
+            });
           })
           .login(u, p);
       }, 50);
