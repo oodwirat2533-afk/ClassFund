@@ -682,7 +682,7 @@
               if (!isRoom && u.role !== 'super_admin') {
                 currentUser = null;
                 sessionStorage.removeItem('cf_user');
-                showCenterLoader('error', 'คุณไม่มีสิทธิ์เข้าสู่ระบบ', '', 2500);
+                showCenterLoader('error', 'คุณไม่มีสิทธิ์เข้าสู่ระบบ', 'กรุณาเข้าสู่ระบบผ่านลิงก์ของห้องตัวเอง', 3000);
                 
                 const pwdInput = document.getElementById('password');
                 if (pwdInput) pwdInput.value = '';
