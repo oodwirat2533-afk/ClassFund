@@ -129,22 +129,8 @@
         centerSyncTimeout = null;
       }
 
-      if (type === 'hide' || !type) {
-        Swal.close();
-        return;
-      }
-
-      if (type === 'loading') {
-        Swal.fire({
-          title: title || 'กำลังดำเนินการ...',
-          text: subtitle || '',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
+      // Do NOT show any popup before success/error!
+      if (type === 'loading' || type === 'hide' || !type) {
         return;
       }
 
@@ -3186,13 +3172,11 @@
         academic_year: '2569',
         semester: '1'
       };
-      showLoader(true);
       google.script.run
         .withSuccessHandler(res => {
-          showLoader(false);
           if (res.success) {
             closeCreateRoomModal();
-            Swal.fire('สำเร็จ', res.message, 'success');
+            Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
             loadAdminData();
           } else {
             Swal.fire('Error', res.message, 'error');
@@ -3239,12 +3223,10 @@
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          showLoader(true);
           google.script.run
             .withSuccessHandler(res => {
-              showLoader(false);
               if (res.success) {
-                Swal.fire('สำเร็จ', res.message, 'success');
+                Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
                 loadAdminData();
               } else {
                 Swal.fire('Error', res.message, 'error');
@@ -3267,12 +3249,10 @@
         cancelButtonText: 'ยกเลิก'
       }).then((result) => {
         if (result.isConfirmed) {
-          showLoader(true);
           google.script.run
             .withSuccessHandler(res => {
-              showLoader(false);
               if (res.success) {
-                Swal.fire('ลบสำเร็จ', res.message, 'success');
+                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
                 loadAdminData();
               } else {
                 Swal.fire('Error', res.message, 'error');
