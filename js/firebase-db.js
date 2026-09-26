@@ -28,6 +28,43 @@ const API = {
     return { success: true, data: rooms };
   },
   
+  async updateRoomInfo(roomId, newRoomName, newTeacherName) {
+    try {
+      if (!roomId || !newRoomName || !newTeacherName) throw new Error('ข้อมูลไม่ครบถ้วน');
+      const cleanRoom = String(newRoomName).trim();
+      const cleanTeacher = String(newTeacherName).trim();
+      const batch = db.batch();
+      
+      // Update room document
+      const roomRef = db.collection('rooms').doc(roomId);
+      batch.set(roomRef, { 
+        name: cleanRoom,
+        teacher_name: cleanTeacher
+      }, { merge: true });
+      
+      // Update global settings
+      const settingsRef = roomRef.collection('settings').doc('global');
+      batch.set(settingsRef, { 
+        class_name: cleanRoom 
+      }, { merge: true });
+      
+      // Update teacher user documents in this room
+      const usersSnap = await db.collection('users')
+        .where('room_id', '==', roomId)
+        .where('role', '==', 'teacher')
+        .get();
+        
+      usersSnap.forEach(doc => {
+        batch.update(doc.ref, { name: cleanTeacher });
+      });
+      
+      await batch.commit();
+      return { success: true, message: 'อัปเดตข้อมูลห้องเรียนและครูประจำชั้นเรียบร้อยแล้ว' };
+    } catch(e) {
+      return { success: false, message: e.message };
+    }
+  },
+
   async updateRoomName(roomId, newRoomName) {
     try {
       if (!roomId || !newRoomName) throw new Error('ข้อมูลไม่ครบถ้วน');

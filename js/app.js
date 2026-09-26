@@ -3136,14 +3136,7 @@
       rooms.forEach(room => {
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="px-4 py-3 font-semibold text-slate-800">
-              <div class="flex items-center gap-2">
-                <span>${room.name}</span>
-                <button onclick="promptEditRoomName('${room.room_id}', '${room.name}')" class="text-xs text-slate-400 hover:text-blue-600 transition-colors p-1 rounded-md hover:bg-blue-50" title="แก้ไขชื่อห้องเรียน">
-                  ✏️
-                </button>
-              </div>
-            </td>
+            <td class="px-4 py-3 font-semibold text-slate-800">${room.name}</td>
             <td class="px-4 py-3 text-sm text-slate-600">${room.teacher_name}</td>
             <td class="px-4 py-3 text-sm text-slate-500">${new Date(room.created_at).toLocaleDateString('th-TH')}</td>
             <td class="px-4 py-3 text-right">
@@ -3153,7 +3146,7 @@
               <button onclick="enterRoom('${room.room_id}', '${room.name}')" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:bg-blue-200 mr-1">
                 เข้าห้อง ➡
               </button>
-              <button onclick="promptEditTeacher('${room.room_id}', '${room.teacher_name}')" class="px-2 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold hover:bg-amber-200 mr-1" title="แก้ไขชื่อครูประจำชั้น">
+              <button onclick="promptEditRoomInfo('${room.room_id}', '${room.name}', '${room.teacher_name}')" class="px-2 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold hover:bg-amber-200 mr-1" title="แก้ไขข้อมูลห้องเรียนและครูประจำชั้น">
                 ✏️
               </button>
               <button onclick="confirmDeleteRoom('${room.room_id}', '${room.name}')" class="px-2 py-1.5 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold hover:bg-rose-200" title="ลบห้องเรียนนี้">
@@ -3220,24 +3213,45 @@
     };
 
     
-    window.promptEditRoomName = function(roomId, oldName) {
+    window.promptEditRoomInfo = function(roomId, currentRoomName, currentTeacherName) {
+      const rName = (currentRoomName === 'undefined' || !currentRoomName) ? '' : currentRoomName;
+      const tName = (currentTeacherName === 'undefined' || !currentTeacherName) ? '' : currentTeacherName;
+
       Swal.fire({
-        title: '✏️ แก้ไขชื่อห้องเรียน',
-        input: 'text',
-        inputValue: oldName === 'undefined' ? '' : oldName,
-        inputPlaceholder: 'กรอกชื่อห้องเรียนใหม่ (เช่น ม.3/7, ม.5/1)',
+        title: '✏️ แก้ไขข้อมูลห้องเรียน',
+        html: `
+          <div class="text-left space-y-3 pt-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อห้องเรียน <span class="text-rose-500">*</span></label>
+              <input id="swalEditRoomName" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold text-slate-800" value="${rName}" placeholder="เช่น ม.3/7">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อครูประจำชั้น <span class="text-rose-500">*</span></label>
+              <input id="swalEditTeacherName" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold text-slate-800" value="${tName}" placeholder="เช่น คุณครูประจำชั้น">
+            </div>
+          </div>
+        `,
         showCancelButton: true,
         confirmButtonColor: '#4f46e5',
         cancelButtonColor: '#94a3b8',
         confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก',
-        inputValidator: (value) => {
-          if (!value || !value.trim()) {
-            return 'กรุณากรอกชื่อห้องเรียน!';
+        focusConfirm: false,
+        preConfirm: () => {
+          const newRoomName = document.getElementById('swalEditRoomName').value.trim();
+          const newTeacherName = document.getElementById('swalEditTeacherName').value.trim();
+          if (!newRoomName) {
+            Swal.showValidationMessage('กรุณากรอกชื่อห้องเรียน');
+            return false;
           }
+          if (!newTeacherName) {
+            Swal.showValidationMessage('กรุณากรอกชื่อครูประจำชั้น');
+            return false;
+          }
+          return { newRoomName, newTeacherName };
         }
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && result.value) {
           google.script.run
             .withSuccessHandler(res => {
               if (res.success) {
@@ -3247,39 +3261,17 @@
                 Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
               }
             })
-            .updateRoomName(roomId, result.value.trim());
+            .updateRoomInfo(roomId, result.value.newRoomName, result.value.newTeacherName);
         }
       });
     };
 
     window.promptEditTeacher = function(roomId, oldName) {
-      Swal.fire({
-        title: '✏️ แก้ไขชื่อครูประจำชั้น',
-        input: 'text',
-        inputValue: oldName === 'undefined' ? '' : oldName,
-        inputPlaceholder: 'กรอกชื่อคุณครูคนใหม่',
-        showCancelButton: true,
-        confirmButtonText: 'ตกลง',
-        cancelButtonText: 'ยกเลิก',
-        inputValidator: (value) => {
-          if (!value) {
-            return 'กรุณากรอกชื่อคุณครู!';
-          }
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          google.script.run
-            .withSuccessHandler(res => {
-              if (res.success) {
-                Swal.fire({ icon: 'success', title: 'แก้ไขสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
-                loadAdminData();
-              } else {
-                Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
-              }
-            })
-            .updateRoomTeacher(roomId, result.value.trim());
-        }
-      });
+      window.promptEditRoomInfo(roomId, '', oldName);
+    };
+
+    window.promptEditRoomName = function(roomId, oldName) {
+      window.promptEditRoomInfo(roomId, oldName, '');
     };
 
     window.confirmDeleteRoom = function(roomId, roomName) {
