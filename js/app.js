@@ -9,7 +9,9 @@
         Swal.fire({
           icon: 'warning',
           title: 'ข้อมูลไม่ครบถ้วน',
-          text: 'กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน'
+          html: '<span style="white-space: nowrap; display: inline-block;">กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน</span>',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#2563eb'
         });
         e.target.focus();
       };

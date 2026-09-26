@@ -59,12 +59,13 @@ body {
 .swal2-popup {
   font-family: 'Prompt', sans-serif !important;
   border-radius: 1.75rem !important; /* rounded-3xl (28px) */
-  padding: 2rem 1.75rem !important;
+  padding: 2rem 1.5rem !important;
   background: #ffffff !important;
   box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
   border: 1px solid rgba(226, 232, 240, 0.8) !important;
-  max-width: 360px !important;
-  width: 90% !important;
+  max-width: 440px !important;
+  width: auto !important;
+  min-width: 320px !important;
 }
 
 .swal2-icon {
@@ -113,7 +114,7 @@ body {
   font-size: 0.875rem !important;
   font-weight: 400 !important;
   line-height: 1.6 !important;
-  margin: 0.25rem 0.5rem 0 !important;
+  margin: 0.25rem 0.25rem 0 !important;
 }
 
 .swal2-actions {
