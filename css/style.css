@@ -119,10 +119,11 @@ body {
 
 .swal2-actions {
   display: flex !important;
-  gap: 0.625rem !important;
+  gap: 0.75rem !important;
   margin-top: 1.5rem !important;
   width: 100% !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .swal2-styled {
@@ -131,7 +132,8 @@ body {
   font-weight: 700 !important;
   font-size: 0.875rem !important;
   padding: 0.65rem 1.75rem !important;
-  min-width: 90px !important;
+  min-width: 105px !important;
+  text-align: center !important;
   box-shadow: none !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   margin: 0 !important;
