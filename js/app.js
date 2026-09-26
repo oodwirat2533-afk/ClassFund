@@ -122,6 +122,22 @@
     let centerSyncTimeout = null;
 
     function showCenterLoader(type, title, subtitle, autoHideMs) {
+      if (type === 'error' || type === 'warning' || type === 'info') {
+        const overlay = document.getElementById('centerSyncOverlay');
+        if (overlay) {
+          overlay.classList.remove('opacity-100', 'pointer-events-auto');
+          overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+        Swal.fire({
+          icon: type,
+          title: title || (type === 'warning' ? 'แจ้งเตือน' : 'เกิดข้อผิดพลาด'),
+          text: subtitle || '',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#2563eb'
+        });
+        return;
+      }
+
       const overlay = document.getElementById('centerSyncOverlay');
       const card = document.getElementById('centerSyncCard');
       const iconBox = document.getElementById('centerSyncIconBox');
@@ -169,51 +185,6 @@
           subEl.classList.add('hidden-view');
         }
         autoHideMs = autoHideMs || 900;
-      } else if (type === 'error') {
-        iconBox.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-3.5 transition-all duration-300 bg-rose-50 text-rose-600 shadow-inner";
-        iconBox.innerHTML = `
-          <svg class="h-8 w-8 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        `;
-        if (subtitle) {
-          subEl.textContent = subtitle;
-          subEl.classList.remove('hidden-view');
-        } else {
-          subEl.textContent = '';
-          subEl.classList.add('hidden-view');
-        }
-        autoHideMs = autoHideMs || 2500;
-      } else if (type === 'warning') {
-        iconBox.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-3.5 transition-all duration-300 bg-amber-50 text-amber-600 shadow-inner";
-        iconBox.innerHTML = `
-          <svg class="h-8 w-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-          </svg>
-        `;
-        if (subtitle) {
-          subEl.textContent = subtitle;
-          subEl.classList.remove('hidden-view');
-        } else {
-          subEl.textContent = '';
-          subEl.classList.add('hidden-view');
-        }
-        autoHideMs = autoHideMs || 2500;
-      } else if (type === 'info') {
-        iconBox.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-3.5 transition-all duration-300 bg-sky-50 text-sky-600 shadow-inner";
-        iconBox.innerHTML = `
-          <svg class="h-8 w-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        `;
-        if (subtitle) {
-          subEl.textContent = subtitle;
-          subEl.classList.remove('hidden-view');
-        } else {
-          subEl.textContent = '';
-          subEl.classList.add('hidden-view');
-        }
-        autoHideMs = autoHideMs || 2500;
       }
 
       overlay.classList.remove('opacity-0', 'pointer-events-none');
@@ -712,16 +683,24 @@
               if (!isRoom && u.role !== 'super_admin') {
                 currentUser = null;
                 sessionStorage.removeItem('cf_user');
-                showCenterLoader('error', 'ปฏิเสธการเข้าถึง (Access Denied)', 'สงวนสิทธิ์เฉพาะผู้ดูแลระบบ กรุณาเข้าใช้งานผ่านลิงก์ห้องเรียนของท่าน', 3200);
+                showCenterLoader('hide');
                 
-                const pwdInput = document.getElementById('password');
-                if (pwdInput) pwdInput.value = '';
-                const uInput = document.getElementById('username');
-                if (uInput) {
-                  uInput.focus();
-                  uInput.select();
-                }
-                openModal('loginModal');
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'ปฏิเสธการเข้าถึง (Access Denied)',
+                  text: 'สงวนสิทธิ์เฉพาะผู้ดูแลระบบ กรุณาเข้าใช้งานผ่านลิงก์ห้องเรียนของท่าน',
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#2563eb'
+                }).then(() => {
+                  const pwdInput = document.getElementById('password');
+                  if (pwdInput) pwdInput.value = '';
+                  const uInput = document.getElementById('username');
+                  if (uInput) {
+                    uInput.focus();
+                    uInput.select();
+                  }
+                  openModal('loginModal');
+                });
                 return;
               }
               showCenterLoader('success', 'เข้าสู่ระบบสำเร็จ!');
