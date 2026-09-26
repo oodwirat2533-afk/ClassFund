@@ -226,17 +226,58 @@ const API = {
       }
 
       await batch.commit(); // Single network request for all writes!
-      return { success: true, message: 'Success', tx_id: txObj.tx_id };
+      return { success: true, message: 'บันทึกสำเร็จ', tx_id: txObj.tx_id };
     } catch (err) {
       console.error('addTransaction error detail:', err);
       throw new Error('บันทึกไม่สำเร็จ: ' + (err.code || '') + ' ' + (err.message || String(err)));
     }
   },
 
+  async updateTransaction(txId, description, amount) {
+    const docRef = db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txId);
+    const doc = await docRef.get();
+    if (!doc.exists) return { success: false, message: 'ไม่พบรายการธุรกรรม' };
+    const txObj = doc.data();
+
+    const oldAmt = parseFloat(txObj.amount) || 0;
+    const newAmt = parseFloat(amount) || 0;
+    const diff = newAmt - oldAmt;
+
+    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
+    const settingsDoc = await settingsRef.get();
+    let current_balance = 0;
+    if (settingsDoc.exists) current_balance = parseFloat(settingsDoc.data().current_balance) || 0;
+
+    const batch = db.batch();
+    batch.update(docRef, {
+      description: String(description || '').trim(),
+      amount: newAmt
+    });
+
+    if (diff !== 0) {
+      if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
+        batch.set(settingsRef, { current_balance: current_balance + diff }, { merge: true });
+        if (txObj.student_id && txObj.student_id !== 'ROOM') {
+          const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
+          if (!usersSnap.empty) {
+            const uDoc = usersSnap.docs[0];
+            const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+            batch.set(db.collection('users').doc(uDoc.id), { total_paid: Math.max(0, curPaid + diff) }, { merge: true });
+          }
+        }
+      } else if (txObj.type === 'expense') {
+        batch.set(settingsRef, { current_balance: current_balance - diff }, { merge: true });
+      }
+    }
+
+    await batch.commit();
+    return { success: true, message: 'แก้ไขรายการเรียบร้อยแล้ว' };
+  },
+
   async deleteTransaction(txId) {
     const docRef = db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: 'Not found' };
+    if (!doc.exists) return { success: false, message: 'ไม่พบรายการธุรกรรม' };
     const txObj = doc.data();
 
     const amt = parseFloat(txObj.amount) || 0;
@@ -264,13 +305,13 @@ const API = {
     }
     
     await batch.commit();
-    return { success: true, message: 'Deleted' };
+    return { success: true, message: 'ลบรายการเรียบร้อยแล้ว' };
   },
   
   async addWeek(weekObj) {
     weekObj.week_id = 'W' + Date.now();
     await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').doc(weekObj.week_id).set(weekObj);
-    return { success: true, message: 'Success' };
+    return { success: true, message: 'บันทึกรอบเก็บเงินเรียบร้อยแล้ว' };
   },
 
   async deleteWeek(weekId) {
@@ -299,12 +340,12 @@ const API = {
     });
     
     await batch.commit();
-    return { success: true, message: 'Deleted' };
+    return { success: true, message: 'ลบรอบเก็บเงินเรียบร้อยแล้ว' };
   },
 
   async updateClassSettings(settings) {
     await db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').set(settings, { merge: true });
-    return { success: true, message: 'Success', settings: settings };
+    return { success: true, message: 'บันทึกการตั้งค่าห้องเรียนเรียบร้อยแล้ว', settings: settings };
   },
   
   async addBatchIncome(payload) {
@@ -361,7 +402,7 @@ const API = {
       }, { merge: true });
 
       await batch.commit(); // ONE massive write for everything
-      return { success: true, message: 'Success' };
+      return { success: true, message: 'บันทึกสำเร็จ' };
     } catch (err) {
       console.error('addBatchIncome error:', err);
       throw new Error('บันทึกไม่สำเร็จ: ' + err.message);
@@ -371,7 +412,7 @@ const API = {
   async cancelStudentWeekPayment(studentId, weekId, txId) {
     const docRef = db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').doc(txId);
     const doc = await docRef.get();
-    if (!doc.exists) return { success: false, message: 'Not found' };
+    if (!doc.exists) return { success: false, message: 'ไม่พบรายการ' };
     
     const docData = doc.data();
     const amt = parseFloat(docData.amount) || 0;
@@ -396,18 +437,51 @@ const API = {
     }
     
     await batch.commit();
-    return { success: true, message: 'Cancelled' };
+    return { success: true, message: 'ยกเลิกรายการเรียบร้อยแล้ว' };
   },
   
   async deleteStudent(studentId) {
     const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
     if (!usersSnap.empty) {
       await db.collection('users').doc(usersSnap.docs[0].id).delete();
-      return { success: true, message: 'Deleted' };
+      return { success: true, message: 'ลบข้อมูลนักเรียนเรียบร้อยแล้ว' };
     }
-    return { success: false, message: 'Not found' };
+    return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
   },
-  
+
+  async updateStudent(oldStudentId, updatedData) {
+    const usersSnap = await db.collection('users').where('student_id', '==', String(oldStudentId)).get();
+    if (usersSnap.empty) {
+      return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
+    }
+
+    const newId = String(updatedData.student_id).trim();
+    if (newId.toLowerCase() !== String(oldStudentId).trim().toLowerCase()) {
+      const checkSnap = await db.collection('users').where('student_id', '==', newId).get();
+      if (!checkSnap.empty) {
+        return { success: false, message: 'รหัสนักเรียนนี้มีในระบบแล้ว' };
+      }
+    }
+
+    const batch = db.batch();
+    const uDoc = usersSnap.docs[0];
+    const updateObj = {
+      student_number: parseInt(updatedData.student_number) || 0,
+      student_id: newId,
+      name: String(updatedData.name || '').trim()
+    };
+    batch.update(uDoc.ref, updateObj);
+
+    if (newId !== String(oldStudentId).trim()) {
+      const txSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').where('student_id', '==', String(oldStudentId)).get();
+      txSnap.docs.forEach(td => {
+        batch.update(td.ref, { student_id: newId });
+      });
+    }
+
+    await batch.commit();
+    return { success: true, message: 'แก้ไขข้อมูลนักเรียนเรียบร้อยแล้ว' };
+  },
   
   async addUsersBatch(usersArray) {
     try {
@@ -418,7 +492,7 @@ const API = {
         
         let pwdHash = u.password_hash;
         if (!pwdHash) {
-           pwdHash = await this.hashPassword('1234');
+          pwdHash = await this.hashPassword('1234');
         }
         
         batch.set(docRef, {
@@ -439,7 +513,7 @@ const API = {
     payload.password_hash = hashed;
     delete payload.password;
     await db.collection('users').add({ ...payload, total_paid: 0, room_id: DBState.currentRoomId });
-    return { success: true, message: 'Success' };
+    return { success: true, message: 'เพิ่มข้อมูลนักเรียนเรียบร้อยแล้ว' };
   },
 
   async setUserRole(studentId, role, pwd) {
@@ -450,9 +524,9 @@ const API = {
          updateData.password_hash = await this.hashPassword(pwd);
       }
       await db.collection('users').doc(usersSnap.docs[0].id).update(updateData);
-      return { success: true, message: 'Success' };
+      return { success: true, message: 'บันทึกสิทธิ์เรียบร้อยแล้ว' };
     }
-    return { success: false, message: 'Not found' };
+    return { success: false, message: 'ไม่พบผู้ใช้ในระบบ' };
   },
   
   async rollOverSemester(newClass, newYear, newSem, userName) {
@@ -510,6 +584,80 @@ const API = {
       console.error('rollOverSemester error:', err);
       throw new Error('ไม่สามารถเลื่อนชั้นได้: ' + err.message);
     }
+  },
+
+  async changePassword(studentId, oldPassword, newPassword) {
+    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
+    if (usersSnap.empty) {
+      return { success: false, message: 'ไม่พบข้อมูลผู้ใช้ในระบบ' };
+    }
+    const uDoc = usersSnap.docs[0];
+    const userData = uDoc.data();
+
+    if (String(newPassword).trim().length < 6) {
+      return { success: false, message: 'รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร' };
+    }
+
+    const hashedOld = await this.hashPassword(oldPassword);
+    const dbPwdHash = userData.password_hash || '';
+
+    if (dbPwdHash === hashedOld || (dbPwdHash === '' && String(oldPassword).trim() === '123456')) {
+      const hashedNew = await this.hashPassword(newPassword);
+      await uDoc.ref.update({ password_hash: hashedNew });
+      return { success: true, message: 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว' };
+    } else {
+      return { success: false, message: 'รหัสผ่านเดิมไม่ถูกต้อง' };
+    }
+  },
+
+  async resetUserPassword(targetStudentId, requestorRole) {
+    const usersSnap = await db.collection('users').where('student_id', '==', String(targetStudentId)).get();
+    if (usersSnap.empty) {
+      return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
+    }
+    const uDoc = usersSnap.docs[0];
+    const defaultHash = await this.hashPassword('123456');
+    await uDoc.ref.update({ password_hash: defaultHash });
+    return { success: true, message: 'รีเซ็ตรหัสผ่านกลับเป็น 123456 สำเร็จ' };
+  },
+
+  async resetSystemData(resetType) {
+    try {
+      const roomRef = db.collection('rooms').doc(DBState.currentRoomId);
+      
+      const txSnap = await roomRef.collection('transactions').get();
+      const batch1 = db.batch();
+      txSnap.docs.forEach(doc => batch1.delete(doc.ref));
+      await batch1.commit();
+
+      const weeksSnap = await roomRef.collection('weeks').get();
+      const batch2 = db.batch();
+      weeksSnap.docs.forEach(doc => batch2.delete(doc.ref));
+      await batch2.commit();
+
+      await roomRef.collection('settings').doc('global').set({ current_balance: 0 }, { merge: true });
+
+      const usersSnap = await db.collection('users').where('room_id', '==', DBState.currentRoomId).get();
+      const batch3 = db.batch();
+      usersSnap.docs.forEach(doc => {
+        const u = doc.data();
+        if (resetType === 'all') {
+          if (u.role !== 'teacher') {
+            batch3.delete(doc.ref);
+          } else {
+            batch3.update(doc.ref, { total_paid: 0 });
+          }
+        } else {
+          batch3.update(doc.ref, { total_paid: 0 });
+        }
+      });
+      await batch3.commit();
+
+      return { success: true, message: 'ล้างข้อมูลเรียบร้อยแล้ว' };
+    } catch (e) {
+      console.error('resetSystemData error:', e);
+      return { success: false, message: e.message };
+    }
   }
 };
 
@@ -538,7 +686,7 @@ function createRunProxy(successHandler, failureHandler) {
       }
       return function(...args) {
         console.warn('Unimplemented GAS function called:', prop, args);
-        if (successHandler) successHandler({ success: true, message: 'Mocked ' + prop });
+        if (successHandler) successHandler({ success: true, message: 'ดำเนินการสำเร็จ' });
       };
     }
   });

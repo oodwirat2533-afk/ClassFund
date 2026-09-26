@@ -10,7 +10,7 @@
           icon: 'warning',
           title: 'ข้อมูลไม่ครบถ้วน',
           html: '<span style="white-space: nowrap; display: inline-block;">กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน</span>',
-          confirmButtonText: 'OK',
+          confirmButtonText: 'ตกลง',
           confirmButtonColor: '#2563eb'
         });
         e.target.focus();
@@ -150,7 +150,7 @@
           icon: type,
           title: title || (type === 'warning' ? 'แจ้งเตือน' : 'เกิดข้อผิดพลาด'),
           text: subtitle || '',
-          confirmButtonText: 'OK',
+          confirmButtonText: 'ตกลง',
           confirmButtonColor: '#2563eb'
         });
         return;
@@ -632,7 +632,7 @@
         setTimeout(() => {
           resetLoginBtn();
           if (u !== 'admin' && u !== '54322') {
-            Swal.fire({ icon: 'warning', title: 'เข้าสู่ระบบไม่สำเร็จ', text: 'ระบบเปิดให้เข้าสู่ระบบเฉพาะคุณครูและเหรัญญิกเท่านั้น (นักเรียนสามารถดูข้อมูลได้ที่หน้าหลัก)', confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
+            Swal.fire({ icon: 'warning', title: 'เข้าสู่ระบบไม่สำเร็จ', text: 'ระบบเปิดให้เข้าสู่ระบบเฉพาะคุณครูและเหรัญญิกเท่านั้น (นักเรียนสามารถดูข้อมูลได้ที่หน้าหลัก)', confirmButtonText: 'ตกลง', confirmButtonColor: '#2563eb' });
             return;
           }
           currentUser = { 
@@ -665,9 +665,9 @@
                 
                 Swal.fire({
                   icon: 'warning',
-                  title: 'ปฏิเสธการเข้าถึง (Access Denied)',
+                  title: 'ปฏิเสธการเข้าถึง',
                   text: 'สงวนสิทธิ์เฉพาะผู้ดูแลระบบ กรุณาเข้าใช้งานผ่านลิงก์ห้องเรียนของท่าน',
-                  confirmButtonText: 'OK',
+                  confirmButtonText: 'ตกลง',
                   confirmButtonColor: '#2563eb'
                 }).then(() => {
                   const pwdInput = document.getElementById('password');
@@ -723,7 +723,7 @@
                 icon: 'warning',
                 title: 'เข้าสู่ระบบไม่สำเร็จ',
                 text: res.message || 'รหัสผ่านไม่ถูกต้อง',
-                confirmButtonText: 'OK',
+                confirmButtonText: 'ตกลง',
                 confirmButtonColor: '#2563eb'
               });
             }
@@ -734,7 +734,7 @@
               icon: 'error',
               title: 'เกิดข้อผิดพลาด',
               text: err.message || 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้',
-              confirmButtonText: 'OK',
+              confirmButtonText: 'ตกลง',
               confirmButtonColor: '#2563eb'
             });
           })
@@ -839,7 +839,7 @@
         })
         .withFailureHandler(err => {
           if (!silent) showLoader(false);
-          Swal.fire({ icon: 'error', title: 'Server Error', text: err.message });
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์', text: err.message });
         })
         .getDashboardData(currentUser ? currentUser.role : 'guest', currentUser ? currentUser.student_id : '');
     }
@@ -976,7 +976,7 @@
           }
         })
         .withFailureHandler(err => {
-          showSyncToast('error', 'Server Error: ' + err.message);
+          showSyncToast('error', 'เกิดข้อผิดพลาด: ' + err.message);
         })
         .updateClassSettings(clsName, schName, acadYear, semester, currentUser ? currentUser.name : '');
     }
@@ -1125,7 +1125,7 @@
               showCenterLoader('hide');
               Swal.fire({
                 icon: 'error',
-                title: 'Server Error',
+                title: 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์',
                 text: err.message
               });
             })
@@ -3106,13 +3106,13 @@
           if(res.success) {
             renderAdminRooms(res.data);
           } else {
-            Swal.fire('Error', 'ไม่สามารถโหลดข้อมูลห้องได้', 'error');
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลห้องได้', 'error');
           }
         })
         .withFailureHandler(err => {
           showLoader(false);
           console.error(err);
-          Swal.fire('Error', err.message || 'เกิดข้อผิดพลาดในการโหลด', 'error');
+          Swal.fire('เกิดข้อผิดพลาด', err.message || 'เกิดข้อผิดพลาดในการโหลด', 'error');
         })
         .getAllRooms();
     };
@@ -3174,10 +3174,10 @@
         .withSuccessHandler(res => {
           if (res.success) {
             closeCreateRoomModal();
-            Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'สร้างห้องเรียนสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
             loadAdminData();
           } else {
-            Swal.fire('Error', res.message, 'error');
+            Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
           }
         })
         .createRoom(payload);
@@ -3224,10 +3224,10 @@
           google.script.run
             .withSuccessHandler(res => {
               if (res.success) {
-                Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
+                Swal.fire({ icon: 'success', title: 'แก้ไขสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
                 loadAdminData();
               } else {
-                Swal.fire('Error', res.message, 'error');
+                Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
               }
             })
             .updateRoomTeacher(roomId, result.value.trim());
@@ -3253,7 +3253,7 @@
                 Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
                 loadAdminData();
               } else {
-                Swal.fire('Error', res.message, 'error');
+                Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
               }
             })
             .deleteRoom(roomId);
