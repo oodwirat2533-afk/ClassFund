@@ -89,7 +89,7 @@
 
     // === View Switcher (Dashboard, Students Management, Collect Checklist) ===
     function switchMainView(view) {
-      if (view === 'students' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'super_admin'))) {
+      if (view === 'students' && (!currentUser || currentUser.role !== 'teacher')) {
         Swal.fire({
           icon: 'warning',
           title: 'จำกัดสิทธิ์การเข้าถึง',
@@ -98,7 +98,7 @@
         return;
       }
 
-      if (view === 'collect' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'treasurer' && currentUser.role !== 'super_admin'))) {
+      if (view === 'collect' && (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'treasurer'))) {
         Swal.fire({
           icon: 'warning',
           title: 'จำกัดสิทธิ์การเข้าถึง',
@@ -342,13 +342,26 @@
     function updateUserNavUI() {
   const urlParams = new URLSearchParams(window.location.search);
   const inRoom = !!urlParams.get('room');
+  const isSuperAdminInRoom = currentUser && currentUser.role === 'super_admin' && inRoom;
   const btnReturn = document.getElementById('btnReturnAdmin');
+  const btnNavMenu = document.getElementById('btnNavMenu');
+
   if (btnReturn) { 
-    if (currentUser && currentUser.role === 'super_admin' && inRoom) { 
+    if (isSuperAdminInRoom) { 
       btnReturn.classList.remove('hidden-view'); 
     } else { 
       btnReturn.classList.add('hidden-view'); 
     } 
+  }
+
+  // Hide hamburger menu completely when Super Admin enters a room to prevent modifying room data
+  if (btnNavMenu) {
+    if (isSuperAdminInRoom) {
+      btnNavMenu.classList.add('hidden-view');
+      closeNavDropdown();
+    } else {
+      btnNavMenu.classList.remove('hidden-view');
+    }
   }
 
       const navGuest = document.getElementById('navGuestState');
@@ -395,10 +408,10 @@
           dropBadge.className = badgeClass;
         }
 
-        if ((currentUser.role === 'teacher' || currentUser.role === 'treasurer' || (currentUser.role === 'super_admin' && inRoom))) {
+        if ((currentUser.role === 'teacher' || currentUser.role === 'treasurer') && !isSuperAdminInRoom) {
             if (navMenuAdminGroup) navMenuAdminGroup.classList.remove('hidden-view');
             if (btnExportExcel) btnExportExcel.classList.remove('hidden-view');
-          } else {
+        } else {
           if (navMenuAdminGroup) navMenuAdminGroup.classList.add('hidden-view');
           if (btnExportExcel) btnExportExcel.classList.add('hidden-view');
           if (currentMainView === 'collect' || currentMainView === 'students') {
@@ -409,7 +422,7 @@
         const navBtnChangePwd = document.getElementById('navBtnChangePwd');
         const navBtnChangePwdDivider = document.getElementById('navBtnChangePwdDivider');
 
-        if (currentUser.role === 'teacher' || (currentUser.role === 'super_admin' && inRoom)) {
+        if (currentUser.role === 'teacher' && !isSuperAdminInRoom) {
           if (navBtnManageStudents) navBtnManageStudents.classList.remove('hidden-view');
           const navBtnClassSettings = document.getElementById('navBtnClassSettings');
           if (navBtnClassSettings) navBtnClassSettings.classList.remove('hidden-view');
@@ -1310,7 +1323,7 @@
         item.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70 transition-colors gap-2';
 
         let adminActions = '';
-        if (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin')) {
+        if (currentUser && currentUser.role === 'teacher') {
           adminActions = `
             <div class="flex items-center gap-1.5 shrink-0">
               <button type="button" onclick="handleEditWeek('${w.week_id}')" class="text-xs text-blue-700 bg-blue-100 hover:bg-blue-200 px-2.5 py-1 rounded-lg font-semibold transition-colors cursor-pointer">✏️ แก้ไข</button>
@@ -1458,7 +1471,7 @@
         return;
       }
 
-      const isTeacher = (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin'));
+      const isTeacher = (currentUser && currentUser.role === 'teacher');
 
       filtered.forEach(s => {
         const totalPaid = parseFloat(s.total_paid) || 0;
@@ -1592,7 +1605,7 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const isTeacher = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin') && window.isCurrentTerm !== false;
+      const isTeacher = currentUser && currentUser.role === 'teacher' && window.isCurrentTerm !== false;
       const thActions = document.getElementById('thTxActions');
       if (thActions) {
         if (isTeacher) thActions.classList.remove('hidden-view');
@@ -2792,7 +2805,7 @@
         return;
       }
 
-      const isTeacher = (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'super_admin'));
+      const isTeacher = (currentUser && currentUser.role === 'teacher');
 
       filtered.forEach(s => {
         const sId = String(s.student_id).trim();
