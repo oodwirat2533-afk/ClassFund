@@ -816,47 +816,7 @@
       google.script.run
         .withSuccessHandler(res => {
           if (!silent) showLoader(false);
-          if (res.success) {
-            window.rawAppData = JSON.parse(JSON.stringify(res.data));
-            
-            const termsSet = new Set();
-            termsSet.add((res.data.settings.current_semester || '1') + '/' + (res.data.settings.current_academic_year || '2569'));
-            
-            res.data.transactions.forEach(t => {
-              if (t.semester && t.academic_year) termsSet.add(t.semester + '/' + t.academic_year);
-            });
-            res.data.weeks.forEach(w => {
-              if (w.semester && w.academic_year) termsSet.add(w.semester + '/' + w.academic_year);
-            });
-            
-            window.availableTerms = Array.from(termsSet).sort((a,b) => {
-               const [semA, yearA] = a.split('/');
-               const [semB, yearB] = b.split('/');
-               if (yearA !== yearB) return parseInt(yearB) - parseInt(yearA);
-               return parseInt(semB) - parseInt(semA);
-            });
-            
-            const sel = document.getElementById('selHistoryTerm');
-            if (sel) {
-              if (window.availableTerms.length > 1) {
-                sel.classList.remove('hidden-view');
-                sel.innerHTML = window.availableTerms.map(t => '<option value="' + t + '">เทอม ' + t + '</option>').join('');
-                if (!window.currentViewTerm) window.currentViewTerm = window.availableTerms[0];
-                sel.value = window.currentViewTerm;
-              } else {
-                sel.classList.add('hidden-view');
-                window.currentViewTerm = window.availableTerms[0];
-              }
-            }
-            
-            applyHistoryFilter();
-            
-            renderManageStudentsTable();
-            populateSelects();
-            initCollectView();
-          } else {
-            Swal.fire({ icon: 'error', title: 'โหลดข้อมูลไม่สำเร็จ', text: res.message });
-          }
+          _processLoadedData(res);
         })
         .withFailureHandler(err => {
           if (!silent) showLoader(false);
@@ -864,6 +824,55 @@
         })
         .getDashboardData(currentUser ? currentUser.role : 'guest', currentUser ? currentUser.student_id : '');
     }
+
+    function _processLoadedData(res) {
+      if (res.success) {
+        window.rawAppData = JSON.parse(JSON.stringify(res.data));
+        
+        const termsSet = new Set();
+        termsSet.add((res.data.settings.current_semester || '1') + '/' + (res.data.settings.current_academic_year || '2569'));
+        
+        res.data.transactions.forEach(t => {
+          if (t.semester && t.academic_year) termsSet.add(t.semester + '/' + t.academic_year);
+        });
+        res.data.weeks.forEach(w => {
+          if (w.semester && w.academic_year) termsSet.add(w.semester + '/' + w.academic_year);
+        });
+        
+        window.availableTerms = Array.from(termsSet).sort((a,b) => {
+           const [semA, yearA] = a.split('/');
+           const [semB, yearB] = b.split('/');
+           if (yearA !== yearB) return parseInt(yearB) - parseInt(yearA);
+           return parseInt(semB) - parseInt(semA);
+        });
+        
+        const sel = document.getElementById('selHistoryTerm');
+        if (sel) {
+          if (window.availableTerms.length > 1) {
+            sel.classList.remove('hidden-view');
+            sel.innerHTML = window.availableTerms.map(t => '<option value="' + t + '">เทอม ' + t + '</option>').join('');
+            if (!window.currentViewTerm) window.currentViewTerm = window.availableTerms[0];
+            sel.value = window.currentViewTerm;
+          } else {
+            sel.classList.add('hidden-view');
+            window.currentViewTerm = window.availableTerms[0];
+          }
+        }
+        
+        applyHistoryFilter();
+        
+        renderManageStudentsTable();
+        populateSelects();
+        initCollectView();
+      } else {
+        Swal.fire({ icon: 'error', title: 'โหลดข้อมูลไม่สำเร็จ', text: res.message });
+      }
+    }
+
+    // Background refresh callback — when fresh data arrives after cached data was shown
+    window._onDataRefresh = function(freshResult) {
+      _processLoadedData(freshResult);
+    };
 
     window.loadHistoryTerm = function() {
       const sel = document.getElementById('selHistoryTerm');

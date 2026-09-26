@@ -2,6 +2,15 @@ const db = firebase.firestore();
 
 const DBState = { currentRoomId: null };
 
+// Clear localStorage cache when data changes
+function _invalidateCache() {
+  try {
+    if (DBState.currentRoomId) {
+      localStorage.removeItem('cf_cache_' + DBState.currentRoomId);
+    }
+  } catch(e) { /* ignore */ }
+}
+
 const API = {
 
   async getAllRooms() {
@@ -198,6 +207,36 @@ const API = {
     if (!DBState.currentRoomId && role !== 'super_admin') {
       return { success: true, data: { transactions: [], users: [], weeks: [], settings: {} } };
     }
+    
+    const cacheKey = 'cf_cache_' + DBState.currentRoomId;
+    
+    // Try to return cached data first for instant display
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        // Return cached data immediately, then schedule a background refresh
+        if (parsed && parsed.data && !this._bgRefreshScheduled) {
+          this._bgRefreshScheduled = true;
+          // Schedule background fetch to update cache silently
+          setTimeout(() => {
+            this._fetchFreshData(cacheKey).then(freshResult => {
+              this._bgRefreshScheduled = false;
+              if (freshResult && window._onDataRefresh) {
+                window._onDataRefresh(freshResult);
+              }
+            }).catch(() => { this._bgRefreshScheduled = false; });
+          }, 100);
+          return parsed;
+        }
+      }
+    } catch(e) { /* ignore cache errors */ }
+    
+    // No cache — fetch from Firestore directly
+    return await this._fetchFreshData(cacheKey);
+  },
+  
+  async _fetchFreshData(cacheKey) {
     const [usersSnap, weeksSnap, txSnap, settingsSnap] = await Promise.all([
       db.collection('users').where('room_id', '==', DBState.currentRoomId).get(),
       db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').orderBy('week_number', 'asc').get(),
@@ -210,7 +249,7 @@ const API = {
       settings = settingsSnap.data();
     }
     
-    return {
+    const result = {
       success: true,
       data: {
         users: usersSnap.docs.map(d => ({ id: d.id, ...d.data() })),
@@ -219,6 +258,19 @@ const API = {
         settings: settings
       }
     };
+    
+    // Save to localStorage for next instant load
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify(result));
+    } catch(e) {
+      // Storage full — clear old caches
+      try {
+        Object.keys(localStorage).filter(k => k.startsWith('cf_cache_')).forEach(k => localStorage.removeItem(k));
+        localStorage.setItem(cacheKey, JSON.stringify(result));
+      } catch(e2) { /* ignore */ }
+    }
+    
+    return result;
   },
 
   async hashPassword(password) {
@@ -495,10 +547,10 @@ const API = {
       const amount = payload.amount || payload.amountPerStudent;
       const recordedBy = payload.recorded_by || payload.recordedBy;
       
-      // Fetch settings and ALL users concurrently to avoid N queries in loop
+      // Fetch settings and room users concurrently to avoid N queries in loop
       const [settingsDoc, allUsersSnap] = await Promise.all([
         db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').get(),
-        db.collection('users').get()
+        db.collection('users').where('room_id', '==', DBState.currentRoomId).get()
       ]);
 
       // Create a map of student_id -> userDoc
@@ -852,9 +904,14 @@ function createRunProxy(successHandler, failureHandler) {
         return (handler) => createRunProxy(successHandler, handler);
       }
       if (API[prop]) {
+        const readOnlyMethods = ['getDashboardData', 'getAllRooms', 'setRoomId', 'hashPassword', 'login', '_fetchFreshData'];
         return async function(...args) {
           try {
             const result = await API[prop](...args);
+            // Invalidate cache after any successful write operation
+            if (!readOnlyMethods.includes(prop) && result && result.success) {
+              _invalidateCache();
+            }
             if (successHandler) successHandler(result);
           } catch (e) {
             console.error('Firebase Error:', e);

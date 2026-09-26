@@ -22,7 +22,7 @@
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <link rel="stylesheet" href="css/style.css?v=20260926q">
+  <link rel="stylesheet" href="css/style.css?v=20260926_perf1">
 
   
   <!-- Firebase SDK -->
@@ -39,6 +39,14 @@
       measurementId: "G-ZLLBVGBWN1"
     };
     firebase.initializeApp(firebaseConfig);
+    // Enable offline persistence — cached data loads instantly on refresh
+    firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+      if (err.code === 'failed-precondition') {
+        console.warn('Firestore persistence: multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        console.warn('Firestore persistence: not supported by browser');
+      }
+    });
     
   </script>
 </head>
@@ -1232,8 +1240,8 @@
 
 
   <!-- ==================== LOGIC & SCRIPTS ==================== -->
-  <script src="js/firebase-db.js?v=20260926_fix1"></script>
-<script src="js/app.js?v=20260926_fix1"></script>
+  <script src="js/firebase-db.js?v=20260926_perf1"></script>
+<script src="js/app.js?v=20260926_perf1"></script>
 
 </body>
 </html>
