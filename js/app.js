@@ -140,9 +140,7 @@
           title: title || 'สำเร็จ',
           text: subtitle || '',
           timer: autoHideMs || 1500,
-          showConfirmButton: true,
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#2563eb'
+          showConfirmButton: false
         });
         return;
       }
@@ -3176,7 +3174,7 @@
         .withSuccessHandler(res => {
           if (res.success) {
             closeCreateRoomModal();
-            Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
+            Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
             loadAdminData();
           } else {
             Swal.fire('Error', res.message, 'error');
@@ -3226,7 +3224,7 @@
           google.script.run
             .withSuccessHandler(res => {
               if (res.success) {
-                Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
+                Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
                 loadAdminData();
               } else {
                 Swal.fire('Error', res.message, 'error');
@@ -3252,7 +3250,7 @@
           google.script.run
             .withSuccessHandler(res => {
               if (res.success) {
-                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', text: res.message, confirmButtonText: 'OK', confirmButtonColor: '#2563eb' });
+                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
                 loadAdminData();
               } else {
                 Swal.fire('Error', res.message, 'error');
