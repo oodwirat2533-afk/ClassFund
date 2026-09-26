@@ -6,7 +6,40 @@ const API = {
 
   async getAllRooms() {
     const snap = await db.collection('rooms').orderBy('created_at', 'desc').get();
-    return { success: true, data: snap.docs.map(d => d.data()) };
+    const rooms = await Promise.all(snap.docs.map(async d => {
+      const data = d.data();
+      try {
+        const setSnap = await db.collection('rooms').doc(d.id).collection('settings').doc('global').get();
+        if (setSnap.exists && setSnap.data() && setSnap.data().class_name) {
+          const settingClassName = setSnap.data().class_name;
+          if (settingClassName && settingClassName !== data.name) {
+            data.name = settingClassName;
+            db.collection('rooms').doc(d.id).set({ name: settingClassName }, { merge: true }).catch(() => {});
+          }
+        }
+      } catch(e) {}
+      return data;
+    }));
+    return { success: true, data: rooms };
+  },
+  
+  async updateRoomName(roomId, newRoomName) {
+    try {
+      if (!roomId || !newRoomName) throw new Error('ข้อมูลไม่ครบถ้วน');
+      const cleanName = String(newRoomName).trim();
+      const batch = db.batch();
+      
+      const roomRef = db.collection('rooms').doc(roomId);
+      batch.set(roomRef, { name: cleanName }, { merge: true });
+      
+      const settingsRef = roomRef.collection('settings').doc('global');
+      batch.set(settingsRef, { class_name: cleanName }, { merge: true });
+      
+      await batch.commit();
+      return { success: true, message: 'อัปเดตชื่อห้องเรียนเรียบร้อยแล้ว' };
+    } catch(e) {
+      return { success: false, message: e.message };
+    }
   },
   
   
@@ -343,9 +376,45 @@ const API = {
     return { success: true, message: 'ลบรอบเก็บเงินเรียบร้อยแล้ว' };
   },
 
-  async updateClassSettings(settings) {
-    await db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global').set(settings, { merge: true });
-    return { success: true, message: 'บันทึกการตั้งค่าห้องเรียนเรียบร้อยแล้ว', settings: settings };
+  async updateClassSettings(classNameOrSettings, schoolName, academicYear, semester, recordedBy) {
+    try {
+      let settingsObj = {};
+      let newClassName = '';
+      if (typeof classNameOrSettings === 'object' && classNameOrSettings !== null) {
+        settingsObj = { ...classNameOrSettings };
+        newClassName = settingsObj.class_name || '';
+      } else {
+        newClassName = String(classNameOrSettings || '').trim();
+        settingsObj = {
+          class_name: newClassName,
+          school_name: schoolName || '',
+          current_academic_year: String(academicYear || ''),
+          current_semester: String(semester || '')
+        };
+      }
+
+      const roomId = DBState.currentRoomId;
+      if (!roomId) throw new Error('ไม่พบ Room ID ปัจจุบัน');
+
+      const batch = db.batch();
+      const roomRef = db.collection('rooms').doc(roomId);
+      const settingsRef = roomRef.collection('settings').doc('global');
+      batch.set(settingsRef, settingsObj, { merge: true });
+
+      if (newClassName) {
+        batch.set(roomRef, { name: newClassName }, { merge: true });
+      }
+
+      await batch.commit();
+
+      const updatedSnap = await settingsRef.get();
+      const updatedSettings = updatedSnap.exists ? updatedSnap.data() : settingsObj;
+
+      return { success: true, message: 'บันทึกการตั้งค่าห้องเรียนเรียบร้อยแล้ว', settings: updatedSettings };
+    } catch (err) {
+      console.error('updateClassSettings error:', err);
+      return { success: false, message: 'บันทึกไม่สำเร็จ: ' + err.message };
+    }
   },
   
   async addBatchIncome(payload) {
@@ -572,6 +641,11 @@ const API = {
         current_academic_year: String(newYear),
         current_semester: String(newSem)
       });
+
+      // Auto-sync new class name to main room document
+      batch.set(roomRef, {
+        name: newClass
+      }, { merge: true });
 
       await batch.commit();
       return { 

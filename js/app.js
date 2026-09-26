@@ -3136,7 +3136,14 @@
       rooms.forEach(room => {
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="px-4 py-3 font-semibold text-slate-800">${room.name}</td>
+            <td class="px-4 py-3 font-semibold text-slate-800">
+              <div class="flex items-center gap-2">
+                <span>${room.name}</span>
+                <button onclick="promptEditRoomName('${room.room_id}', '${room.name}')" class="text-xs text-slate-400 hover:text-blue-600 transition-colors p-1 rounded-md hover:bg-blue-50" title="แก้ไขชื่อห้องเรียน">
+                  ✏️
+                </button>
+              </div>
+            </td>
             <td class="px-4 py-3 text-sm text-slate-600">${room.teacher_name}</td>
             <td class="px-4 py-3 text-sm text-slate-500">${new Date(room.created_at).toLocaleDateString('th-TH')}</td>
             <td class="px-4 py-3 text-right">
@@ -3213,6 +3220,38 @@
     };
 
     
+    window.promptEditRoomName = function(roomId, oldName) {
+      Swal.fire({
+        title: '✏️ แก้ไขชื่อห้องเรียน',
+        input: 'text',
+        inputValue: oldName === 'undefined' ? '' : oldName,
+        inputPlaceholder: 'กรอกชื่อห้องเรียนใหม่ (เช่น ม.3/7, ม.5/1)',
+        showCancelButton: true,
+        confirmButtonColor: '#4f46e5',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+        inputValidator: (value) => {
+          if (!value || !value.trim()) {
+            return 'กรุณากรอกชื่อห้องเรียน!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          google.script.run
+            .withSuccessHandler(res => {
+              if (res.success) {
+                Swal.fire({ icon: 'success', title: 'แก้ไขสำเร็จ', text: res.message, timer: 1500, showConfirmButton: false });
+                loadAdminData();
+              } else {
+                Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
+              }
+            })
+            .updateRoomName(roomId, result.value.trim());
+        }
+      });
+    };
+
     window.promptEditTeacher = function(roomId, oldName) {
       Swal.fire({
         title: '✏️ แก้ไขชื่อครูประจำชั้น',
