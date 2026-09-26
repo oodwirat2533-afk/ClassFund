@@ -172,14 +172,14 @@ const API = {
         usersSnap = await queryNum.get();
       }
     if (usersSnap.empty) {
-      return { success: false, message: '��辺���ʻ�Шӵ�ǹ����к�' };
+      return { success: false, message: 'ไม่พบรหัสประจำตัวในระบบ' };
     }
     const user = usersSnap.docs[0].data();
     if (user.role === 'student') { return { success: false, message: 'ไม่มีสิทธิ์เข้าถึง' }; }
     if (user.password_hash === hashedPin) {
       return { success: true, user: user };
     } else {
-      return { success: false, message: '���ʼ�ҹ���١��ͧ' };
+      return { success: false, message: 'รหัสผ่านไม่ถูกต้อง' };
     }
   },
 
