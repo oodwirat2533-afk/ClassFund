@@ -124,38 +124,44 @@
     let centerSyncTimeout = null;
 
     function showCenterLoader(type, title, subtitle, autoHideMs) {
-      const overlay = document.getElementById('centerSyncOverlay');
-      const card = document.getElementById('centerSyncCard');
-      const iconBox = document.getElementById('centerSyncIconBox');
-      const titleEl = document.getElementById('centerSyncTitle');
-      const subEl = document.getElementById('centerSyncSubtitle');
-
       if (centerSyncTimeout) {
         clearTimeout(centerSyncTimeout);
         centerSyncTimeout = null;
       }
 
       if (type === 'hide' || !type) {
-        if (overlay) {
-          overlay.classList.remove('opacity-100', 'pointer-events-auto');
-          overlay.classList.add('opacity-0', 'pointer-events-none');
-        }
-        if (card) {
-          card.classList.remove('scale-100');
-          card.classList.add('scale-90');
-        }
+        Swal.close();
+        return;
+      }
+
+      if (type === 'loading') {
+        Swal.fire({
+          title: title || 'กำลังดำเนินการ...',
+          text: subtitle || '',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        return;
+      }
+
+      if (type === 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: title || 'สำเร็จ',
+          text: subtitle || '',
+          timer: autoHideMs || 1500,
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#2563eb'
+        });
         return;
       }
 
       if (type === 'error' || type === 'warning' || type === 'info') {
-        if (overlay) {
-          overlay.classList.remove('opacity-100', 'pointer-events-auto');
-          overlay.classList.add('opacity-0', 'pointer-events-none');
-        }
-        if (card) {
-          card.classList.remove('scale-100');
-          card.classList.add('scale-90');
-        }
         Swal.fire({
           icon: type,
           title: title || (type === 'warning' ? 'แจ้งเตือน' : 'เกิดข้อผิดพลาด'),
@@ -164,48 +170,6 @@
           confirmButtonColor: '#2563eb'
         });
         return;
-      }
-
-      if (!overlay || !card || !iconBox || !titleEl || !subEl) return;
-
-      titleEl.textContent = title || 'กำลังดำเนินการ...';
-
-      if (type === 'loading') {
-        iconBox.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-3.5 transition-all duration-300 bg-blue-50 text-blue-600 shadow-inner";
-        iconBox.innerHTML = `
-          <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-85" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-          </svg>
-        `;
-        subEl.textContent = subtitle || 'กรุณารอสักครู่ ระบบกำลังประมวลผล';
-        subEl.classList.remove('hidden-view');
-      } else if (type === 'success') {
-        iconBox.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-3.5 transition-all duration-300 bg-emerald-50 text-emerald-600 shadow-inner scale-105";
-        iconBox.innerHTML = `
-          <svg class="h-8 w-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-          </svg>
-        `;
-        if (subtitle) {
-          subEl.textContent = subtitle;
-          subEl.classList.remove('hidden-view');
-        } else {
-          subEl.textContent = '';
-          subEl.classList.add('hidden-view');
-        }
-        autoHideMs = autoHideMs || 900;
-      }
-
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-      overlay.classList.add('opacity-100', 'pointer-events-auto');
-      card.classList.remove('scale-90');
-      card.classList.add('scale-100');
-
-      if (autoHideMs) {
-        centerSyncTimeout = setTimeout(() => {
-          showCenterLoader('hide');
-        }, autoHideMs);
       }
     }
 

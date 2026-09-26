@@ -175,3 +175,23 @@ body {
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
+
+
+/* Hide legacy centerSyncOverlay completely */
+#centerSyncOverlay {
+  display: none !important;
+}
+
+/* SweetAlert2 Loader & Timer Bar */
+.swal2-loader {
+  border-color: #2563eb transparent #2563eb transparent !important;
+  width: 3.25rem !important;
+  height: 3.25rem !important;
+  margin: 1.25rem auto 0.5rem !important;
+}
+
+.swal2-timer-progress-bar {
+  background: rgba(37, 99, 235, 0.4) !important;
+  height: 3px !important;
+  border-radius: 9999px !important;
+}
