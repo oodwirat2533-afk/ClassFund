@@ -229,27 +229,57 @@ const API = {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   },
 
-    async login(studentId, pin) {
+  async findUserDoc(studentId) {
+    if (!studentId && studentId !== 0) return null;
+    const sIdStr = String(studentId).trim();
+    const sIdNum = Number(studentId);
+    const roomId = DBState.currentRoomId || (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('room') : null);
+
+    // 1. Direct doc ID lookup: roomId_studentId
+    if (roomId) {
+      try {
+        const directRef = db.collection('users').doc(roomId + '_' + sIdStr);
+        const directDoc = await directRef.get();
+        if (directDoc.exists) return directDoc;
+      } catch (e) {}
+    }
+
+    // 2. Query by student_id as String
+    try {
+      let snap = await db.collection('users').where('student_id', '==', sIdStr).get();
+      if (!snap.empty) {
+        if (roomId && sIdStr !== 'superadmin') {
+          const match = snap.docs.find(d => d.data().room_id === roomId);
+          if (match) return match;
+        }
+        return snap.docs[0];
+      }
+    } catch (e) {}
+
+    // 3. Query by student_id as Number (if numeric)
+    if (!isNaN(sIdNum)) {
+      try {
+        let numSnap = await db.collection('users').where('student_id', '==', sIdNum).get();
+        if (!numSnap.empty) {
+          if (roomId && sIdStr !== 'superadmin') {
+            const match = numSnap.docs.find(d => d.data().room_id === roomId);
+            if (match) return match;
+          }
+          return numSnap.docs[0];
+        }
+      } catch (e) {}
+    }
+
+    return null;
+  },
+
+  async login(studentId, pin) {
     const hashedPin = await this.hashPassword(pin);
-          const urlParams = new URLSearchParams(window.location.search);
-      const currentRoom = urlParams.get('room');
-      
-      let queryStr = db.collection('users').where('student_id', '==', String(studentId));
-      let queryNum = db.collection('users').where('student_id', '==', Number(studentId));
-      
-      if (studentId !== 'superadmin' && currentRoom) {
-         queryStr = queryStr.where('room_id', '==', currentRoom);
-         queryNum = queryNum.where('room_id', '==', currentRoom);
-      }
-      
-      let usersSnap = await queryStr.get();
-      if (usersSnap.empty) {
-        usersSnap = await queryNum.get();
-      }
-    if (usersSnap.empty) {
+    const uDoc = await this.findUserDoc(studentId);
+    if (!uDoc) {
       return { success: false, message: 'ไม่พบรหัสประจำตัวในระบบ' };
     }
-    const user = usersSnap.docs[0].data();
+    const user = uDoc.data();
     if (user.role === 'student') { return { success: false, message: 'ไม่มีสิทธิ์เข้าถึง' }; }
     if (user.password_hash === hashedPin) {
       return { success: true, user: user };
@@ -271,11 +301,11 @@ const API = {
       let userQuery = null;
       
       if (txObj.student_id && txObj.student_id !== 'ROOM') {
-        userQuery = db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
+        userQuery = this.findUserDoc(txObj.student_id);
       }
 
       // Fetch concurrently
-      const [settingsDoc, usersSnap] = await Promise.all([
+      const [settingsDoc, uDoc] = await Promise.all([
         settingsRef.get(),
         userQuery || Promise.resolve(null)
       ]);
@@ -291,8 +321,7 @@ const API = {
       if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
         batch.set(settingsRef, { current_balance: current_balance + amt }, { merge: true });
         
-        if (usersSnap && !usersSnap.empty) {
-          const uDoc = usersSnap.docs[0];
+        if (uDoc) {
           const curPaid = parseFloat(uDoc.data().total_paid) || 0;
           batch.set(db.collection('users').doc(uDoc.id), { total_paid: curPaid + amt }, { merge: true });
         }
@@ -333,9 +362,8 @@ const API = {
       if (txObj.type === 'income' || txObj.type === 'fine' || txObj.type === 'other') {
         batch.set(settingsRef, { current_balance: current_balance + diff }, { merge: true });
         if (txObj.student_id && txObj.student_id !== 'ROOM') {
-          const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
-          if (!usersSnap.empty) {
-            const uDoc = usersSnap.docs[0];
+          const uDoc = await this.findUserDoc(txObj.student_id);
+          if (uDoc) {
             const curPaid = parseFloat(uDoc.data().total_paid) || 0;
             batch.set(db.collection('users').doc(uDoc.id), { total_paid: Math.max(0, curPaid + diff) }, { merge: true });
           }
@@ -368,9 +396,8 @@ const API = {
       batch.set(settingsRef, { current_balance: current_balance - amt }, { merge: true });
       
       if (txObj.student_id && txObj.student_id !== 'ROOM') {
-        const usersSnap = await db.collection('users').where('student_id', '==', String(txObj.student_id)).get();
-        if (!usersSnap.empty) {
-          const uDoc = usersSnap.docs[0];
+        const uDoc = await this.findUserDoc(txObj.student_id);
+        if (uDoc) {
           const curPaid = parseFloat(uDoc.data().total_paid) || 0;
           batch.set(db.collection('users').doc(uDoc.id), { total_paid: Math.max(0, curPaid - amt) }, { merge: true });
         }
@@ -538,9 +565,8 @@ const API = {
       current_balance: current_balance - amt
     }, { merge: true });
     
-    const userSnap = await db.collection('users').where('student_id', '==', studentId).get();
-    if(!userSnap.empty) {
-      const uDoc = userSnap.docs[0];
+    const uDoc = await this.findUserDoc(studentId);
+    if(uDoc) {
       const curPaid = parseFloat(uDoc.data().total_paid) || 0;
       batch.set(db.collection('users').doc(uDoc.id), {
         total_paid: Math.max(0, curPaid - amt)
@@ -552,30 +578,29 @@ const API = {
   },
   
   async deleteStudent(studentId) {
-    const usersSnap = await db.collection('users').where('student_id', '==', studentId).get();
-    if (!usersSnap.empty) {
-      await db.collection('users').doc(usersSnap.docs[0].id).delete();
+    const uDoc = await this.findUserDoc(studentId);
+    if (uDoc) {
+      await db.collection('users').doc(uDoc.id).delete();
       return { success: true, message: 'ลบข้อมูลนักเรียนเรียบร้อยแล้ว' };
     }
     return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
   },
 
   async updateStudent(oldStudentId, updatedData) {
-    const usersSnap = await db.collection('users').where('student_id', '==', String(oldStudentId)).get();
-    if (usersSnap.empty) {
+    const uDoc = await this.findUserDoc(oldStudentId);
+    if (!uDoc) {
       return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
     }
 
     const newId = String(updatedData.student_id).trim();
     if (newId.toLowerCase() !== String(oldStudentId).trim().toLowerCase()) {
-      const checkSnap = await db.collection('users').where('student_id', '==', newId).get();
-      if (!checkSnap.empty) {
+      const checkDoc = await this.findUserDoc(newId);
+      if (checkDoc) {
         return { success: false, message: 'รหัสนักเรียนนี้มีในระบบแล้ว' };
       }
     }
 
     const batch = db.batch();
-    const uDoc = usersSnap.docs[0];
     const updateObj = {
       student_number: parseInt(updatedData.student_number) || 0,
       student_id: newId,
@@ -584,10 +609,16 @@ const API = {
     batch.update(uDoc.ref, updateObj);
 
     if (newId !== String(oldStudentId).trim()) {
-      const txSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').where('student_id', '==', String(oldStudentId)).get();
-      txSnap.docs.forEach(td => {
+      const txSnapStr = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').where('student_id', '==', String(oldStudentId)).get();
+      txSnapStr.docs.forEach(td => {
         batch.update(td.ref, { student_id: newId });
       });
+      if (!isNaN(Number(oldStudentId))) {
+        const txSnapNum = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').where('student_id', '==', Number(oldStudentId)).get();
+        txSnapNum.docs.forEach(td => {
+          batch.update(td.ref, { student_id: newId });
+        });
+      }
     }
 
     await batch.commit();
@@ -598,8 +629,13 @@ const API = {
     try {
       const batch = db.batch();
       for (const u of usersArray) {
+        const cleanId = String(u.student_id || u.studentId || u['รหัสนักเรียน'] || u['รหัส'] || '').trim();
+        const cleanNum = parseInt(u.student_number || u.studentNumber || u['เลขที่'] || u['ลำดับ'] || 0) || 0;
+        const cleanName = String(u.name || u['ชื่อ-นามสกุล'] || u['ชื่อ'] || '').trim();
+        if (!cleanId) continue;
+
         // Document ID is roomId_studentId to prevent overwrites across rooms
-        const docRef = db.collection('users').doc(DBState.currentRoomId + '_' + String(u.student_id));
+        const docRef = db.collection('users').doc(DBState.currentRoomId + '_' + cleanId);
         
         let pwdHash = u.password_hash;
         if (!pwdHash) {
@@ -608,9 +644,12 @@ const API = {
         
         batch.set(docRef, {
           ...u,
+          student_id: cleanId,
+          student_number: cleanNum,
+          name: cleanName,
           password_hash: pwdHash,
           room_id: DBState.currentRoomId,
-          total_paid: 0
+          total_paid: parseFloat(u.total_paid) || 0
         });
       }
       await batch.commit();
@@ -620,21 +659,37 @@ const API = {
     }
   },
   async addUser(payload) {
+    const cleanId = String(payload.student_id || '').trim();
+    const cleanNum = parseInt(payload.student_number || 0) || 0;
+    const cleanName = String(payload.name || '').trim();
     const hashed = await this.hashPassword(payload.password || '1234');
-    payload.password_hash = hashed;
     delete payload.password;
-    await db.collection('users').add({ ...payload, total_paid: 0, room_id: DBState.currentRoomId });
+
+    const docRef = db.collection('users').doc(DBState.currentRoomId + '_' + cleanId);
+    await docRef.set({
+      ...payload,
+      student_id: cleanId,
+      student_number: cleanNum,
+      name: cleanName,
+      password_hash: hashed,
+      total_paid: 0,
+      room_id: DBState.currentRoomId
+    }, { merge: true });
+
     return { success: true, message: 'เพิ่มข้อมูลนักเรียนเรียบร้อยแล้ว' };
   },
 
   async setUserRole(studentId, role, pwd) {
-    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
-    if (!usersSnap.empty) {
-      const updateData = { role: role };
+    const uDoc = await this.findUserDoc(studentId);
+    if (uDoc) {
+      const updateData = { 
+        role: role,
+        student_id: String(studentId).trim() // Auto-heal student_id to String
+      };
       if (pwd) {
          updateData.password_hash = await this.hashPassword(pwd);
       }
-      await db.collection('users').doc(usersSnap.docs[0].id).update(updateData);
+      await db.collection('users').doc(uDoc.id).update(updateData);
       return { success: true, message: 'บันทึกสิทธิ์เรียบร้อยแล้ว' };
     }
     return { success: false, message: 'ไม่พบผู้ใช้ในระบบ' };
@@ -706,11 +761,10 @@ const API = {
   },
 
   async changePassword(studentId, oldPassword, newPassword) {
-    const usersSnap = await db.collection('users').where('student_id', '==', String(studentId)).get();
-    if (usersSnap.empty) {
+    const uDoc = await this.findUserDoc(studentId);
+    if (!uDoc) {
       return { success: false, message: 'ไม่พบข้อมูลผู้ใช้ในระบบ' };
     }
-    const uDoc = usersSnap.docs[0];
     const userData = uDoc.data();
 
     if (String(newPassword).trim().length < 6) {
@@ -722,7 +776,10 @@ const API = {
 
     if (dbPwdHash === hashedOld || (dbPwdHash === '' && String(oldPassword).trim() === '123456')) {
       const hashedNew = await this.hashPassword(newPassword);
-      await uDoc.ref.update({ password_hash: hashedNew });
+      await uDoc.ref.update({ 
+        password_hash: hashedNew,
+        student_id: String(studentId).trim()
+      });
       return { success: true, message: 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว' };
     } else {
       return { success: false, message: 'รหัสผ่านเดิมไม่ถูกต้อง' };
@@ -730,13 +787,15 @@ const API = {
   },
 
   async resetUserPassword(targetStudentId, requestorRole) {
-    const usersSnap = await db.collection('users').where('student_id', '==', String(targetStudentId)).get();
-    if (usersSnap.empty) {
+    const uDoc = await this.findUserDoc(targetStudentId);
+    if (!uDoc) {
       return { success: false, message: 'ไม่พบข้อมูลนักเรียน' };
     }
-    const uDoc = usersSnap.docs[0];
     const defaultHash = await this.hashPassword('123456');
-    await uDoc.ref.update({ password_hash: defaultHash });
+    await uDoc.ref.update({ 
+      password_hash: defaultHash,
+      student_id: String(targetStudentId).trim()
+    });
     return { success: true, message: 'รีเซ็ตรหัสผ่านกลับเป็น 123456 สำเร็จ' };
   },
 
