@@ -1977,7 +1977,7 @@
 
     function renderChart() {
       const ctx = document.getElementById('financeChart').getContext('2d');
-      if (chartInstance) { chartInstance.data.datasets[0].data = [totalIncomes]; chartInstance.data.datasets[1].data = [totalExpenses]; chartInstance.update(); return; }
+
 
       // Total overall incomes across all transactions (income + fine)
       const totalIncomes = (appData.transactions || [])
@@ -1988,6 +1988,8 @@
       const totalExpenses = (appData.transactions || [])
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+
+      if (chartInstance) { chartInstance.data.datasets[0].data = [totalIncomes]; chartInstance.data.datasets[1].data = [totalExpenses]; chartInstance.update(); return; }
 
       const isMobile = window.innerWidth < 640;
 
@@ -3354,6 +3356,7 @@
         }
       });
     };
+
 
 
 
