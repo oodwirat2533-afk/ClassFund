@@ -338,7 +338,8 @@
       if (!timestamp) return '-';
       const str = String(timestamp).trim();
       
-      const d = new Date(str);
+      const safeStr = str.replace(' ', 'T');
+      const d = new Date(safeStr);
       if (!isNaN(d.getTime())) {
         let y = d.getFullYear();
         if (y < 2400) y += 543;
@@ -3122,7 +3123,8 @@
         
         let txDate = t.timestamp;
         try {
-          const d = new Date(t.timestamp);
+          const safeStr = String(t.timestamp).replace(' ', 'T');
+          const d = new Date(safeStr);
           if (!isNaN(d.getTime())) {
             txDate = d.toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
           }
