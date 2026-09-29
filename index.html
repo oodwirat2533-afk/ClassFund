@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ClassFund System - ม.4/7 โรงเรียนบรรหารแจ่มใสวิทยา 3</title>
+  <title>ClassFund System - 喔�.4/7 喙傕福喔囙箑喔｀傅喔⑧笝喔氞福喔｀斧喔侧福喙佮笀喙堗浮喙冟釜喔о复喔椸涪喔� 3</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,7 +22,7 @@
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <link rel="stylesheet" href="css/style.css?v=20260926_perf1">
+  <link rel="stylesheet" href="css/style.css?v=20260929_fix1">
 
   
   <!-- Firebase SDK -->
@@ -39,7 +39,7 @@
       measurementId: "G-ZLLBVGBWN1"
     };
     firebase.initializeApp(firebaseConfig);
-    // Enable offline persistence � cached data loads instantly on refresh
+    // Enable offline persistence � cached data loads instantly on refresh
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(err) {
       if (err.code === 'failed-precondition') {
         console.warn('Firestore persistence: multiple tabs open');
@@ -55,7 +55,7 @@
   <!-- Fullscreen Loader (Used only on initial app load) -->
   <div id="fullLoader" class="fixed inset-0 bg-white/85 backdrop-blur-sm z-50 flex flex-col justify-center items-center">
     <div class="loader mb-4"></div>
-    <p class="text-slate-600 font-medium tracking-wide">กำลังโหลดข้อมูลระบบ...</p>
+    <p class="text-slate-600 font-medium tracking-wide">喔佮赋喔ム副喔囙箓喔�弗喔斷競喙夃腑喔∴腹喔ム福喔班笟喔�...</p>
   </div>
 
   <!-- Center Loading Card (Modern Glassmorphism Sync Dialog) -->
@@ -71,10 +71,10 @@
       </div>
 
       <!-- Main Title -->
-      <h3 id="centerSyncTitle" class="text-base font-bold text-slate-800 tracking-tight">กำลังบันทึกข้อมูล...</h3>
+      <h3 id="centerSyncTitle" class="text-base font-bold text-slate-800 tracking-tight">喔佮赋喔ム副喔囙笟喔编笝喔椸付喔佮競喙夃腑喔∴腹喔�...</h3>
       
       <!-- Subtitle / Helper -->
-      <p id="centerSyncSubtitle" class="text-xs text-slate-500 font-medium mt-1">กรุณารอสักครู่ ระบบกำลังประมวลผล</p>
+      <p id="centerSyncSubtitle" class="text-xs text-slate-500 font-medium mt-1">喔佮福喔膏笓喔侧福喔�釜喔编竵喔勦福喔灌箞 喔｀赴喔氞笟喔佮赋喔ム副喔囙笡喔｀赴喔∴抚喔ム笢喔�</p>
     </div>
   </div>
 
@@ -87,16 +87,16 @@
           <!-- Logo & Title -->
           <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <div class="w-10 h-10 sm:w-11 sm:h-11 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-lg sm:text-xl font-bold shadow-md shadow-blue-500/20 shrink-0">
-              💰
+              馃挵
             </div>
             <div class="min-w-0">
               <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                 <span class="text-base sm:text-xl font-bold text-slate-800 tracking-tight leading-tight">ClassFund</span>
-                <span id="lblHeaderClassRoom" class="text-xs sm:text-sm font-semibold text-blue-600 leading-tight mt-0.5 sm:mt-0">ม.4/7 เทอม 1/2569</span>
+                <span id="lblHeaderClassRoom" class="text-xs sm:text-sm font-semibold text-blue-600 leading-tight mt-0.5 sm:mt-0">喔�.4/7 喙€喔椸腑喔� 1/2569</span>
                 <select id="selHistoryTerm" onchange="loadHistoryTerm()" class="hidden-view mt-0.5 sm:mt-0 ml-0 sm:ml-2 text-[11px] sm:text-xs bg-blue-50 text-blue-700 font-bold border border-blue-200 rounded-lg px-2 py-0.5 outline-none cursor-pointer focus:ring-2 focus:ring-blue-400/50 hover:bg-blue-100 transition-colors shrink-0">
                 </select>
               </div>
-              <p id="lblHeaderSchoolName" class="text-[11px] sm:text-xs text-slate-500 font-medium truncate leading-tight mt-0.5">โรงเรียนบรรหารแจ่มใสวิทยา 3</p>
+              <p id="lblHeaderSchoolName" class="text-[11px] sm:text-xs text-slate-500 font-medium truncate leading-tight mt-0.5">喙傕福喔囙箑喔｀傅喔⑧笝喔氞福喔｀斧喔侧福喙佮笀喙堗浮喙冟釜喔о复喔椸涪喔� 3</p>
             </div>
           </div>
 
@@ -109,13 +109,13 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span class="whitespace-nowrap">เข้าสู่ระบบ</span>
+                <span class="whitespace-nowrap">喙€喔傕箟喔侧釜喔灌箞喔｀赴喔氞笟</span>
               </button>
             </div>
 
             <!-- Logged In State with Hamburger Dropdown -->
             <button id="btnReturnAdmin" onclick="exitRoom()" class="hidden-view bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-bold mr-3 hover:bg-amber-200 transition-colors shadow-sm">
-      ⬅️ ออกจากห้อง
+      猬咃笍 喔�腑喔佮笀喔侧竵喔�箟喔�竾
     </button>
             <div id="navUserState" class="hidden-view relative flex items-center gap-3">
               <div class="text-right hidden sm:block">
@@ -131,7 +131,7 @@
                   <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
-                  <span>เมนู</span>
+                  <span>喙€喔∴笝喔�</span>
                 </button>
 
                 <!-- Dropdown Menu -->
@@ -147,36 +147,36 @@
 
                   <!-- Actions for Teacher & Treasurer -->
                   <div id="navMenuAdminGroup" class="py-1">
-                    <div class="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">เมนูปฏิบัติการ</div>
+                    <div class="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">喙€喔∴笝喔灌笡喔忇复喔氞副喔曕复喔佮覆喔�</div>
                     
                     <button onclick="handleMenuAction('collect')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">📥</span>
-                      <span>เก็บเงินนักเรียน</span>
+                      <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">馃摜</span>
+                      <span>喙€喔佮箛喔氞箑喔囙复喔權笝喔编竵喙€喔｀傅喔⑧笝</span>
                     </button>
 
                     <button onclick="handleMenuAction('expense')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-xs">📉</span>
-                      <span>บันทึกรายจ่าย</span>
+                      <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-xs">馃搲</span>
+                      <span>喔氞副喔權笚喔多竵喔｀覆喔⑧笀喙堗覆喔�</span>
                     </button>
 
                     <button onclick="handleMenuAction('fine')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs">✨</span>
-                      <span>บันทึกรายรับอื่นๆ</span>
+                      <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs">鉁�</span>
+                      <span>喔氞副喔權笚喔多竵喔｀覆喔⑧福喔编笟喔�阜喙堗笝喙�</span>
                     </button>
 
                     <button onclick="handleMenuAction('week')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">📅</span>
-                      <span>เพิ่มรอบ</span>
+                      <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">馃搮</span>
+                      <span>喙€喔炧复喙堗浮喔｀腑喔�</span>
                     </button>
 
                     <button id="navBtnManageStudents" onclick="handleMenuAction('students')" class="hidden-view w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center text-xs">👥</span>
-                      <span>จัดการรายชื่อนักเรียน</span>
+                      <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center text-xs">馃懃</span>
+                      <span>喔堗副喔斷竵喔侧福喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝</span>
                     </button>
 
                     <button id="navBtnClassSettings" onclick="handleMenuAction('settings')" class="hidden-view w-full text-left px-4 py-2.5 text-xs font-semibold text-purple-700 hover:bg-purple-50 flex items-center gap-2.5 transition-colors cursor-pointer">
-                      <span class="w-6 h-6 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-xs">⚙️</span>
-                      <span>ตั้งค่าระดับชั้น / ห้องเรียน</span>
+                      <span class="w-6 h-6 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-xs">鈿欙笍</span>
+                      <span>喔曕副喙夃竾喔勦箞喔侧福喔班笖喔编笟喔娻副喙夃笝 / 喔�箟喔�竾喙€喔｀傅喔⑧笝</span>
                     </button>
                     
                     <div class="border-t border-slate-100 my-1"></div>
@@ -184,15 +184,15 @@
 
                   <!-- Change Password Button (Visible for Teacher and Treasurer) -->
                   <button id="navBtnChangePwd" onclick="closeNavDropdown(); openChangePasswordModal();" class="hidden-view w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors cursor-pointer">
-                    <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-xs">🔑</span>
-                    <span>เปลี่ยนรหัสผ่าน</span>
+                    <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-xs">馃攽</span>
+                    <span>喙€喔涏弗喔掂箞喔⑧笝喔｀斧喔编釜喔溹箞喔侧笝</span>
                   </button>
                   <div id="navBtnChangePwdDivider" class="hidden-view border-t border-slate-100 my-1"></div>
 
                   <!-- Logout Button -->
                   <button onclick="closeNavDropdown(); logout();" class="w-full text-left px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer">
-                    <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-xs">🚪</span>
-                    <span>ออกจากระบบ</span>
+                    <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-xs">馃毆</span>
+                    <span>喔�腑喔佮笀喔侧竵喔｀赴喔氞笟</span>
                   </button>
 
                 </div>
@@ -209,11 +209,11 @@
     <main id="viewAdminDashboard" class="hidden-view w-full px-2 sm:px-8 lg:px-12 py-4 sm:py-8 space-y-6 sm:space-y-8">
       <div class="flex justify-between items-center bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div>
-          <h2 class="text-2xl font-bold text-slate-800">แผงควบคุมระบบ (Super Admin)</h2>
-          <p class="text-sm text-slate-500 mt-1">จัดการห้องเรียนและครูที่ปรึกษาทั้งหมดในโรงเรียน</p>
+          <h2 class="text-2xl font-bold text-slate-800">喙佮笢喔囙竸喔о笟喔勦父喔∴福喔班笟喔� (Super Admin)</h2>
+          <p class="text-sm text-slate-500 mt-1">喔堗副喔斷竵喔侧福喔�箟喔�竾喙€喔｀傅喔⑧笝喙佮弗喔班竸喔｀腹喔椸傅喙堗笡喔｀付喔佮俯喔侧笚喔编箟喔囙斧喔∴笖喙冟笝喙傕福喔囙箑喔｀傅喔⑧笝</p>
         </div>
         <button onclick="openCreateRoomModal()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
-          + สร้างห้องเรียนใหม่
+          + 喔�福喙夃覆喔囙斧喙夃腑喔囙箑喔｀傅喔⑧笝喙冟斧喔∴箞
         </button>
       </div>
 
@@ -222,10 +222,10 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500 font-bold">
-                <th class="px-4 py-3">ห้องเรียน</th>
-                <th class="px-4 py-3">ครูประจำห้อง</th>
-                <th class="px-4 py-3">วันที่สร้าง</th>
-                <th class="px-4 py-3 text-right">จัดการ</th>
+                <th class="px-4 py-3">喔�箟喔�竾喙€喔｀傅喔⑧笝</th>
+                <th class="px-4 py-3">喔勦福喔灌笡喔｀赴喔堗赋喔�箟喔�竾</th>
+                <th class="px-4 py-3">喔о副喔權笚喔掂箞喔�福喙夃覆喔�</th>
+                <th class="px-4 py-3 text-right">喔堗副喔斷竵喔侧福</th>
               </tr>
             </thead>
             <tbody id="adminRoomsTableBody">
@@ -247,43 +247,43 @@
         <div class="col-span-2 md:col-span-1 order-1 md:order-3 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all relative overflow-hidden">
           <div class="flex items-center justify-between mb-1.5 sm:mb-2">
             <span class="text-xs sm:text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <span>ยอดเงินคงเหลือสุทธิ</span>
+              <span>喔⑧腑喔斷箑喔囙复喔權竸喔囙箑喔�弗喔粪腑喔�父喔椸笜喔�</span>
             </span>
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm sm:text-base font-bold shadow-xs">💳</div>
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm sm:text-base font-bold shadow-xs">馃挸</div>
           </div>
-          <p id="lblBalance" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">0 บาท</p>
+          <p id="lblBalance" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">0 喔氞覆喔�</p>
           <div class="mt-2 sm:mt-3 flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-400 font-medium">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>สถานะกองกลางปัจจุบัน</span>
+            <span>喔�笘喔侧笝喔班竵喔�竾喔佮弗喔侧竾喔涏副喔堗笀喔膏笟喔编笝</span>
           </div>
         </div>
 
         <!-- Total Income Card (Half Width on Mobile, 1 Col on Desktop) -->
-        <div onclick="openTransactionsModal('income')" class="col-span-1 md:col-span-1 order-2 md:order-1 bg-white p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border border-emerald-100 shadow-sm hover:shadow-md hover:border-emerald-300 active:scale-[0.99] transition-all relative overflow-hidden group cursor-pointer" title="คลิกเพื่อดูรายการรายรับทั้งหมด">
+        <div onclick="openTransactionsModal('income')" class="col-span-1 md:col-span-1 order-2 md:order-1 bg-white p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border border-emerald-100 shadow-sm hover:shadow-md hover:border-emerald-300 active:scale-[0.99] transition-all relative overflow-hidden group cursor-pointer" title="喔勦弗喔脆竵喙€喔炧阜喙堗腑喔斷腹喔｀覆喔⑧竵喔侧福喔｀覆喔⑧福喔编笟喔椸副喙夃竾喔�浮喔�">
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-600 truncate">รายรับรวม</span>
-            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs sm:text-base font-bold shadow-xs group-hover:scale-110 transition-transform">📈</div>
+            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-600 truncate">喔｀覆喔⑧福喔编笟喔｀抚喔�</span>
+            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs sm:text-base font-bold shadow-xs group-hover:scale-110 transition-transform">馃搱</div>
           </div>
-          <p id="lblIncome" class="text-lg sm:text-3xl font-extrabold text-emerald-600 tracking-tight truncate">0 บาท</p>
+          <p id="lblIncome" class="text-lg sm:text-3xl font-extrabold text-emerald-600 tracking-tight truncate">0 喔氞覆喔�</p>
           <div class="mt-1 sm:mt-3 flex items-center justify-between text-[10px] sm:text-xs">
-            <span class="text-slate-400 font-medium truncate">รวมเงินรอบ & อื่นๆ</span>
+            <span class="text-slate-400 font-medium truncate">喔｀抚喔∴箑喔囙复喔權福喔�笟 & 喔�阜喙堗笝喙�</span>
             <span class="text-emerald-600 font-semibold group-hover:underline shrink-0 flex items-center gap-0.5">
-              ดูรายรับ <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              喔斷腹喔｀覆喔⑧福喔编笟 <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </span>
           </div>
         </div>
 
         <!-- Total Expense Card (Half Width on Mobile, 1 Col on Desktop) -->
-        <div onclick="openTransactionsModal('expense')" class="col-span-1 md:col-span-1 order-3 md:order-2 bg-white p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border border-rose-100 shadow-sm hover:shadow-md hover:border-rose-300 active:scale-[0.99] transition-all relative overflow-hidden group cursor-pointer" title="คลิกเพื่อดูรายการรายจ่ายทั้งหมด">
+        <div onclick="openTransactionsModal('expense')" class="col-span-1 md:col-span-1 order-3 md:order-2 bg-white p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border border-rose-100 shadow-sm hover:shadow-md hover:border-rose-300 active:scale-[0.99] transition-all relative overflow-hidden group cursor-pointer" title="喔勦弗喔脆竵喙€喔炧阜喙堗腑喔斷腹喔｀覆喔⑧竵喔侧福喔｀覆喔⑧笀喙堗覆喔⑧笚喔编箟喔囙斧喔∴笖">
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-rose-600 truncate">รายจ่ายรวม</span>
-            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs sm:text-base font-bold shadow-xs group-hover:scale-110 transition-transform">📉</div>
+            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-rose-600 truncate">喔｀覆喔⑧笀喙堗覆喔⑧福喔о浮</span>
+            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs sm:text-base font-bold shadow-xs group-hover:scale-110 transition-transform">馃搲</div>
           </div>
-          <p id="lblExpense" class="text-lg sm:text-3xl font-extrabold text-rose-600 tracking-tight truncate">0 บาท</p>
+          <p id="lblExpense" class="text-lg sm:text-3xl font-extrabold text-rose-600 tracking-tight truncate">0 喔氞覆喔�</p>
           <div class="mt-1 sm:mt-3 flex items-center justify-between text-[10px] sm:text-xs">
-            <span class="text-slate-400 font-medium truncate">อุปกรณ์ & กิจกรรม</span>
+            <span class="text-slate-400 font-medium truncate">喔�父喔涏竵喔｀笓喙� & 喔佮复喔堗竵喔｀福喔�</span>
             <span class="text-rose-600 font-semibold group-hover:underline shrink-0 flex items-center gap-0.5">
-              ดูรายจ่าย <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              喔斷腹喔｀覆喔⑧笀喙堗覆喔� <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </span>
           </div>
         </div>
@@ -294,13 +294,13 @@
       <div id="studentPersonalBanner" class="hidden-view bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <span class="bg-white/20 text-xs px-3 py-1 rounded-full font-medium">ข้อมูลส่วนตัวของคุณ</span>
-            <h2 id="lblStudentWelcome" class="text-xl font-bold mt-2">ยินดีต้อนรับ</h2>
-            <p class="text-blue-100 text-sm">ตรวจสอบสถานะการชำระเงินกองกลางของคุณ</p>
+            <span class="bg-white/20 text-xs px-3 py-1 rounded-full font-medium">喔傕箟喔�浮喔灌弗喔�箞喔о笝喔曕副喔о競喔�竾喔勦父喔�</span>
+            <h2 id="lblStudentWelcome" class="text-xl font-bold mt-2">喔⑧复喔權笖喔掂笗喙夃腑喔權福喔编笟</h2>
+            <p class="text-blue-100 text-sm">喔曕福喔о笀喔�腑喔氞釜喔栢覆喔權赴喔佮覆喔｀笂喔赤福喔班箑喔囙复喔權竵喔�竾喔佮弗喔侧竾喔傕腑喔囙竸喔膏笓</p>
           </div>
           <div class="bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-4 rounded-xl text-right">
-            <p class="text-xs text-blue-100">ยอดเงินสะสมที่คุณจ่ายแล้ว</p>
-            <p id="lblMyTotalPaid" class="text-2xl font-bold mt-1 text-emerald-300">0 บาท</p>
+            <p class="text-xs text-blue-100">喔⑧腑喔斷箑喔囙复喔權釜喔班釜喔∴笚喔掂箞喔勦父喔撪笀喙堗覆喔⑧箒喔ム箟喔�</p>
+            <p id="lblMyTotalPaid" class="text-2xl font-bold mt-1 text-emerald-300">0 喔氞覆喔�</p>
           </div>
         </div>
       </div>
@@ -309,8 +309,8 @@
       <div class="w-full bg-white p-6 sm:p-7 rounded-3xl border border-slate-100 shadow-sm">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-800">📊 กราฟเปรียบเทียบรายรับและรายจ่าย</h2>
-            <p class="text-xs text-slate-400 mt-0.5">เปรียบเทียบยอดเงินรายรับรวมทั้งหมด และรายจ่ายรวมทั้งหมด</p>
+            <h2 class="text-lg font-bold text-slate-800">馃搳 喔佮福喔侧笩喙€喔涏福喔掂涪喔氞箑喔椸傅喔⑧笟喔｀覆喔⑧福喔编笟喙佮弗喔班福喔侧涪喔堗箞喔侧涪</h2>
+            <p class="text-xs text-slate-400 mt-0.5">喙€喔涏福喔掂涪喔氞箑喔椸傅喔⑧笟喔⑧腑喔斷箑喔囙复喔權福喔侧涪喔｀副喔氞福喔о浮喔椸副喙夃竾喔�浮喔� 喙佮弗喔班福喔侧涪喔堗箞喔侧涪喔｀抚喔∴笚喔编箟喔囙斧喔∴笖</p>
           </div>
         </div>
         <div class="relative h-80 sm:h-96 w-full max-w-4xl mx-auto">
@@ -323,13 +323,13 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
           <div>
             <div class="flex items-start gap-2">
-              <span class="text-xl">⚠️</span>
+              <span class="text-xl">鈿狅笍</span>
               <h2 class="text-lg font-bold text-slate-800 leading-tight">
-                รายชื่อผู้ที่ยังไม่จ่ายเงิน<br>
-                <span class="text-sm font-medium text-slate-500">(แยกตามรอบเก็บเงิน)</span>
+                喔｀覆喔⑧笂喔粪箞喔�笢喔灌箟喔椸傅喙堗涪喔编竾喙勦浮喙堗笀喙堗覆喔⑧箑喔囙复喔�<br>
+                <span class="text-sm font-medium text-slate-500">(喙佮涪喔佮笗喔侧浮喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔�)</span>
               </h2>
             </div>
-            <p class="text-xs text-slate-400 mt-1">แสดงเฉพาะรอบเก็บเงินที่ยังมีนักเรียนค้างชำระ (เรียงจากรอบล่าสุดอยู่บนสุด)</p>
+            <p class="text-xs text-slate-400 mt-1">喙佮釜喔斷竾喙€喔夃笧喔侧赴喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔權笚喔掂箞喔⑧副喔囙浮喔掂笝喔编竵喙€喔｀傅喔⑧笝喔勦箟喔侧竾喔娻赋喔｀赴 (喙€喔｀傅喔⑧竾喔堗覆喔佮福喔�笟喔ム箞喔侧釜喔膏笖喔�涪喔灌箞喔氞笝喔�父喔�)</p>
           </div>
           <span id="lblUnpaidWeeksCount" class="self-start sm:self-auto text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full"></span>
         </div>
@@ -352,13 +352,13 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-              <span>👥 จัดการรายชื่อนักเรียน</span>
-              <span id="lblClassRoomManage" class="text-blue-600 font-extrabold">ม.4/7</span>
+              <span>馃懃 喔堗副喔斷竵喔侧福喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝</span>
+              <span id="lblClassRoomManage" class="text-blue-600 font-extrabold">喔�.4/7</span>
             </h1>
-            <span id="lblTotalStudentsBadge" class="bg-blue-50 text-blue-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-blue-200">0 คน</span>
-            <span id="lblTotalTreasurersBadge" class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-200">0 เหรัญญิก</span>
+            <span id="lblTotalStudentsBadge" class="bg-blue-50 text-blue-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-blue-200">0 喔勦笝</span>
+            <span id="lblTotalTreasurersBadge" class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-200">0 喙€喔�福喔编笉喔嵿复喔�</span>
           </div>
-          <p class="text-sm text-slate-500 mt-1">แก้ไขข้อมูลนักเรียน แต่งตั้งสิทธิ์เหรัญญิก หรือลบนักเรียนได้จากด้านหลังชื่อโดยตรง</p>
+          <p class="text-sm text-slate-500 mt-1">喙佮竵喙夃箘喔傕競喙夃腑喔∴腹喔ム笝喔编竵喙€喔｀傅喔⑧笝 喙佮笗喙堗竾喔曕副喙夃竾喔�复喔椸笜喔脆箤喙€喔�福喔编笉喔嵿复喔� 喔�福喔粪腑喔ム笟喔權副喔佮箑喔｀傅喔⑧笝喙勦笖喙夃笀喔侧竵喔斷箟喔侧笝喔�弗喔编竾喔娻阜喙堗腑喙傕笖喔⑧笗喔｀竾</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
@@ -368,11 +368,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
               </svg>
             </div>
-            <span>กลับหน้าแดชบอร์ด</span>
+            <span>喔佮弗喔编笟喔�笝喙夃覆喙佮笖喔娻笟喔�福喙屶笖</span>
           </button>
           <button onclick="openModal('userModal')" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            <span>เพิ่มนักเรียน / นำเข้า Excel</span>
+            <span>喙€喔炧复喙堗浮喔權副喔佮箑喔｀傅喔⑧笝 / 喔權赋喙€喔傕箟喔� Excel</span>
           </button>
         </div>
       </div>
@@ -381,8 +381,8 @@
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-800">📋 รายชื่อนักเรียนทั้งหมดในห้องเรียน</h2>
-            <p class="text-xs text-slate-400 mt-0.5">คุณครูสามารถกดปุ่มจัดการด้านหลังชื่อ เพื่อแต่งตั้งเหรัญญิกหรือแก้ไขข้อมูลได้ทันที</p>
+            <h2 class="text-lg font-bold text-slate-800">馃搵 喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝喔椸副喙夃竾喔�浮喔斷箖喔權斧喙夃腑喔囙箑喔｀傅喔⑧笝</h2>
+            <p class="text-xs text-slate-400 mt-0.5">喔勦父喔撪竸喔｀腹喔�覆喔∴覆喔｀笘喔佮笖喔涏父喙堗浮喔堗副喔斷竵喔侧福喔斷箟喔侧笝喔�弗喔编竾喔娻阜喙堗腑 喙€喔炧阜喙堗腑喙佮笗喙堗竾喔曕副喙夃竾喙€喔�福喔编笉喔嵿复喔佮斧喔｀阜喔�箒喔佮箟喙勦競喔傕箟喔�浮喔灌弗喙勦笖喙夃笚喔编笝喔椸傅</p>
           </div>
         </div>
 
@@ -390,12 +390,12 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
-                <th class="px-3 sm:px-6 py-3 text-center w-12 sm:w-20">เลขที่</th>
-                <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">รหัสนักเรียน</th>
-                <th class="px-3 sm:px-6 py-3">ชื่อ-นามสกุล</th>
-                <th class="px-3 sm:px-6 py-3 text-center hidden md:table-cell">สิทธิ์ปัจจุบัน</th>
-                <th class="px-3 sm:px-6 py-3 text-right">ยอดเงินสะสม</th>
-                <th class="px-3 sm:px-6 py-3 text-center w-24 sm:w-64">จัดการ</th>
+                <th class="px-3 sm:px-6 py-3 text-center w-12 sm:w-20">喙€喔ム競喔椸傅喙�</th>
+                <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝</th>
+                <th class="px-3 sm:px-6 py-3">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</th>
+                <th class="px-3 sm:px-6 py-3 text-center hidden md:table-cell">喔�复喔椸笜喔脆箤喔涏副喔堗笀喔膏笟喔编笝</th>
+                <th class="px-3 sm:px-6 py-3 text-right">喔⑧腑喔斷箑喔囙复喔權釜喔班釜喔�</th>
+                <th class="px-3 sm:px-6 py-3 text-center w-24 sm:w-64">喔堗副喔斷竵喔侧福</th>
               </tr>
             </thead>
             <tbody id="manageStudentsTableBody" class="text-sm divide-y divide-slate-100">
@@ -417,11 +417,11 @@
           <div>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-2xl shadow-sm">
-                📥
+                馃摜
               </div>
               <div>
-                <h1 id="lblCollectTitle" class="text-2xl font-bold text-slate-800">เช็คชื่อเก็บเงินประจำงวด</h1>
-                <p class="text-xs text-slate-500 mt-0.5">ติ๊กถูกที่กล่องหน้ารายชื่อนักเรียนเพื่อบันทึกการชำระเงินพร้อมกันหลายคน</p>
+                <h1 id="lblCollectTitle" class="text-2xl font-bold text-slate-800">喙€喔娻箛喔勦笂喔粪箞喔�箑喔佮箛喔氞箑喔囙复喔權笡喔｀赴喔堗赋喔囙抚喔�</h1>
+                <p class="text-xs text-slate-500 mt-0.5">喔曕复喙娻竵喔栢腹喔佮笚喔掂箞喔佮弗喙堗腑喔囙斧喔權箟喔侧福喔侧涪喔娻阜喙堗腑喔權副喔佮箑喔｀傅喔⑧笝喙€喔炧阜喙堗腑喔氞副喔權笚喔多竵喔佮覆喔｀笂喔赤福喔班箑喔囙复喔權笧喔｀箟喔�浮喔佮副喔權斧喔ム覆喔⑧竸喔�</p>
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
               </div>
-              <span>กลับหน้าแดชบอร์ด</span>
+              <span>喔佮弗喔编笟喔�笝喙夃覆喙佮笖喔娻笟喔�福喙屶笖</span>
             </button>
           </div>
         </div>
@@ -441,13 +441,13 @@
         <!-- Week & Amount Selector Row -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-3 border-t border-slate-100">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">เลือกรอบเก็บเงินที่เก็บเงิน</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">喙€喔ム阜喔�竵喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔權笚喔掂箞喙€喔佮箛喔氞箑喔囙复喔�</label>
             <select id="colWeekSelect" onchange="handleCollectWeekChange()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-semibold text-slate-800">
               <!-- JS Render -->
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">ยอดเงินต่อคน (บาท)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">喔⑧腑喔斷箑喔囙复喔權笗喙堗腑喔勦笝 (喔氞覆喔�)</label>
             <input id="colAmountInput" type="number" min="1" value="20" readonly class="w-full px-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none text-sm font-bold text-emerald-600 cursor-not-allowed">
           </div>
         </div>
@@ -459,8 +459,8 @@
         <!-- Table Controls (Title) -->
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div>
-            <h2 class="text-base font-bold text-slate-800">📋 รายชื่อนักเรียน</h2>
-            <p class="text-xs text-slate-400 mt-0.5">เลื่อนเปิดสวิตช์ด้านหลังชื่อนักเรียนที่ต้องการบันทึกการเก็บเงิน</p>
+            <h2 class="text-base font-bold text-slate-800">馃搵 喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝</h2>
+            <p class="text-xs text-slate-400 mt-0.5">喙€喔ム阜喙堗腑喔權箑喔涏复喔斷釜喔о复喔曕笂喙屶笖喙夃覆喔權斧喔ム副喔囙笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝喔椸傅喙堗笗喙夃腑喔囙竵喔侧福喔氞副喔權笚喔多竵喔佮覆喔｀箑喔佮箛喔氞箑喔囙复喔�</p>
           </div>
         </div>
 
@@ -469,11 +469,11 @@
           <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
               <tr>
-                <th class="px-3 sm:px-6 py-3 text-center w-12 sm:w-20">เลขที่</th>
-                <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">รหัสนักเรียน</th>
-                <th class="px-3 sm:px-6 py-3">ชื่อ-นามสกุล</th>
-                <th class="px-3 sm:px-6 py-3 text-center w-20 sm:w-32 whitespace-nowrap">สถานะ</th>
-                <th class="px-3 sm:px-6 py-3 text-center w-16 sm:w-28 whitespace-nowrap">เช็คชื่อ</th>
+                <th class="px-3 sm:px-6 py-3 text-center w-12 sm:w-20">喙€喔ム競喔椸傅喙�</th>
+                <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝</th>
+                <th class="px-3 sm:px-6 py-3">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</th>
+                <th class="px-3 sm:px-6 py-3 text-center w-20 sm:w-32 whitespace-nowrap">喔�笘喔侧笝喔�</th>
+                <th class="px-3 sm:px-6 py-3 text-center w-16 sm:w-28 whitespace-nowrap">喙€喔娻箛喔勦笂喔粪箞喔�</th>
               </tr>
             </thead>
             <tbody id="collectTableBody" class="text-sm divide-y divide-slate-100">
@@ -486,7 +486,7 @@
         <div class="p-6 bg-slate-50/70 border-t border-slate-100 flex items-center justify-center">
           <button id="btnSubmitCollect" onclick="submitBatchCollect()" class="w-full sm:w-auto min-w-[220px] inline-flex items-center justify-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-slate-950 font-bold px-8 py-3.5 rounded-2xl text-base shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35 transition-all cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-            <span>บันทึกการเก็บเงิน</span>
+            <span>喔氞副喔權笚喔多竵喔佮覆喔｀箑喔佮箛喔氞箑喔囙复喔�</span>
           </button>
         </div>
 
@@ -501,9 +501,9 @@
     <div id="lblFooterClassInfo" class="w-full px-4 sm:px-8 text-center text-xs text-slate-400">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-1 sm:gap-1.5">
         <span class="font-medium text-slate-600 sm:font-normal sm:text-slate-400">
-          ระบบเก็บเงินห้องเรียน (ClassFund System) <span id="lblFooterClassRoom">ม.4/7</span>
+          喔｀赴喔氞笟喙€喔佮箛喔氞箑喔囙复喔權斧喙夃腑喔囙箑喔｀傅喔⑧笝 (ClassFund System) <span id="lblFooterClassRoom">喔�.4/7</span>
         </span>
-        <span id="lblFooterSchoolName" class="text-[11px] sm:text-xs text-slate-400">โรงเรียนบรรหารแจ่มใสวิทยา 3</span>
+        <span id="lblFooterSchoolName" class="text-[11px] sm:text-xs text-slate-400">喙傕福喔囙箑喔｀傅喔⑧笝喔氞福喔｀斧喔侧福喙佮笀喙堗浮喙冟釜喔о复喔椸涪喔� 3</span>
       </div>
     </div>
   </footer>
@@ -513,29 +513,29 @@
   <div id="createRoomModal" class="hidden-view fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
       <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
-        <h3 class="text-xl font-extrabold text-slate-800">✨ สร้างห้องเรียนใหม่</h3>
+        <h3 class="text-xl font-extrabold text-slate-800">鉁� 喔�福喙夃覆喔囙斧喙夃腑喔囙箑喔｀傅喔⑧笝喙冟斧喔∴箞</h3>
         <button type="button" onclick="closeCreateRoomModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-          ✕
+          鉁�
         </button>
       </div>
       <div class="p-6 overflow-y-auto">
         <form id="formCreateRoom" onsubmit="submitCreateRoom(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อห้องเรียน (เช่น ม.5/1)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔娻阜喙堗腑喔�箟喔�竾喙€喔｀傅喔⑧笝 (喙€喔娻箞喔� 喔�.5/1)</label>
             <input type="text" id="newRoomName" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm font-medium">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ-นามสกุล ครูประจำห้อง</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔� 喔勦福喔灌笡喔｀赴喔堗赋喔�箟喔�竾</label>
             <input type="text" id="newTeacherName" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm font-medium">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">รหัสผู้ใช้งาน (Username สำหรับล็อกอิน)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔｀斧喔编釜喔溹腹喙夃箖喔娻箟喔囙覆喔� (Username 喔�赋喔�福喔编笟喔ム箛喔�竵喔�复喔�)</label>
             <input type="text" id="newTeacherUser" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm font-medium">
-            <p class="text-[10px] text-amber-600 mt-1">* รหัสผ่านตั้งต้นระบบจะกำหนดเป็น <b>123456</b> เสมอ</p>
+            <p class="text-[10px] text-amber-600 mt-1">* 喔｀斧喔编釜喔溹箞喔侧笝喔曕副喙夃竾喔曕箟喔權福喔班笟喔氞笀喔班竵喔赤斧喔權笖喙€喔涏箛喔� <b>123456</b> 喙€喔�浮喔�</p>
           </div>
           <div class="pt-4 flex gap-3">
-            <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md shadow-blue-200 transition-all">ตกลง</button>
-            <button type="button" onclick="closeCreateRoomModal()" class="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">ยกเลิก</button>
+            <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md shadow-blue-200 transition-all">喔曕竵喔ム竾</button>
+            <button type="button" onclick="closeCreateRoomModal()" class="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">喔⑧竵喙€喔ム复喔�</button>
           </div>
         </form>
       </div>
@@ -543,139 +543,139 @@
   </div>
 
 
-  <!-- Modal: ตั้งค่าห้องเรียน (Class Settings) -->
+  <!-- Modal: 喔曕副喙夃竾喔勦箞喔侧斧喙夃腑喔囙箑喔｀傅喔⑧笝 (Class Settings) -->
   <div id="classSettingsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('classSettingsModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('classSettingsModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-lg">⚙️</div>
+        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-lg">鈿欙笍</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">ตั้งค่าข้อมูลห้องเรียน</h2>
-          <p class="text-xs text-slate-400">ปรับเปลี่ยนระดับชั้น/ห้อง เมื่อเลื่อนชั้นเรียน</p>
+          <h2 class="text-lg font-bold text-slate-800">喔曕副喙夃竾喔勦箞喔侧競喙夃腑喔∴腹喔ム斧喙夃腑喔囙箑喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喔涏福喔编笟喙€喔涏弗喔掂箞喔⑧笝喔｀赴喔斷副喔氞笂喔编箟喔�/喔�箟喔�竾 喙€喔∴阜喙堗腑喙€喔ム阜喙堗腑喔權笂喔编箟喔權箑喔｀傅喔⑧笝</p>
         </div>
       </div>
 
       <form id="classSettingsForm" onsubmit="submitClassSettings(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ระดับชั้น / ห้องเรียน <span class="text-rose-500">*</span></label>
-          <input id="setClassName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm font-semibold text-slate-800" placeholder="เช่น ม.4/7, ม.5/7 หรือ ม.6/7">
-          <p class="text-[11px] text-slate-400 mt-1">ข้อความนี้จะแสดงในส่วนหัวเว็บและรายงานการเงินทั้งหมด</p>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔｀赴喔斷副喔氞笂喔编箟喔� / 喔�箟喔�竾喙€喔｀傅喔⑧笝 <span class="text-rose-500">*</span></label>
+          <input id="setClassName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm font-semibold text-slate-800" placeholder="喙€喔娻箞喔� 喔�.4/7, 喔�.5/7 喔�福喔粪腑 喔�.6/7">
+          <p class="text-[11px] text-slate-400 mt-1">喔傕箟喔�竸喔о覆喔∴笝喔掂箟喔堗赴喙佮釜喔斷竾喙冟笝喔�箞喔о笝喔�副喔о箑喔о箛喔氞箒喔ム赴喔｀覆喔⑧竾喔侧笝喔佮覆喔｀箑喔囙复喔權笚喔编箟喔囙斧喔∴笖</p>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อโรงเรียน</label>
-          <input id="setSchoolName" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-800" placeholder="เช่น โรงเรียนบรรหารแจ่มใสวิทยา 3">
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔娻阜喙堗腑喙傕福喔囙箑喔｀傅喔⑧笝</label>
+          <input id="setSchoolName" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-800" placeholder="喙€喔娻箞喔� 喙傕福喔囙箑喔｀傅喔⑧笝喔氞福喔｀斧喔侧福喙佮笀喙堗浮喙冟釜喔о复喔椸涪喔� 3">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ภาคเรียนที่</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔犩覆喔勦箑喔｀傅喔⑧笝喔椸傅喙�</label>
             <select id="setSemester" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-800 font-semibold">
               <option value="1">1</option>
               <option value="2">2</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ปีการศึกษา</label>
-            <input id="setAcademicYear" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-800" placeholder="เช่น 2569">
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔涏傅喔佮覆喔｀辅喔多竵喔┼覆</label>
+            <input id="setAcademicYear" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-800" placeholder="喙€喔娻箞喔� 2569">
           </div>
         </div>
         <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-purple-600/20 cursor-pointer">
-          บันทึกการเปลี่ยนแปลง
+          喔氞副喔權笚喔多竵喔佮覆喔｀箑喔涏弗喔掂箞喔⑧笝喙佮笡喔ム竾
         </button>
       </form>
 
       <!-- Rollover Shortcut -->
       <div class="mt-5 pt-4 border-t border-indigo-100">
         <div class="bg-indigo-50/80 p-3.5 rounded-2xl border border-indigo-100 mb-2.5 flex items-start gap-3">
-          <span class="text-xl">🎓</span>
+          <span class="text-xl">馃帗</span>
           <div>
-            <h4 class="text-xs font-bold text-indigo-900">เลื่อนชั้นเรียน หรือ สิ้นสุดภาคเรียน</h4>
-            <p class="text-[11px] text-indigo-700 mt-0.5 leading-relaxed">จัดเก็บข้อมูลประวัติย้อนหลังไว้บนระบบ Cloud ถาวร พร้อมยกยอดเงินคงเหลือไปภาคเรียนใหม่</p>
+            <h4 class="text-xs font-bold text-indigo-900">喙€喔ム阜喙堗腑喔權笂喔编箟喔權箑喔｀傅喔⑧笝 喔�福喔粪腑 喔�复喙夃笝喔�父喔斷笭喔侧竸喙€喔｀傅喔⑧笝</h4>
+            <p class="text-[11px] text-indigo-700 mt-0.5 leading-relaxed">喔堗副喔斷箑喔佮箛喔氞競喙夃腑喔∴腹喔ム笡喔｀赴喔о副喔曕复喔⑧箟喔�笝喔�弗喔编竾喙勦抚喙夃笟喔權福喔班笟喔� Cloud 喔栢覆喔о福 喔炧福喙夃腑喔∴涪喔佮涪喔�笖喙€喔囙复喔權竸喔囙箑喔�弗喔粪腑喙勦笡喔犩覆喔勦箑喔｀傅喔⑧笝喙冟斧喔∴箞</p>
           </div>
         </div>
         <button type="button" onclick="closeModal('classSettingsModal'); openRolloverModal();" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md shadow-indigo-500/20 cursor-pointer flex items-center justify-center gap-2">
-          <span>🎓</span>
-          <span>เปิดเมนูเลื่อนชั้น / จบภาคเรียน</span>
+          <span>馃帗</span>
+          <span>喙€喔涏复喔斷箑喔∴笝喔灌箑喔ム阜喙堗腑喔權笂喔编箟喔� / 喔堗笟喔犩覆喔勦箑喔｀傅喔⑧笝</span>
         </button>
       </div>
 
       <!-- Danger Zone -->
       <div class="mt-5 pt-4 border-t border-rose-100">
-        <h3 class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2.5">⚠️ จัดการข้อมูลระบบ (Danger Zone)</h3>
+        <h3 class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2.5">鈿狅笍 喔堗副喔斷竵喔侧福喔傕箟喔�浮喔灌弗喔｀赴喔氞笟 (Danger Zone)</h3>
         <div class="space-y-2">
           <button onclick="handleResetData('transactions')" class="w-full bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 active:scale-95 font-bold py-2 px-3 rounded-xl text-xs transition-all cursor-pointer">
-            ลบข้อมูลการเงินทั้งหมด (คงรายชื่อนักเรียนไว้)
+            喔ム笟喔傕箟喔�浮喔灌弗喔佮覆喔｀箑喔囙复喔權笚喔编箟喔囙斧喔∴笖 (喔勦竾喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝喙勦抚喙�)
           </button>
           <button onclick="handleResetData('all')" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 active:scale-95 font-bold py-2 px-3 rounded-xl text-xs transition-all cursor-pointer">
-            ลบข้อมูลทั้งหมดรวมรายชื่อนักเรียน (เริ่มระบบใหม่)
+            喔ム笟喔傕箟喔�浮喔灌弗喔椸副喙夃竾喔�浮喔斷福喔о浮喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝 (喙€喔｀复喙堗浮喔｀赴喔氞笟喙冟斧喔∴箞)
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal: เลื่อนชั้นเรียน / จบภาคเรียน (Rollover & Archive) -->
+  <!-- Modal: 喙€喔ム阜喙堗腑喔權笂喔编箟喔權箑喔｀傅喔⑧笝 / 喔堗笟喔犩覆喔勦箑喔｀傅喔⑧笝 (Rollover & Archive) -->
   <div id="rolloverModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg p-6 border border-slate-100 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('rolloverModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('rolloverModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">🎓</div>
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">馃帗</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">เลื่อนชั้นเรียน / สิ้นสุดภาคเรียน</h2>
-          <p class="text-xs text-slate-400">เก็บบันทึกประวัติย้อนหลังบน Cloud & ยกยอดเงินคงเหลืออัตโนมัติ</p>
+          <h2 class="text-lg font-bold text-slate-800">喙€喔ム阜喙堗腑喔權笂喔编箟喔權箑喔｀傅喔⑧笝 / 喔�复喙夃笝喔�父喔斷笭喔侧竸喙€喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喙€喔佮箛喔氞笟喔编笝喔椸付喔佮笡喔｀赴喔о副喔曕复喔⑧箟喔�笝喔�弗喔编竾喔氞笝 Cloud & 喔⑧竵喔⑧腑喔斷箑喔囙复喔權竸喔囙箑喔�弗喔粪腑喔�副喔曕箓喔權浮喔编笗喔�</p>
         </div>
       </div>
 
       <!-- Current Term Summary Card -->
       <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 mb-4 space-y-2">
         <div class="flex items-center justify-between text-xs text-slate-500">
-          <span>📌 ภาคเรียนปัจจุบันที่กำลังจะปิด:</span>
-          <span id="roCurrentBadge" class="font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-200">ม.4/7 เทอม 1/2569</span>
+          <span>馃搶 喔犩覆喔勦箑喔｀傅喔⑧笝喔涏副喔堗笀喔膏笟喔编笝喔椸傅喙堗竵喔赤弗喔编竾喔堗赴喔涏复喔�:</span>
+          <span id="roCurrentBadge" class="font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-200">喔�.4/7 喙€喔椸腑喔� 1/2569</span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t border-slate-200/60">
-          <span class="text-xs font-semibold text-slate-600">💰 ยอดเงินคงเหลือที่จะยกยอดไปอัตโนมัติ:</span>
-          <span id="roCarryBalance" class="text-base font-extrabold text-emerald-600">0 บาท</span>
+          <span class="text-xs font-semibold text-slate-600">馃挵 喔⑧腑喔斷箑喔囙复喔權竸喔囙箑喔�弗喔粪腑喔椸傅喙堗笀喔班涪喔佮涪喔�笖喙勦笡喔�副喔曕箓喔權浮喔编笗喔�:</span>
+          <span id="roCarryBalance" class="text-base font-extrabold text-emerald-600">0 喔氞覆喔�</span>
         </div>
       </div>
 
       <form id="rolloverForm" onsubmit="submitRollover(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ระดับชั้น / ห้องเรียนใหม่ <span class="text-rose-500">*</span></label>
-          <input id="roNewClassName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-semibold text-slate-800" placeholder="เช่น ม.4/7 หรือ ม.5/7">
-          <p class="text-[11px] text-slate-400 mt-1">หากนักเรียนกลุ่มเดิมเลื่อนชั้น ให้เปลี่ยนเป็นระดับชั้นถัดไป (เช่น ม.5/7)</p>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔｀赴喔斷副喔氞笂喔编箟喔� / 喔�箟喔�竾喙€喔｀傅喔⑧笝喙冟斧喔∴箞 <span class="text-rose-500">*</span></label>
+          <input id="roNewClassName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-semibold text-slate-800" placeholder="喙€喔娻箞喔� 喔�.4/7 喔�福喔粪腑 喔�.5/7">
+          <p class="text-[11px] text-slate-400 mt-1">喔�覆喔佮笝喔编竵喙€喔｀傅喔⑧笝喔佮弗喔膏箞喔∴箑喔斷复喔∴箑喔ム阜喙堗腑喔權笂喔编箟喔� 喙冟斧喙夃箑喔涏弗喔掂箞喔⑧笝喙€喔涏箛喔權福喔班笖喔编笟喔娻副喙夃笝喔栢副喔斷箘喔� (喙€喔娻箞喔� 喔�.5/7)</p>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ภาคเรียนใหม่ <span class="text-rose-500">*</span></label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔犩覆喔勦箑喔｀傅喔⑧笝喙冟斧喔∴箞 <span class="text-rose-500">*</span></label>
             <select id="roNewSemester" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 font-semibold">
               <option value="1">1</option>
               <option value="2">2</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ปีการศึกษาใหม่ <span class="text-rose-500">*</span></label>
-            <input id="roNewAcademicYear" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 font-semibold" placeholder="เช่น 2570">
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔涏傅喔佮覆喔｀辅喔多竵喔┼覆喙冟斧喔∴箞 <span class="text-rose-500">*</span></label>
+            <input id="roNewAcademicYear" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 font-semibold" placeholder="喙€喔娻箞喔� 2570">
           </div>
         </div>
 
         <!-- Auto Actions Explain Box -->
         <div class="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl space-y-1.5 text-xs text-emerald-900">
           <div class="font-bold flex items-center gap-1.5 text-emerald-800">
-            <span>✨ สิ่งที่ระบบจะดำเนินการให้อัตโนมัติ:</span>
+            <span>鉁� 喔�复喙堗竾喔椸傅喙堗福喔班笟喔氞笀喔班笖喔赤箑喔權复喔權竵喔侧福喙冟斧喙夃腑喔编笗喙傕笝喔∴副喔曕复:</span>
           </div>
           <ul class="list-disc list-inside space-y-1 text-[11px] leading-relaxed text-emerald-800/90">
-            <li><b>จัดเก็บข้อมูลย้อนหลัง</b> ประวัติรายรับ-รายจ่ายและยอดสะสมของนักเรียนทุกคนไว้บนระบบ Cloud ถาวร (สามารถเลือกดูเทอมเก่าย้อนหลังได้ที่หน้าแรก)</li>
-            <li><b>ยกยอดเงินคงเหลือ</b> จากเทอมปัจจุบัน ไปเป็นรายรับเริ่มต้นของภาคเรียนใหม่อัตโนมัติ</li>
-            <li>รีเซ็ตตารางรับ-จ่าย และยอดจ่ายสะสมรายคนเป็น 0 บาท สำหรับภาคเรียนใหม่</li>
-            <li><b>คงรายชื่อนักเรียน รหัสผ่าน และเหรัญญิกไว้ครบถ้วน 100%</b> ไม่ต้องกรอกใหม่</li>
+            <li><b>喔堗副喔斷箑喔佮箛喔氞競喙夃腑喔∴腹喔ム涪喙夃腑喔權斧喔ム副喔�</b> 喔涏福喔班抚喔编笗喔脆福喔侧涪喔｀副喔�-喔｀覆喔⑧笀喙堗覆喔⑧箒喔ム赴喔⑧腑喔斷釜喔班釜喔∴競喔�竾喔權副喔佮箑喔｀傅喔⑧笝喔椸父喔佮竸喔權箘喔о箟喔氞笝喔｀赴喔氞笟 Cloud 喔栢覆喔о福 (喔�覆喔∴覆喔｀笘喙€喔ム阜喔�竵喔斷腹喙€喔椸腑喔∴箑喔佮箞喔侧涪喙夃腑喔權斧喔ム副喔囙箘喔斷箟喔椸傅喙堗斧喔權箟喔侧箒喔｀竵)</li>
+            <li><b>喔⑧竵喔⑧腑喔斷箑喔囙复喔權竸喔囙箑喔�弗喔粪腑</b> 喔堗覆喔佮箑喔椸腑喔∴笡喔编笀喔堗父喔氞副喔� 喙勦笡喙€喔涏箛喔權福喔侧涪喔｀副喔氞箑喔｀复喙堗浮喔曕箟喔權競喔�竾喔犩覆喔勦箑喔｀傅喔⑧笝喙冟斧喔∴箞喔�副喔曕箓喔權浮喔编笗喔�</li>
+            <li>喔｀傅喙€喔嬥箛喔曕笗喔侧福喔侧竾喔｀副喔�-喔堗箞喔侧涪 喙佮弗喔班涪喔�笖喔堗箞喔侧涪喔�赴喔�浮喔｀覆喔⑧竸喔權箑喔涏箛喔� 0 喔氞覆喔� 喔�赋喔�福喔编笟喔犩覆喔勦箑喔｀傅喔⑧笝喙冟斧喔∴箞</li>
+            <li><b>喔勦竾喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝 喔｀斧喔编釜喔溹箞喔侧笝 喙佮弗喔班箑喔�福喔编笉喔嵿复喔佮箘喔о箟喔勦福喔氞笘喙夃抚喔� 100%</b> 喙勦浮喙堗笗喙夃腑喔囙竵喔｀腑喔佮箖喔�浮喙�</li>
           </ul>
         </div>
 
         <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-indigo-600/20 cursor-pointer flex items-center justify-center gap-2">
-          <span>🚀</span>
-          <span>ยืนยันเลื่อนชั้น / ขึ้นภาคเรียนใหม่</span>
+          <span>馃殌</span>
+          <span>喔⑧阜喔權涪喔编笝喙€喔ム阜喙堗腑喔權笂喔编箟喔� / 喔傕付喙夃笝喔犩覆喔勦箑喔｀傅喔⑧笝喙冟斧喔∴箞</span>
         </button>
       </form>
     </div>
@@ -684,40 +684,40 @@
   <!-- Modal: Login -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 border border-slate-100 relative">
-      <button id="btnCloseLoginModal" onclick="closeModal('loginModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      <button id="btnCloseLoginModal" onclick="closeModal('loginModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">鉁�</button>
       
       <div class="text-center mb-6">
         <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-md shadow-blue-500/20">
-          🔐
+          馃攼
         </div>
-        <h2 class="text-2xl font-bold text-slate-800">เข้าสู่ระบบ</h2>
-        <p id="loginModalSubtitle" class="text-slate-500 text-xs mt-1">สำหรับคุณครูและเหรัญญิกประจำห้อง</p>
+        <h2 class="text-2xl font-bold text-slate-800">喙€喔傕箟喔侧釜喔灌箞喔｀赴喔氞笟</h2>
+        <p id="loginModalSubtitle" class="text-slate-500 text-xs mt-1">喔�赋喔�福喔编笟喔勦父喔撪竸喔｀腹喙佮弗喔班箑喔�福喔编笉喔嵿复喔佮笡喔｀赴喔堗赋喔�箟喔�竾</p>
       </div>
 
       <form id="loginForm" onsubmit="handleLogin(event)">
         <div class="mb-4">
           <label class="block text-slate-700 text-xs font-bold mb-1.5" for="username">
-            ชื่อผู้ใช้งาน (Username) <span class="text-rose-500">*</span>
+            喔娻阜喙堗腑喔溹腹喙夃箖喔娻箟喔囙覆喔� (Username) <span class="text-rose-500">*</span>
           </label>
           <input class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition-colors font-semibold" 
                  id="username" type="text" required placeholder="">
         </div>
         <div class="mb-4">
           <label class="block text-slate-700 text-xs font-bold mb-1.5" for="password">
-            รหัสผ่าน (Password) <span class="text-rose-500">*</span>
+            喔｀斧喔编釜喔溹箞喔侧笝 (Password) <span class="text-rose-500">*</span>
           </label>
           <input class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition-colors" 
                  id="password" type="password" required placeholder="">
           <div id="loginModalInfo" class="text-[11px] text-slate-500 mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 leading-relaxed">
-            ℹ️ สำหรับ<strong>คุณครู</strong>และ<strong>เหรัญญิก</strong>เท่านั้น (นักเรียนทั่วไปสามารถดูยอดเงินและประวัติการชำระได้ที่หน้าหลัก)
+            鈩癸笍 喔�赋喔�福喔编笟<strong>喔勦父喔撪竸喔｀腹</strong>喙佮弗喔�<strong>喙€喔�福喔编笉喔嵿复喔�</strong>喙€喔椸箞喔侧笝喔编箟喔� (喔權副喔佮箑喔｀傅喔⑧笝喔椸副喙堗抚喙勦笡喔�覆喔∴覆喔｀笘喔斷腹喔⑧腑喔斷箑喔囙复喔權箒喔ム赴喔涏福喔班抚喔编笗喔脆竵喔侧福喔娻赋喔｀赴喙勦笖喙夃笚喔掂箞喔�笝喙夃覆喔�弗喔编竵)
           </div>
         </div>
         <button class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 cursor-pointer" 
                 type="submit">
-          ยืนยันการเข้าสู่ระบบ
+          喔⑧阜喔權涪喔编笝喔佮覆喔｀箑喔傕箟喔侧釜喔灌箞喔｀赴喔氞笟
         </button>
         <div class="mt-4 text-center">
-          <button type="button" onclick="forgotPassword()" class="text-sm text-blue-600 hover:text-blue-700 font-medium">ลืมรหัสผ่าน?</button>
+          <button type="button" onclick="forgotPassword()" class="text-sm text-blue-600 hover:text-blue-700 font-medium">喔ム阜喔∴福喔�副喔�笢喙堗覆喔�?</button>
         </div>
       </form>
     </div>
@@ -726,249 +726,249 @@
   <!-- Modal: Change Password -->
   <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 border border-slate-100 relative">
-      <button onclick="closeModal('changePasswordModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">✖</button>
+      <button onclick="closeModal('changePasswordModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">鉁�</button>
       <div class="flex items-center gap-4 mb-6">
         <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 text-2xl shadow-inner">
-          🔑
+          馃攽
         </div>
         <div>
-          <h2 class="text-xl font-bold text-slate-800">เปลี่ยนรหัสผ่าน</h2>
-          <p class="text-sm text-slate-500">สำหรับครูและเหรัญญิก</p>
+          <h2 class="text-xl font-bold text-slate-800">喙€喔涏弗喔掂箞喔⑧笝喔｀斧喔编釜喔溹箞喔侧笝</h2>
+          <p class="text-sm text-slate-500">喔�赋喔�福喔编笟喔勦福喔灌箒喔ム赴喙€喔�福喔编笉喔嵿复喔�</p>
         </div>
       </div>
       <form id="changePasswordForm" onsubmit="submitChangePassword(event)" class="space-y-5">
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">รหัสผ่านเดิม</label>
-          <input type="password" id="oldPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="รหัสผ่านปัจจุบัน" required>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">喔｀斧喔编釜喔溹箞喔侧笝喙€喔斷复喔�</label>
+          <input type="password" id="oldPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="喔｀斧喔编釜喔溹箞喔侧笝喔涏副喔堗笀喔膏笟喔编笝" required>
         </div>
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">รหัสผ่านใหม่ <span class="text-xs text-slate-400 font-normal">(ขั้นต่ำ 6 ตัวอักษร)</span></label>
-          <input type="password" id="newPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="ตั้งรหัสผ่านใหม่" minlength="6" required>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">喔｀斧喔编釜喔溹箞喔侧笝喙冟斧喔∴箞 <span class="text-xs text-slate-400 font-normal">(喔傕副喙夃笝喔曕箞喔� 6 喔曕副喔о腑喔编竵喔┼福)</span></label>
+          <input type="password" id="newPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="喔曕副喙夃竾喔｀斧喔编釜喔溹箞喔侧笝喙冟斧喔∴箞" minlength="6" required>
         </div>
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">ยืนยันรหัสผ่านใหม่</label>
-          <input type="password" id="confirmNewPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง" minlength="6" required>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">喔⑧阜喔權涪喔编笝喔｀斧喔编釜喔溹箞喔侧笝喙冟斧喔∴箞</label>
+          <input type="password" id="confirmNewPasswordInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="喔佮福喔�竵喔｀斧喔编釜喔溹箞喔侧笝喙冟斧喔∴箞喔�傅喔佮竸喔｀副喙夃竾" minlength="6" required>
         </div>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]">
-          บันทึกรหัสผ่านใหม่
+          喔氞副喔權笚喔多竵喔｀斧喔编釜喔溹箞喔侧笝喙冟斧喔∴箞
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: รับเงิน/เก็บเงิน (Income) -->
+  <!-- Modal: 喔｀副喔氞箑喔囙复喔�/喙€喔佮箛喔氞箑喔囙复喔� (Income) -->
   <div id="txModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh] border border-slate-100 relative">
-      <button onclick="closeModal('txModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('txModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">📥</div>
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">馃摜</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">เก็บเงินนักเรียน</h2>
-          <p class="text-xs text-slate-400">บันทึกรายรับประจำงวด</p>
+          <h2 class="text-lg font-bold text-slate-800">喙€喔佮箛喔氞箑喔囙复喔權笝喔编竵喙€喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喔氞副喔權笚喔多竵喔｀覆喔⑧福喔编笟喔涏福喔班笀喔赤竾喔о笖</p>
         </div>
       </div>
 
       <form onsubmit="submitTransaction(event, 'income', 'txModal')" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">เลือกนักเรียน (เรียงตามเลขที่)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喙€喔ム阜喔�竵喔權副喔佮箑喔｀傅喔⑧笝 (喙€喔｀傅喔⑧竾喔曕覆喔∴箑喔ム競喔椸傅喙�)</label>
           <select id="incStudentId" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
             <!-- JS Render -->
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">รอบเก็บเงิน</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔�</label>
           <select id="incWeekId" required onchange="updateIncomeAmountByWeek()" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
             <!-- JS Render -->
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">จำนวนเงิน (บาท)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔堗赋喔權抚喔權箑喔囙复喔� (喔氞覆喔�)</label>
           <input id="incAmount" type="number" min="1" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="20">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">หมายเหตุ (ถ้ามี)</label>
-          <input id="incDesc" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="เช่น จ่ายครบแล้ว">
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔�浮喔侧涪喙€喔�笗喔� (喔栢箟喔侧浮喔�)</label>
+          <input id="incDesc" type="text" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="喙€喔娻箞喔� 喔堗箞喔侧涪喔勦福喔氞箒喔ム箟喔�">
         </div>
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20">
-          บันทึกรายรับ
+          喔氞副喔權笚喔多竵喔｀覆喔⑧福喔编笟
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: รายจ่าย (Expense) -->
+  <!-- Modal: 喔｀覆喔⑧笀喙堗覆喔� (Expense) -->
   <div id="expenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('expenseModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('expenseModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">📤</div>
+        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">馃摛</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">บันทึกรายจ่ายห้องเรียน</h2>
-          <p class="text-xs text-slate-400">หักออกจากเงินกองกลางห้อง</p>
+          <h2 class="text-lg font-bold text-slate-800">喔氞副喔權笚喔多竵喔｀覆喔⑧笀喙堗覆喔⑧斧喙夃腑喔囙箑喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喔�副喔佮腑喔�竵喔堗覆喔佮箑喔囙复喔權竵喔�竾喔佮弗喔侧竾喔�箟喔�竾</p>
         </div>
       </div>
 
       <form onsubmit="submitTransaction(event, 'expense', 'expenseModal')" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดรายจ่าย</label>
-          <input id="expDesc" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none text-sm" placeholder="เช่น ซื้อไม้กวาด, ซื้อกระดาษรายงาน">
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖喔｀覆喔⑧笀喙堗覆喔�</label>
+          <input id="expDesc" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none text-sm" placeholder="喙€喔娻箞喔� 喔嬥阜喙夃腑喙勦浮喙夃竵喔о覆喔�, 喔嬥阜喙夃腑喔佮福喔班笖喔侧俯喔｀覆喔⑧竾喔侧笝">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">จำนวนเงิน (บาท)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔堗赋喔權抚喔權箑喔囙复喔� (喔氞覆喔�)</label>
           <input id="expAmount" type="number" min="1" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none text-sm" placeholder="100">
         </div>
         <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-rose-600/20">
-          บันทึกรายจ่าย
+          喔氞副喔權笚喔多竵喔｀覆喔⑧笀喙堗覆喔�
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: แก้ไขรายการ (Edit Transaction Modal) -->
+  <!-- Modal: 喙佮竵喙夃箘喔傕福喔侧涪喔佮覆喔� (Edit Transaction Modal) -->
   <div id="editExpenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('editExpenseModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
+      <button onclick="closeModal('editExpenseModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg cursor-pointer">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div id="editTxIcon" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">✏️</div>
+        <div id="editTxIcon" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">鉁忥笍</div>
         <div>
-          <h2 id="editTxTitle" class="text-lg font-bold text-slate-800">แก้ไขรายการ</h2>
-          <p id="editTxSubtitle" class="text-xs text-slate-400">ปรับปรุงรายละเอียด หรือจำนวนเงิน</p>
+          <h2 id="editTxTitle" class="text-lg font-bold text-slate-800">喙佮竵喙夃箘喔傕福喔侧涪喔佮覆喔�</h2>
+          <p id="editTxSubtitle" class="text-xs text-slate-400">喔涏福喔编笟喔涏福喔膏竾喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖 喔�福喔粪腑喔堗赋喔權抚喔權箑喔囙复喔�</p>
         </div>
       </div>
 
       <form id="editExpenseForm" onsubmit="submitEditExpense(event)" class="space-y-4">
         <input type="hidden" id="editExpTxId">
         <div>
-          <label id="editTxDescLabel" class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดรายการ <span class="text-rose-500">*</span></label>
-          <input id="editExpDescription" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-800 font-semibold" placeholder="ระบุรายละเอียด">
+          <label id="editTxDescLabel" class="block text-xs font-bold text-slate-700 mb-1">喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖喔｀覆喔⑧竵喔侧福 <span class="text-rose-500">*</span></label>
+          <input id="editExpDescription" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-800 font-semibold" placeholder="喔｀赴喔氞父喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">จำนวนเงิน (บาท) <span class="text-rose-500">*</span></label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔堗赋喔權抚喔權箑喔囙复喔� (喔氞覆喔�) <span class="text-rose-500">*</span></label>
           <input id="editExpAmount" type="number" step="any" min="0.01" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-800 font-bold">
         </div>
         <button id="editTxSubmitBtn" type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 cursor-pointer">
-          บันทึกการแก้ไขรายการ
+          喔氞副喔權笚喔多竵喔佮覆喔｀箒喔佮箟喙勦競喔｀覆喔⑧竵喔侧福
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: รายรับอื่นๆ (Other Income) -->
+  <!-- Modal: 喔｀覆喔⑧福喔编笟喔�阜喙堗笝喙� (Other Income) -->
   <div id="fineModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('fineModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('fineModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">✨</div>
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">鉁�</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">บันทึกรายรับอื่นๆ</h2>
-          <p class="text-xs text-slate-400">เงินรายรับอื่นๆ จะถูกนำเข้ากองกลางห้องเรียน</p>
+          <h2 class="text-lg font-bold text-slate-800">喔氞副喔權笚喔多竵喔｀覆喔⑧福喔编笟喔�阜喙堗笝喙�</h2>
+          <p class="text-xs text-slate-400">喙€喔囙复喔權福喔侧涪喔｀副喔氞腑喔粪箞喔權箚 喔堗赴喔栢腹喔佮笝喔赤箑喔傕箟喔侧竵喔�竾喔佮弗喔侧竾喔�箟喔�竾喙€喔｀傅喔⑧笝</p>
         </div>
       </div>
 
       <form onsubmit="submitTransaction(event, 'fine', 'fineModal')" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียด / ที่มาของรายรับ</label>
-          <input id="fineDescInput" type="text" placeholder="เช่น ค่าปรับไม่ทำเขตฯ, ค่าปรับเล่นโทรศัพท์ในแถว" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm font-medium">
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖 / 喔椸傅喙堗浮喔侧競喔�竾喔｀覆喔⑧福喔编笟</label>
+          <input id="fineDescInput" type="text" placeholder="喙€喔娻箞喔� 喔勦箞喔侧笡喔｀副喔氞箘喔∴箞喔椸赋喙€喔傕笗喔�, 喔勦箞喔侧笡喔｀副喔氞箑喔ム箞喔權箓喔椸福喔ㄠ副喔炧笚喙屶箖喔權箒喔栢抚" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm font-medium">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">จำนวนเงิน (บาท)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔堗赋喔權抚喔權箑喔囙复喔� (喔氞覆喔�)</label>
           <input id="fineAmount" type="number" min="1" step="any" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm font-bold text-slate-800">
         </div>
         <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-amber-500/20">
-          บันทึกรายรับอื่นๆ
+          喔氞副喔權笚喔多竵喔｀覆喔⑧福喔编笟喔�阜喙堗笝喙�
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: เพิ่ม/แก้ไขรอบเก็บเงิน (Week) -->
+  <!-- Modal: 喙€喔炧复喙堗浮/喙佮竵喙夃箘喔傕福喔�笟喙€喔佮箛喔氞箑喔囙复喔� (Week) -->
   <div id="weekModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg p-6 border border-slate-100 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('weekModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
+      <button onclick="closeModal('weekModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg cursor-pointer">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">📅</div>
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">馃搮</div>
         <div>
-          <h2 id="lblWeekModalTitle" class="text-lg font-bold text-slate-800">เพิ่มรอบเก็บเงินใหม่</h2>
-          <p id="lblWeekModalSubtitle" class="text-xs text-slate-400">กำหนดรอบการเก็บเงินห้องเรียน</p>
+          <h2 id="lblWeekModalTitle" class="text-lg font-bold text-slate-800">喙€喔炧复喙堗浮喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔權箖喔�浮喙�</h2>
+          <p id="lblWeekModalSubtitle" class="text-xs text-slate-400">喔佮赋喔�笝喔斷福喔�笟喔佮覆喔｀箑喔佮箛喔氞箑喔囙复喔權斧喙夃腑喔囙箑喔｀傅喔⑧笝</p>
         </div>
       </div>
 
       <form id="weekForm" onsubmit="submitWeek(event)" class="space-y-4">
-        <!-- วันที่เริ่ม -->
+        <!-- 喔о副喔權笚喔掂箞喙€喔｀复喙堗浮 -->
         <div class="bg-slate-50/90 p-3.5 rounded-2xl border border-slate-200/80">
           <div class="mb-2">
             <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
-              <span>📅 วันที่เริ่ม</span>
+              <span>馃搮 喔о副喔權笚喔掂箞喙€喔｀复喙堗浮</span>
             </label>
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">วัน</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喔о副喔�</label>
               <select id="wkStartDay" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
               </select>
             </div>
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">เดือน</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喙€喔斷阜喔�笝</label>
               <select id="wkStartMonth" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
-                <option value="1">ม.ค.</option>
-                <option value="2">ก.พ.</option>
-                <option value="3">มี.ค.</option>
-                <option value="4">เม.ย.</option>
-                <option value="5">พ.ค.</option>
-                <option value="6">มิ.ย.</option>
-                <option value="7">ก.ค.</option>
-                <option value="8">ส.ค.</option>
-                <option value="9">ก.ย.</option>
-                <option value="10">ต.ค.</option>
-                <option value="11">พ.ย.</option>
-                <option value="12">ธ.ค.</option>
+                <option value="1">喔�.喔�.</option>
+                <option value="2">喔�.喔�.</option>
+                <option value="3">喔∴傅.喔�.</option>
+                <option value="4">喙€喔�.喔�.</option>
+                <option value="5">喔�.喔�.</option>
+                <option value="6">喔∴复.喔�.</option>
+                <option value="7">喔�.喔�.</option>
+                <option value="8">喔�.喔�.</option>
+                <option value="9">喔�.喔�.</option>
+                <option value="10">喔�.喔�.</option>
+                <option value="11">喔�.喔�.</option>
+                <option value="12">喔�.喔�.</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">ปี (พ.ศ.)</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喔涏傅 (喔�.喔�.)</label>
               <select id="wkStartYear" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none font-bold text-blue-600">
               </select>
             </div>
           </div>
         </div>
 
-        <!-- วันที่สิ้นสุด -->
+        <!-- 喔о副喔權笚喔掂箞喔�复喙夃笝喔�父喔� -->
         <div class="bg-slate-50/90 p-3.5 rounded-2xl border border-slate-200/80">
           <div class="mb-2">
             <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
-              <span>📅 วันที่สิ้นสุด</span>
+              <span>馃搮 喔о副喔權笚喔掂箞喔�复喙夃笝喔�父喔�</span>
             </label>
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">วัน</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喔о副喔�</label>
               <select id="wkEndDay" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
               </select>
             </div>
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">เดือน</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喙€喔斷阜喔�笝</label>
               <select id="wkEndMonth" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
-                <option value="1">ม.ค.</option>
-                <option value="2">ก.พ.</option>
-                <option value="3">มี.ค.</option>
-                <option value="4">เม.ย.</option>
-                <option value="5">พ.ค.</option>
-                <option value="6">มิ.ย.</option>
-                <option value="7">ก.ค.</option>
-                <option value="8">ส.ค.</option>
-                <option value="9">ก.ย.</option>
-                <option value="10">ต.ค.</option>
-                <option value="11">พ.ย.</option>
-                <option value="12">ธ.ค.</option>
+                <option value="1">喔�.喔�.</option>
+                <option value="2">喔�.喔�.</option>
+                <option value="3">喔∴傅.喔�.</option>
+                <option value="4">喙€喔�.喔�.</option>
+                <option value="5">喔�.喔�.</option>
+                <option value="6">喔∴复.喔�.</option>
+                <option value="7">喔�.喔�.</option>
+                <option value="8">喔�.喔�.</option>
+                <option value="9">喔�.喔�.</option>
+                <option value="10">喔�.喔�.</option>
+                <option value="11">喔�.喔�.</option>
+                <option value="12">喔�.喔�.</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] text-slate-400 font-medium mb-1">ปี (พ.ศ.)</label>
+              <label class="block text-[10px] text-slate-400 font-medium mb-1">喔涏傅 (喔�.喔�.)</label>
               <select id="wkEndYear" class="w-full px-2 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none font-bold text-blue-600">
               </select>
             </div>
@@ -977,21 +977,21 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ครั้งที่</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔勦福喔编箟喔囙笚喔掂箞</label>
             <input id="wkNumber" type="number" min="1" required readonly class="w-full px-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none text-sm font-bold text-blue-600 cursor-not-allowed">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ยอดเป้าหมาย (บาท/คน)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔⑧腑喔斷箑喔涏箟喔侧斧喔∴覆喔� (喔氞覆喔�/喔勦笝)</label>
             <input id="wkAmount" type="number" min="1" value="20" required class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-slate-800">
           </div>
         </div>
 
         <div class="space-y-2 pt-1">
           <button id="btnSubmitWeek" type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 cursor-pointer">
-            บันทึกรอบใหม่
+            喔氞副喔權笚喔多竵喔｀腑喔氞箖喔�浮喙�
           </button>
           <button id="btnCancelEditWeek" type="button" onclick="cancelEditWeek()" class="hidden-view w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold py-2.5 px-4 rounded-xl text-xs transition-all cursor-pointer">
-            ยกเลิกการแก้ไข (สร้างรอบใหม่)
+            喔⑧竵喙€喔ム复喔佮竵喔侧福喙佮竵喙夃箘喔� (喔�福喙夃覆喔囙福喔�笟喙冟斧喔∴箞)
           </button>
         </div>
       </form>
@@ -1000,8 +1000,8 @@
       <div class="mt-6 pt-5 border-t border-slate-100">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span>📋 รอบเก็บเงินในเทอมนี้</span>
-            <span id="lblModalWeekCount" class="text-[11px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold border border-blue-200/60">0 รอบ</span>
+            <span>馃搵 喔｀腑喔氞箑喔佮箛喔氞箑喔囙复喔權箖喔權箑喔椸腑喔∴笝喔掂箟</span>
+            <span id="lblModalWeekCount" class="text-[11px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold border border-blue-200/60">0 喔｀腑喔�</span>
           </h3>
         </div>
         <div id="modalWeeksList" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
@@ -1011,16 +1011,16 @@
     </div>
   </div>
 
-  <!-- Modal: เพิ่มนักเรียน & นำเข้า Excel (Tabbed User Modal) -->
+  <!-- Modal: 喙€喔炧复喙堗浮喔權副喔佮箑喔｀傅喔⑧笝 & 喔權赋喙€喔傕箟喔� Excel (Tabbed User Modal) -->
   <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg p-6 border border-slate-100 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('userModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      <button onclick="closeModal('userModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-lg">鉁�</button>
       
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">👥</div>
+        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">馃懃</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">เพิ่มรายชื่อนักเรียน</h2>
-          <p class="text-xs text-slate-400">กรอกเพิ่มทีละคน หรือนำเข้าจากไฟล์ Excel (.xlsx)</p>
+          <h2 class="text-lg font-bold text-slate-800">喙€喔炧复喙堗浮喔｀覆喔⑧笂喔粪箞喔�笝喔编竵喙€喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喔佮福喔�竵喙€喔炧复喙堗浮喔椸傅喔ム赴喔勦笝 喔�福喔粪腑喔權赋喙€喔傕箟喔侧笀喔侧竵喙勦笩喔ム箤 Excel (.xlsx)</p>
         </div>
       </div>
 
@@ -1028,11 +1028,11 @@
       <div class="flex border-b border-slate-100 mb-5">
         <button id="btnTabExcel" onclick="switchUserTab('excel')" class="flex-1 pb-2.5 text-xs font-bold border-b-2 border-emerald-600 text-emerald-600 transition-colors flex items-center justify-center gap-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          นำเข้าจากไฟล์ Excel (.xlsx)
+          喔權赋喙€喔傕箟喔侧笀喔侧竵喙勦笩喔ム箤 Excel (.xlsx)
         </button>
         <button id="btnTabManual" onclick="switchUserTab('manual')" class="flex-1 pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center gap-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          กรอกเพิ่มทีละคน
+          喔佮福喔�竵喙€喔炧复喙堗浮喔椸傅喔ム赴喔勦笝
         </button>
       </div>
 
@@ -1040,36 +1040,36 @@
       <div id="tabExcelContent" class="space-y-4">
         <div class="bg-emerald-50/60 border border-emerald-100 p-4 rounded-2xl flex items-center justify-between gap-3">
           <div>
-            <p class="text-xs font-bold text-emerald-800">มีไฟล์ตัวอย่าง (3 คอลัมน์: เลขที่, รหัส, ชื่อ)</p>
-            <p class="text-[11px] text-emerald-600">ไม่ต้องมีรหัสผ่าน ค่อยแต่งตั้งเหรัญญิกในระบบได้ทีหลัง</p>
+            <p class="text-xs font-bold text-emerald-800">喔∴傅喙勦笩喔ム箤喔曕副喔о腑喔⑧箞喔侧竾 (3 喔勦腑喔ム副喔∴笝喙�: 喙€喔ム競喔椸傅喙�, 喔｀斧喔编釜, 喔娻阜喙堗腑)</p>
+            <p class="text-[11px] text-emerald-600">喙勦浮喙堗笗喙夃腑喔囙浮喔掂福喔�副喔�笢喙堗覆喔� 喔勦箞喔�涪喙佮笗喙堗竾喔曕副喙夃竾喙€喔�福喔编笉喔嵿复喔佮箖喔權福喔班笟喔氞箘喔斷箟喔椸傅喔�弗喔编竾</p>
           </div>
           <button type="button" onclick="downloadStudentTemplate()" class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition-all whitespace-nowrap">
-            📥 โหลดแม่แบบ
+            馃摜 喙傕斧喔ム笖喙佮浮喙堗箒喔氞笟
           </button>
         </div>
 
         <div class="border-2 border-dashed border-slate-200 hover:border-emerald-400 rounded-2xl p-6 text-center cursor-pointer transition-colors" onclick="document.getElementById('excelFileInput').click()">
           <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" onchange="handleExcelFileUpload(event)" class="hidden">
           <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl">
-            📑
+            馃搼
           </div>
-          <p class="text-xs font-bold text-slate-700">คลิกเพื่อเลือกไฟล์ Excel (.xlsx, .csv)</p>
-          <p class="text-[11px] text-slate-400 mt-0.5">หรือลากไฟล์มาวางที่นี่</p>
+          <p class="text-xs font-bold text-slate-700">喔勦弗喔脆竵喙€喔炧阜喙堗腑喙€喔ム阜喔�竵喙勦笩喔ム箤 Excel (.xlsx, .csv)</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">喔�福喔粪腑喔ム覆喔佮箘喔熰弗喙屶浮喔侧抚喔侧竾喔椸傅喙堗笝喔掂箞</p>
         </div>
 
         <!-- Preview Area -->
         <div id="excelPreviewArea" class="hidden-view space-y-3">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-bold text-slate-700">ตัวอย่างข้อมูลที่พบ (<span id="lblPreviewCount" class="text-emerald-600">0</span> คน):</p>
-            <button onclick="clearExcelPreview()" class="text-xs text-rose-500 hover:underline">ล้างข้อมูล</button>
+            <p class="text-xs font-bold text-slate-700">喔曕副喔о腑喔⑧箞喔侧竾喔傕箟喔�浮喔灌弗喔椸傅喙堗笧喔� (<span id="lblPreviewCount" class="text-emerald-600">0</span> 喔勦笝):</p>
+            <button onclick="clearExcelPreview()" class="text-xs text-rose-500 hover:underline">喔ム箟喔侧竾喔傕箟喔�浮喔灌弗</button>
           </div>
           <div class="max-h-48 overflow-y-auto border border-slate-100 rounded-xl">
             <table class="w-full text-left text-xs border-collapse">
               <thead class="bg-slate-50 text-slate-500 sticky top-0">
                 <tr>
-                  <th class="px-3 py-2 text-center">เลขที่</th>
-                  <th class="px-3 py-2">รหัสนักเรียน</th>
-                  <th class="px-3 py-2">ชื่อ-นามสกุล</th>
+                  <th class="px-3 py-2 text-center">喙€喔ム競喔椸傅喙�</th>
+                  <th class="px-3 py-2">喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝</th>
+                  <th class="px-3 py-2">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</th>
                 </tr>
               </thead>
               <tbody id="excelPreviewBody" class="divide-y divide-slate-100">
@@ -1078,7 +1078,7 @@
             </table>
           </div>
           <button type="button" onclick="submitBatchExcelUsers()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
-            🚀 ยืนยันการนำเข้าทั้งหมด
+            馃殌 喔⑧阜喔權涪喔编笝喔佮覆喔｀笝喔赤箑喔傕箟喔侧笚喔编箟喔囙斧喔∴笖
           </button>
         </div>
       </div>
@@ -1088,21 +1088,21 @@
         <form onsubmit="submitUser(event)" class="space-y-4">
           <div class="grid grid-cols-3 gap-3">
             <div class="col-span-2">
-              <label class="block text-xs font-bold text-slate-700 mb-1">รหัสนักเรียน (ID / Username)</label>
-              <input id="usrStudentId" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm" placeholder="เช่น 54321">
+              <label class="block text-xs font-bold text-slate-700 mb-1">喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝 (ID / Username)</label>
+              <input id="usrStudentId" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm" placeholder="喙€喔娻箞喔� 54321">
             </div>
             <div class="col-span-1">
-              <label class="block text-xs font-bold text-slate-700 mb-1">เลขที่</label>
+              <label class="block text-xs font-bold text-slate-700 mb-1">喙€喔ム競喔椸傅喙�</label>
               <input id="usrStudentNumber" type="number" min="1" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm" placeholder="1">
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ-นามสกุล</label>
-            <input id="usrName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm" placeholder="เช่น นายสมชาย สายเปย์">
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</label>
+            <input id="usrName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm" placeholder="喙€喔娻箞喔� 喔權覆喔⑧釜喔∴笂喔侧涪 喔�覆喔⑧箑喔涏涪喙�">
           </div>
 
           <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-slate-800/20">
-            เพิ่มนักเรียน
+            喙€喔炧复喙堗浮喔權副喔佮箑喔｀傅喔⑧笝
           </button>
         </form>
       </div>
@@ -1110,16 +1110,16 @@
     </div>
   </div>
 
-  <!-- Modal: แก้ไขข้อมูลนักเรียน (Edit Student Modal) -->
+  <!-- Modal: 喙佮竵喙夃箘喔傕競喙夃腑喔∴腹喔ム笝喔编竵喙€喔｀傅喔⑧笝 (Edit Student Modal) -->
   <div id="editStudentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('editStudentModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('editStudentModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">✏️</div>
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">鉁忥笍</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">แก้ไขข้อมูลนักเรียน</h2>
-          <p class="text-xs text-slate-400">อัปเดตเลขที่, รหัสนักเรียน หรือชื่อ-นามสกุล</p>
+          <h2 class="text-lg font-bold text-slate-800">喙佮竵喙夃箘喔傕競喙夃腑喔∴腹喔ム笝喔编竵喙€喔｀傅喔⑧笝</h2>
+          <p class="text-xs text-slate-400">喔�副喔涏箑喔斷笗喙€喔ム競喔椸傅喙�, 喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝 喔�福喔粪腑喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</p>
         </div>
       </div>
 
@@ -1127,76 +1127,76 @@
         <input id="editOldStudentId" type="hidden">
         <div class="grid grid-cols-3 gap-3">
           <div class="col-span-2">
-            <label class="block text-xs font-bold text-slate-700 mb-1">รหัสนักเรียน (ID)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝 (ID)</label>
             <input id="editStudentId" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
           </div>
           <div class="col-span-1">
-            <label class="block text-xs font-bold text-slate-700 mb-1">เลขที่</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">喙€喔ム競喔椸傅喙�</label>
             <input id="editStudentNumber" type="number" min="1" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ-นามสกุล</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔娻阜喙堗腑-喔權覆喔∴釜喔佮父喔�</label>
           <input id="editName" type="text" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
         </div>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-blue-600/20">
-          บันทึกการแก้ไข
+          喔氞副喔權笚喔多竵喔佮覆喔｀箒喔佮箟喙勦競
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: จัดการ/แต่งตั้งเหรัญญิก (Treasurer Modal) -->
+  <!-- Modal: 喔堗副喔斷竵喔侧福/喙佮笗喙堗竾喔曕副喙夃竾喙€喔�福喔编笉喔嵿复喔� (Treasurer Modal) -->
   <div id="treasurerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden-view">
     <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 border border-slate-100 relative">
-      <button onclick="closeModal('treasurerModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">✕</button>
+      <button onclick="closeModal('treasurerModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">鉁�</button>
       
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">💼</div>
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">馃捈</div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800">กำหนดสิทธิ์เหรัญญิกห้อง</h2>
-          <p id="lblTreasurerTargetName" class="text-xs text-indigo-600 font-semibold mt-0.5">เลือกนักเรียน</p>
+          <h2 class="text-lg font-bold text-slate-800">喔佮赋喔�笝喔斷釜喔脆笚喔樴复喙屶箑喔�福喔编笉喔嵿复喔佮斧喙夃腑喔�</h2>
+          <p id="lblTreasurerTargetName" class="text-xs text-indigo-600 font-semibold mt-0.5">喙€喔ム阜喔�竵喔權副喔佮箑喔｀傅喔⑧笝</p>
         </div>
       </div>
 
       <form onsubmit="submitTreasurer(event)" class="space-y-4">
         <input id="trsStudentId" type="hidden">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">บทบาท / สิทธิ์</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔氞笚喔氞覆喔� / 喔�复喔椸笜喔脆箤</label>
           <select id="trsRole" onchange="handleTreasurerRoleToggle()" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
-            <option value="treasurer">💼 แต่งตั้งเป็น "เหรัญญิกห้อง" (มีสิทธิ์เก็บเงิน/จ่ายเงิน)</option>
-            <option value="student">👤 ปรับเป็น "นักเรียนทั่วไป" (ไม่มีสิทธิ์บันทึกเงิน)</option>
+            <option value="treasurer">馃捈 喙佮笗喙堗竾喔曕副喙夃竾喙€喔涏箛喔� "喙€喔�福喔编笉喔嵿复喔佮斧喙夃腑喔�" (喔∴傅喔�复喔椸笜喔脆箤喙€喔佮箛喔氞箑喔囙复喔�/喔堗箞喔侧涪喙€喔囙复喔�)</option>
+            <option value="student">馃懁 喔涏福喔编笟喙€喔涏箛喔� "喔權副喔佮箑喔｀傅喔⑧笝喔椸副喙堗抚喙勦笡" (喙勦浮喙堗浮喔掂釜喔脆笚喔樴复喙屶笟喔编笝喔椸付喔佮箑喔囙复喔�)</option>
           </select>
         </div>
         <div id="trsPasswordBlock">
-          <label class="block text-xs font-bold text-slate-700 mb-1">กำหนดรหัสผ่านสำหรับเหรัญญิก</label>
-          <input id="trsPassword" type="password" placeholder="เช่น 123456" value="123456" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
-          <p class="text-[11px] text-slate-400 mt-1">💡 เหรัญญิกจะใช้รหัสนักเรียน + รหัสผ่านนี้เข้าสู่ระบบ</p>
+          <label class="block text-xs font-bold text-slate-700 mb-1">喔佮赋喔�笝喔斷福喔�副喔�笢喙堗覆喔權釜喔赤斧喔｀副喔氞箑喔�福喔编笉喔嵿复喔�</label>
+          <input id="trsPassword" type="password" placeholder="喙€喔娻箞喔� 123456" value="123456" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+          <p class="text-[11px] text-slate-400 mt-1">馃挕 喙€喔�福喔编笉喔嵿复喔佮笀喔班箖喔娻箟喔｀斧喔编釜喔權副喔佮箑喔｀傅喔⑧笝 + 喔｀斧喔编釜喔溹箞喔侧笝喔權傅喙夃箑喔傕箟喔侧釜喔灌箞喔｀赴喔氞笟</p>
         </div>
         <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md shadow-indigo-600/20">
-          บันทึกการกำหนดสิทธิ์
+          喔氞副喔權笚喔多竵喔佮覆喔｀竵喔赤斧喔權笖喔�复喔椸笜喔脆箤
         </button>
       </form>
     </div>
   </div>
 
 
-  <!-- Modal: รายการธุรกรรมทั้งหมด (Transactions Modal) -->
+  <!-- Modal: 喔｀覆喔⑧竵喔侧福喔樴父喔｀竵喔｀福喔∴笚喔编箟喔囙斧喔∴笖 (Transactions Modal) -->
   <div id="transactionsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden-view">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl p-5 sm:p-7 border border-slate-100 relative max-h-[92vh] flex flex-col">
       <!-- Header -->
       <div class="flex items-center justify-between pb-4 border-b border-slate-100 shrink-0">
         <div class="flex items-center gap-3">
           <div id="txModalIcon" class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg shadow-xs">
-            📋
+            馃搵
           </div>
           <div>
-            <h2 id="txModalTitle" class="text-lg sm:text-xl font-bold text-slate-800">ประวัติการทำรายการ</h2>
-            <p id="txModalSubtitle" class="text-xs text-slate-400 mt-0.5">รายการรับเงิน จ่ายเงิน และรายรับอื่นๆ ทั้งหมด</p>
+            <h2 id="txModalTitle" class="text-lg sm:text-xl font-bold text-slate-800">喔涏福喔班抚喔编笗喔脆竵喔侧福喔椸赋喔｀覆喔⑧竵喔侧福</h2>
+            <p id="txModalSubtitle" class="text-xs text-slate-400 mt-0.5">喔｀覆喔⑧竵喔侧福喔｀副喔氞箑喔囙复喔� 喔堗箞喔侧涪喙€喔囙复喔� 喙佮弗喔班福喔侧涪喔｀副喔氞腑喔粪箞喔權箚 喔椸副喙夃竾喔�浮喔�</p>
           </div>
         </div>
         <button onclick="closeModal('transactionsModal')" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer">
-          ✕
+          鉁�
         </button>
       </div>
 
@@ -1204,17 +1204,17 @@
       <div class="py-3.5 flex items-center justify-between gap-3 shrink-0">
         <!-- Search + Export -->
         <div class="flex items-center gap-2 w-full justify-end">
-          <button id="btnExportExcel" onclick="exportToExcel()" class="hidden-view hidden xl:inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors shrink-0 cursor-pointer" title="ส่งออกข้อมูลเป็น Excel">
+          <button id="btnExportExcel" onclick="exportToExcel()" class="hidden-view hidden xl:inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors shrink-0 cursor-pointer" title="喔�箞喔囙腑喔�竵喔傕箟喔�浮喔灌弗喙€喔涏箛喔� Excel">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="hidden sm:inline">ส่งออก Excel</span>
+            <span class="hidden sm:inline">喔�箞喔囙腑喔�竵 Excel</span>
           </button>
         </div>
       </div>
 
       <!-- Summary Stats Strip in Modal -->
       <div id="modalTxSummaryStrip" class="py-2.5 px-3.5 bg-slate-50 rounded-xl my-2.5 flex items-center justify-between text-xs text-slate-600 shrink-0 border border-slate-100">
-        <span id="modalTxCountBadge" class="font-medium">จำนวน <span class="font-bold text-slate-900">0</span> รายการ</span>
-        <span id="modalTxSumBadge" class="font-medium">ยอดรวม: <span class="font-bold text-slate-900">0 บาท</span></span>
+        <span id="modalTxCountBadge" class="font-medium">喔堗赋喔權抚喔� <span class="font-bold text-slate-900">0</span> 喔｀覆喔⑧竵喔侧福</span>
+        <span id="modalTxSumBadge" class="font-medium">喔⑧腑喔斷福喔о浮: <span class="font-bold text-slate-900">0 喔氞覆喔�</span></span>
       </div>
 
       <!-- Table Body Container (Scrollable) -->
@@ -1222,12 +1222,12 @@
         <table class="w-full text-left border-collapse block sm:table">
           <thead class="sticky top-0 bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold z-10 border-b border-slate-100 hidden sm:table-header-group">
             <tr>
-              <th class="px-5 py-3">วัน-เวลา</th>
-              <th class="px-5 py-3">รายละเอียด</th>
-              <th class="px-5 py-3">ประเภท</th>
-              <th class="px-5 py-3 text-right">จำนวนเงิน</th>
-              <th class="px-5 py-3 text-slate-400 text-right">ผู้บันทึก</th>
-              <th id="thTxActions" class="px-5 py-3 text-center hidden-view">จัดการ</th>
+              <th class="px-5 py-3">喔о副喔�-喙€喔о弗喔�</th>
+              <th class="px-5 py-3">喔｀覆喔⑧弗喔班箑喔�傅喔⑧笖</th>
+              <th class="px-5 py-3">喔涏福喔班箑喔犩笚</th>
+              <th class="px-5 py-3 text-right">喔堗赋喔權抚喔權箑喔囙复喔�</th>
+              <th class="px-5 py-3 text-slate-400 text-right">喔溹腹喙夃笟喔编笝喔椸付喔�</th>
+              <th id="thTxActions" class="px-5 py-3 text-center hidden-view">喔堗副喔斷竵喔侧福</th>
             </tr>
           </thead>
           <tbody id="txTableBody" class="text-sm divide-y divide-slate-100 block sm:table-row-group">
@@ -1240,8 +1240,8 @@
 
 
   <!-- ==================== LOGIC & SCRIPTS ==================== -->
-  <script src="js/firebase-db.js?v=20260926_perf1"></script>
-<script src="js/app.js?v=20260926_perf1"></script>
+  <script src="js/firebase-db.js?v=20260929_fix1"></script>
+<script src="js/app.js?v=20260929_fix1"></script>
 
 </body>
 </html>

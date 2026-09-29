@@ -477,12 +477,15 @@ const API = {
     const deletedWeek = weekDoc.data();
     const deletedNum = parseInt(deletedWeek.week_number) || 0;
     
-    // Find weeks that need shifting
-    const weeksToShift = await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks')
-      .where('academic_year', '==', deletedWeek.academic_year)
-      .where('semester', '==', deletedWeek.semester)
-      .where('week_number', '>', deletedNum)
-      .get();
+    // Find weeks that need shifting (fetch all and filter in JS to avoid composite index requirement)
+    const allWeeksSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').get();
+    const weeksToShiftDocs = allWeeksSnap.docs.filter(doc => {
+      const data = doc.data();
+      return data.academic_year === deletedWeek.academic_year
+        && data.semester === deletedWeek.semester
+        && (parseInt(data.week_number) || 0) > deletedNum;
+    });
+    const weeksToShift = { docs: weeksToShiftDocs };
       
     const batch = db.batch();
     batch.delete(weekRef);
