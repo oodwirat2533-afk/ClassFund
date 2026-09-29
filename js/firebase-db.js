@@ -1,3 +1,22 @@
+const firebaseConfig = {
+      apiKey: "AIzaSyDtcvBWebmk-6tUFRvEQ2feE47GI7gMcyw",
+      authDomain: "classfund-1528e.firebaseapp.com",
+      projectId: "classfund-1528e",
+      storageBucket: "classfund-1528e.firebasestorage.app",
+      messagingSenderId: "1074855580881",
+      appId: "1:1074855580881:web:f6a0841c2328f9d63961f0",
+      measurementId: "G-ZLLBVGBWN1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    // Enable offline persistence � cached data loads instantly on refresh
+    firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+      if (err.code === 'failed-precondition') {
+        console.warn('Firestore persistence: multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        console.warn('Firestore persistence: not supported by browser');
+      }
+    });
+
 const db = firebase.firestore();
 
 const DBState = { currentRoomId: null };

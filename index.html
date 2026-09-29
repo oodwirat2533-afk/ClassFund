@@ -28,28 +28,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js" defer></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDtcvBWebmk-6tUFRvEQ2feE47GI7gMcyw",
-      authDomain: "classfund-1528e.firebaseapp.com",
-      projectId: "classfund-1528e",
-      storageBucket: "classfund-1528e.firebasestorage.app",
-      messagingSenderId: "1074855580881",
-      appId: "1:1074855580881:web:f6a0841c2328f9d63961f0",
-      measurementId: "G-ZLLBVGBWN1"
-    };
-    firebase.initializeApp(firebaseConfig);
-    // Enable offline persistence — cached data loads instantly on refresh
-    firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(err) {
-      if (err.code === 'failed-precondition') {
-        console.warn('Firestore persistence: multiple tabs open');
-      } else if (err.code === 'unimplemented') {
-        console.warn('Firestore persistence: not supported by browser');
-      }
-    });
-    
-  </script>
-</head>
+  </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between" ontouchstart="">
 
   <!-- Fullscreen Loader (Used only on initial app load) -->
