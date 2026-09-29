@@ -472,12 +472,34 @@ const API = {
     const weekRef = db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').doc(weekId);
     const weekDoc = await weekRef.get();
     
-    if (!weekDoc.exists) return { success: false, message: 'ไม่พบรอบเก็บเงินที่ต้องการลบ' };
+    if (!weekDoc.exists) return { success: false, message: '\u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e23\u0e2d\u0e1a\u0e40\u0e01\u0e47\u0e1a\u0e40\u0e07\u0e34\u0e19\u0e17\u0e35\u0e48\u0e15\u0e49\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e25\u0e1a' };
     
     const deletedWeek = weekDoc.data();
     const deletedNum = parseInt(deletedWeek.week_number) || 0;
     
-    // Find weeks that need shifting (fetch all and filter in JS to avoid composite index requirement)
+    // 1. Find all transactions linked to this week
+    const allTxSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').get();
+    const weekTxDocs = allTxSnap.docs.filter(doc => String(doc.data().week_id) === String(weekId));
+    
+    // 2. Calculate balance adjustment and per-student paid adjustment
+    let balanceAdjust = 0;
+    const studentPaidAdjust = {};
+    
+    weekTxDocs.forEach(doc => {
+      const tx = doc.data();
+      const amt = parseFloat(tx.amount) || 0;
+      if (tx.type === 'income' || tx.type === 'fine' || tx.type === 'other') {
+        balanceAdjust -= amt;
+        if (tx.type === 'income' && tx.student_id && tx.student_id !== 'ROOM') {
+          const sid = String(tx.student_id);
+          studentPaidAdjust[sid] = (studentPaidAdjust[sid] || 0) + amt;
+        }
+      } else if (tx.type === 'expense') {
+        balanceAdjust += amt;
+      }
+    });
+    
+    // 3. Find weeks that need shifting (fetch all and filter in JS to avoid composite index)
     const allWeeksSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').get();
     const weeksToShiftDocs = allWeeksSnap.docs.filter(doc => {
       const data = doc.data();
@@ -485,19 +507,65 @@ const API = {
         && data.semester === deletedWeek.semester
         && (parseInt(data.week_number) || 0) > deletedNum;
     });
-    const weeksToShift = { docs: weeksToShiftDocs };
-      
-    const batch = db.batch();
-    batch.delete(weekRef);
     
-    // Shift remaining weeks
-    weeksToShift.docs.forEach(doc => {
-      const currentNum = parseInt(doc.data().week_number);
-      batch.update(doc.ref, { week_number: currentNum - 1 });
+    // 4. Get current settings balance
+    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
+    const settingsDoc = await settingsRef.get();
+    let currentBalance = 0;
+    if (settingsDoc.exists) currentBalance = parseFloat(settingsDoc.data().current_balance) || 0;
+    
+    // 5. Get user docs for students that need total_paid update
+    const affectedStudentIds = Object.keys(studentPaidAdjust);
+    let userMap = {};
+    if (affectedStudentIds.length > 0) {
+      const allUsersSnap = await db.collection('users').where('room_id', '==', DBState.currentRoomId).get();
+      allUsersSnap.docs.forEach(doc => {
+        userMap[String(doc.data().student_id)] = doc;
+      });
+    }
+    
+    // 6. Batch delete/update everything (Firestore batch max 500, split if needed)
+    const allOps = [];
+    
+    // Delete week
+    allOps.push({ type: 'delete', ref: weekRef });
+    
+    // Delete transactions
+    weekTxDocs.forEach(doc => {
+      allOps.push({ type: 'delete', ref: doc.ref });
     });
     
-    await batch.commit();
-    return { success: true, message: 'ลบรอบเก็บเงินเรียบร้อยแล้ว' };
+    // Shift remaining weeks
+    weeksToShiftDocs.forEach(doc => {
+      const currentNum = parseInt(doc.data().week_number);
+      allOps.push({ type: 'update', ref: doc.ref, data: { week_number: currentNum - 1 } });
+    });
+    
+    // Update balance
+    allOps.push({ type: 'set', ref: settingsRef, data: { current_balance: currentBalance + balanceAdjust } });
+    
+    // Update student total_paid
+    for (const sid of affectedStudentIds) {
+      const uDoc = userMap[sid];
+      if (uDoc) {
+        const curPaid = parseFloat(uDoc.data().total_paid) || 0;
+        allOps.push({ type: 'set', ref: db.collection('users').doc(uDoc.id), data: { total_paid: Math.max(0, curPaid - studentPaidAdjust[sid]) } });
+      }
+    }
+    
+    // Execute in batches of 499
+    for (let i = 0; i < allOps.length; i += 499) {
+      const chunk = allOps.slice(i, i + 499);
+      const batch = db.batch();
+      chunk.forEach(op => {
+        if (op.type === 'delete') batch.delete(op.ref);
+        else if (op.type === 'update') batch.update(op.ref, op.data);
+        else if (op.type === 'set') batch.set(op.ref, op.data, { merge: true });
+      });
+      await batch.commit();
+    }
+    
+    return { success: true, message: '\u0e25\u0e1a\u0e23\u0e2d\u0e1a\u0e40\u0e01\u0e47\u0e1a\u0e40\u0e07\u0e34\u0e19\u0e41\u0e25\u0e30\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e17\u0e35\u0e48\u0e40\u0e01\u0e35\u0e48\u0e22\u0e27\u0e02\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e1a\u0e23\u0e49\u0e2d\u0e22\u0e41\u0e25\u0e49\u0e27' };
   },
 
   async updateClassSettings(classNameOrSettings, schoolName, academicYear, semester, recordedBy) {
