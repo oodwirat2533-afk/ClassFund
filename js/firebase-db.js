@@ -249,12 +249,55 @@ const API = {
       settings = settingsSnap.data();
     }
     
+    const transactions = txSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    // Always recalculate balance from actual transactions (self-healing)
+    let computedBalance = 0;
+    const computedStudentPaid = {};
+    transactions.forEach(tx => {
+      const amt = parseFloat(tx.amount) || 0;
+      if (tx.type === 'income' || tx.type === 'fine' || tx.type === 'other') {
+        computedBalance += amt;
+        if (tx.type === 'income' && tx.student_id && tx.student_id !== 'ROOM') {
+          const sid = String(tx.student_id);
+          computedStudentPaid[sid] = (computedStudentPaid[sid] || 0) + amt;
+        }
+      } else if (tx.type === 'expense') {
+        computedBalance -= amt;
+      }
+    });
+    
+    // Fix stored balance if it drifted
+    const storedBalance = parseFloat(settings.current_balance) || 0;
+    if (Math.abs(storedBalance - computedBalance) > 0.01) {
+      settings.current_balance = computedBalance;
+      // Update Firestore in background (fire-and-forget)
+      db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global')
+        .set({ current_balance: computedBalance }, { merge: true }).catch(() => {});
+    }
+    
+    // Fix student total_paid if drifted
+    const users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    users.forEach(u => {
+      if (u.role === 'student' || u.role === 'treasurer') {
+        const sid = String(u.student_id);
+        const computed = computedStudentPaid[sid] || 0;
+        const stored = parseFloat(u.total_paid) || 0;
+        if (Math.abs(stored - computed) > 0.01) {
+          u.total_paid = computed;
+          // Update Firestore in background
+          db.collection('users').doc(u.id)
+            .set({ total_paid: computed }, { merge: true }).catch(() => {});
+        }
+      }
+    });
+    
     const result = {
       success: true,
       data: {
-        users: usersSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+        users: users,
         weeks: weeksSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        transactions: txSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+        transactions: transactions,
         settings: settings
       }
     };
