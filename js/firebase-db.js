@@ -520,12 +520,17 @@ const API = {
     const deletedWeek = weekDoc.data();
     const deletedNum = parseInt(deletedWeek.week_number) || 0;
     
-    // 1. Find all transactions linked to this week (Fast query)
-    const txSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions')
-      .where('week_id', '==', String(weekId)).get();
+    // 1-4. Parallelize all necessary Firestore fetches to make deletion blazing fast!
+    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
+    
+    const [txSnap, allWeeksSnap, settingsDoc] = await Promise.all([
+      db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').where('week_id', '==', String(weekId)).get(),
+      db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').get(),
+      settingsRef.get()
+    ]);
+    
     const weekTxDocs = txSnap.docs;
     
-    // 2. Calculate balance adjustment and per-student paid adjustment
     let balanceAdjust = 0;
     const studentPaidAdjust = {};
     
@@ -543,8 +548,6 @@ const API = {
       }
     });
     
-    // 3. Find weeks that need shifting (fetch all and filter in JS to avoid composite index)
-    const allWeeksSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('weeks').get();
     const weeksToShiftDocs = allWeeksSnap.docs.filter(doc => {
       const data = doc.data();
       return data.academic_year === deletedWeek.academic_year
@@ -552,9 +555,6 @@ const API = {
         && (parseInt(data.week_number) || 0) > deletedNum;
     });
     
-    // 4. Get current settings balance
-    const settingsRef = db.collection('rooms').doc(DBState.currentRoomId).collection('settings').doc('global');
-    const settingsDoc = await settingsRef.get();
     let currentBalance = 0;
     if (settingsDoc.exists) currentBalance = parseFloat(settingsDoc.data().current_balance) || 0;
     
@@ -562,6 +562,8 @@ const API = {
     const affectedStudentIds = Object.keys(studentPaidAdjust);
     let userMap = {};
     if (affectedStudentIds.length > 0) {
+      // Split user fetching into chunks of 10 for 'in' queries to be fast, or just get all users
+      // Since max users is usually 40, getting all users in the room is fast enough and already indexed locally
       const allUsersSnap = await db.collection('users').where('room_id', '==', DBState.currentRoomId).get();
       allUsersSnap.docs.forEach(doc => {
         userMap[String(doc.data().student_id)] = doc;
