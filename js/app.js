@@ -835,8 +835,7 @@
 
       google.script.run
         .withSuccessHandler(res => {
-          if (!silent) showLoader(false);
-          _processLoadedData(res);
+          _processLoadedData(res, silent);
         })
         .withFailureHandler(err => {
           if (!silent) showLoader(false);
@@ -845,7 +844,7 @@
         .getDashboardData(currentUser ? currentUser.role : 'guest', currentUser ? currentUser.student_id : '');
     }
 
-    function _processLoadedData(res) {
+    function _processLoadedData(res, silent = false) {
       if (res.success) {
         window.rawAppData = JSON.parse(JSON.stringify(res.data));
         
@@ -883,8 +882,7 @@
         
         renderManageStudentsTable();
         populateSelects();
-        initCollectView();
-      } else {
+        initCollectView(); if (!silent) showLoader(false); } else { if (!silent) showLoader(false);
         Swal.fire({ icon: 'error', title: 'โหลดข้อมูลไม่สำเร็จ', text: res.message });
       }
     }
@@ -1979,7 +1977,7 @@
 
     function renderChart() {
       const ctx = document.getElementById('financeChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
+      if (chartInstance) { chartInstance.data.datasets[0].data = [totalIncomes]; chartInstance.data.datasets[1].data = [totalExpenses]; chartInstance.update(); return; }
 
       // Total overall incomes across all transactions (income + fine)
       const totalIncomes = (appData.transactions || [])
@@ -2020,7 +2018,7 @@
             }
           ]
         },
-        options: {
+        options: { animation: false,
           responsive: true,
           maintainAspectRatio: false,
           layout: {
@@ -3356,3 +3354,6 @@
         }
       });
     };
+
+
+
