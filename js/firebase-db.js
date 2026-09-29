@@ -520,9 +520,10 @@ const API = {
     const deletedWeek = weekDoc.data();
     const deletedNum = parseInt(deletedWeek.week_number) || 0;
     
-    // 1. Find all transactions linked to this week
-    const allTxSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions').get();
-    const weekTxDocs = allTxSnap.docs.filter(doc => String(doc.data().week_id) === String(weekId));
+    // 1. Find all transactions linked to this week (Fast query)
+    const txSnap = await db.collection('rooms').doc(DBState.currentRoomId).collection('transactions')
+      .where('week_id', '==', String(weekId)).get();
+    const weekTxDocs = txSnap.docs;
     
     // 2. Calculate balance adjustment and per-student paid adjustment
     let balanceAdjust = 0;

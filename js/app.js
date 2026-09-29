@@ -1384,8 +1384,19 @@
             .withSuccessHandler(res => {
               if (res.success) {
                 appData.weeks = (appData.weeks || []).filter(w => w.week_id !== weekId);
+                appData.transactions = (appData.transactions || []).filter(t => String(t.week_id) !== String(weekId));
+                
+                let computedBalance = 0;
+                appData.transactions.forEach(tx => {
+                  const amt = parseFloat(tx.amount) || 0;
+                  if (tx.type === 'income' || tx.type === 'fine' || tx.type === 'other') computedBalance += amt;
+                  else if (tx.type === 'expense') computedBalance -= amt;
+                });
+                if (appData.settings) appData.settings.current_balance = computedBalance;
+                
                 cancelEditWeek();
                 renderModalWeeksList();
+                renderDashboard();
                 showSyncToast('success', res.message || 'ลบรอบเก็บเงินเรียบร้อยแล้ว');
                 loadData(true);
               } else {
