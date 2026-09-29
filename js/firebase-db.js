@@ -20,23 +20,10 @@ const API = {
       const dbDate = (b.data() && b.data().created_at) || '';
       return dbDate.localeCompare(da);
     });
-    const rooms = await Promise.all(sortedDocs.map(async d => {
-      const data = d.data();
-      try {
-        const setSnap = await db.collection('rooms').doc(d.id).collection('settings').doc('global').get();
-        if (setSnap.exists && setSnap.data() && setSnap.data().class_name) {
-          const settingClassName = setSnap.data().class_name;
-          if (settingClassName && settingClassName !== data.name) {
-            data.name = settingClassName;
-            db.collection('rooms').doc(d.id).set({ name: settingClassName }, { merge: true }).catch(() => {});
-          }
-        }
-      } catch(e) {}
-      return data;
-    }));
+    const rooms = sortedDocs.map(d => { const data = d.data(); data.room_id = d.id; return data; });
     return { success: true, data: rooms };
   },
-  
+
   async updateRoomInfo(roomId, newRoomName, newTeacherName) {
     try {
       if (!roomId || !newRoomName || !newTeacherName) throw new Error('ข้อมูลไม่ครบถ้วน');
@@ -1026,22 +1013,45 @@ function createRunProxy(successHandler, failureHandler) {
       if (API[prop]) {
         const readOnlyMethods = ['getDashboardData', 'getAllRooms', 'setRoomId', 'hashPassword', 'login', '_fetchFreshData'];
         return async function(...args) {
+          const isWrite = !readOnlyMethods.includes(prop);
+          let genericLoaderShown = false;
+          
+          if (isWrite && window.Swal && !window.Swal.isVisible()) {
+             if (window.showCenterLoader) {
+                 window.showCenterLoader('loading', 'กำลังประมวลผล...', 'กรุณารอสักครู่');
+             } else {
+                 window.Swal.fire({ title: 'กำฅังประมวลผล...', text: 'กรุณารอสักครู่', allowOutsideClick: false, didOpen: () => window.Swal.showLoading() });
+             }
+             genericLoaderShown = true;
+          }
+          
           try {
             const result = await API[prop](...args);
             // Invalidate cache after any successful write operation
-            if (!readOnlyMethods.includes(prop) && result && result.success) {
+            if (isWrite && result && result.success) {
               _invalidateCache();
             }
             if (successHandler) successHandler(result);
+            
+            // Auto close the generic loader if the successHandler didn't show a new message
+            if (genericLoaderShown && window.Swal && window.Swal.isVisible()) {
+               const titleEl = window.Swal.getTitle();
+               if (titleEl && titleEl.textContent === 'กำลังประมวลผล...') {
+                   window.Swal.close();
+               }
+            }
           } catch (e) {
             console.error('Firebase Error:', e);
             if (failureHandler) failureHandler(e);
+            else if (genericLoaderShown && window.Swal) {
+                window.Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: e.message || 'การเชื่อมต่อขัดข้อง' });
+            }
           }
         };
       }
       return function(...args) {
         console.warn('Unimplemented GAS function called:', prop, args);
-        if (successHandler) successHandler({ success: true, message: 'ดำเนินการสำเร็จ' });
+        if (successHandler) successHandler({ success: true, message: 'ดำเนินการสำเร็ช' });
       };
     }
   });

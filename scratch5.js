@@ -1,0 +1,30 @@
+const fs = require('fs');
+let c = fs.readFileSync('js/firebase-db.js', 'utf8');
+
+// fix N+1 in getAllRooms
+const idx1 = c.indexOf('async getAllRooms() {');
+const endIdx1 = c.indexOf('  async updateRoomInfo');
+const p1 = c.substring(0, idx1);
+const p2 = c.substring(endIdx1);
+const newFn1 = `async getAllRooms() {
+    const snap = await db.collection('rooms').get();
+    const sortedDocs = [...snap.docs].sort((a, b) => {
+      const da = (a.data() && a.data().created_at) || '';
+      const dbDate = (b.data() && b.data().created_at) || '';
+      return dbDate.localeCompare(da);
+    });
+    const rooms = sortedDocs.map(d => { const data = d.data(); data.room_id = d.id; return data; });
+    return { success: true, data: rooms };
+  },\n\n`;
+c = p1 + newFn1 + p2;
+
+// replace proxy
+const searchStr2 = `function createRunProxy(successHandler, failureHandler) {`;
+const start2 = c.indexOf(searchStr2);
+const end2 = c.indexOf('window.google.script.run = createRunProxy(null, null);');
+
+const replaceStr2Base64 = "ZnVuY3Rpb24gY3JlYXRlUnVuUHJveHkoc3VjY2Vzc0hhbmRsZXIsIGZhaWx1cmVIYW5kbGVyKSB7CiAgcmV0dXJuIG5ldyBQcm94eSh7fSwgewogICAgZ2V0KHRhcmdldCwgcHJvcCkgewogICAgICBpZiAocHJvcCA9PT0gJ3dpdGhTdWNjZXNzSGFuZGxlcicpIHsKICAgICAgICByZXR1cm4gKGhhbmRsZXIpID0+IGNyZWF0ZVJ1blByb3h5KGhhbmRsZXIsIGZhaWx1cmVIYW5kbGVyKTsKICAgICAgfQogICAgICBpZiAocHJvcCA9PT0gJ3dpdGhGYWlsdXJlSGFuZGxlcicpIHsKICAgICAgICByZXR1cm4gKGhhbmRsZXIpID0+IGNyZWF0ZVJ1blByb3h5KHN1Y2Nlc3NIYW5kbGVyLCBoYW5kbGVyKTsKICAgICAgfQogICAgICBpZiAoQVBJW3Byb3BdKSB7CiAgICAgICAgY29uc3QgcmVhZE9ubHlNZXRob2RzID0gWydnZXREYXNoYm9hcmREYXRhJywgJ2dldEFsbFJvb21zJywgJ3NldFJvb21JZCcsICdoYXNoUGFzc3dvcmQnLCAnbG9naW4nLCAnX2ZldGNoRnJlc2hEYXRhJ107CiAgICAgICAgcmV0dXJuIGFzeW5jIGZ1bmN0aW9uKC4uLmFyZ3MpIHsKICAgICAgICAgIGNvbnN0IGlzV3JpdGUgPSAhcmVhZE9ubHlNZXRob2RzLmluY2x1ZGVzKHByb3ApOwogICAgICAgICAgbGV0IGdlbmVyaWNMb2FkZXJTaG93biA9IGZhbHNlOwogICAgICAgICAgCiAgICAgICAgICBpZiAoaXNXcml0ZSAmJiB3aW5kb3cuU3dhbCAmJiAhd2luZG93LlN3YWwuaXNWaXNpYmxlKCkpIHsKICAgICAgICAgICAgIGlmICh3aW5kb3cuc2hvd0NlbnRlckxvYWRlcikgewogICAgICAgICAgICAgICAgIHdpbmRvdy5zaG93Q2VudGVyTG9hZGVyKCdsb2FkaW5nJywgJ+C4geC4s+C4peC4seC4h+C4m+C4o+C4sOC4oeC4p+C4peC4nOC4pS4uLicsICfguIHguKPguLjguJPguLLguKPguK3guKrguLHguIHguITguKPguLnguYgnKTsKICAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICAgd2luZG93LlN3YWwuZmlyZSh7IHRpdGxlOiAn4LiB4Liz4LiF4Lix4LiH4Lib4Lij4Liw4Lih4Lin4Lil4Lic4LilLi4uJywgdGV4dDogJ+C4geC4o+C4uOC4k+C4suC4o+C4reC4quC4seC4geC4hOC4o+C4ueC5iCcsIGFsbG93T3V0c2lkZUNsaWNrOiBmYWxzZSwgZGlkT3BlbjogKCkgPT4gd2luZG93LlN3YWwuc2hvd0xvYWRpbmcoKSB9KTsKICAgICAgICAgICAgIH0KICAgICAgICAgICAgIGdlbmVyaWNMb2FkZXJTaG93biA9IHRydWU7CiAgICAgICAgICB9CiAgICAgICAgICAKICAgICAgICAgIHRyeSB7CiAgICAgICAgICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IEFQSVtwcm9wXSguLi5hcmdzKTsKICAgICAgICAgICAgLy8gSW52YWxpZGF0ZSBjYWNoZSBhZnRlciBhbnkgc3VjY2Vzc2Z1bCB3cml0ZSBvcGVyYXRpb24KICAgICAgICAgICAgaWYgKGlzV3JpdGUgJiYgcmVzdWx0ICYmIHJlc3VsdC5zdWNjZXNzKSB7CiAgICAgICAgICAgICAgX2ludmFsaWRhdGVDYWNoZSgpOwogICAgICAgICAgICB9CiAgICAgICAgICAgIGlmIChzdWNjZXNzSGFuZGxlcikgc3VjY2Vzc0hhbmRsZXIocmVzdWx0KTsKICAgICAgICAgICAgCiAgICAgICAgICAgIC8vIEF1dG8gY2xvc2UgdGhlIGdlbmVyaWMgbG9hZGVyIGlmIHRoZSBzdWNjZXNzSGFuZGxlciBkaWRuJ3Qgc2hvdyBhIG5ldyBtZXNzYWdlCiAgICAgICAgICAgIGlmIChnZW5lcmljTG9hZGVyU2hvd24gJiYgd2luZG93LlN3YWwgJiYgd2luZG93LlN3YWwuaXNWaXNpYmxlKCkpIHsKICAgICAgICAgICAgICAgY29uc3QgdGl0bGVFbCA9IHdpbmRvdy5Td2FsLmdldFRpdGxlKCk7CiAgICAgICAgICAgICAgIGlmICh0aXRsZUVsICYmIHRpdGxlRWwudGV4dENvbnRlbnQgPT09ICfguIHguLPguKXguLHguIfguJvguKPguLDguKHguKfguKXguJzguKUuLi4nKSB7CiAgICAgICAgICAgICAgICAgICB3aW5kb3cuU3dhbC5jbG9zZSgpOwogICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgIH0gY2F0Y2ggKGUpIHsKICAgICAgICAgICAgY29uc29sZS5lcnJvcignRmlyZWJhc2UgRXJyb3I6JywgZSk7CiAgICAgICAgICAgIGlmIChmYWlsdXJlSGFuZGxlcikgZmFpbHVyZUhhbmRsZXIoZSk7CiAgICAgICAgICAgIGVsc2UgaWYgKGdlbmVyaWNMb2FkZXJTaG93biAmJiB3aW5kb3cuU3dhbCkgewogICAgICAgICAgICAgICAgd2luZG93LlN3YWwuZmlyZSh7IGljb246ICdlcnJvcicsIHRpdGxlOiAn4LmA4LiB4Li04LiU4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUJywgdGV4dDogZS5tZXNzYWdlIHx8ICfguIHguLLguKPguYDguIrguLfguYjguK3guKHguJXguYjguK3guILguLHguJTguILguYnguK3guIcnIH0pOwogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgfTsKICAgICAgfQogICAgICByZXR1cm4gZnVuY3Rpb24oLi4uYXJncykgewogICAgICAgIGNvbnNvbGUud2FybignVW5pbXBsZW1lbnRlZCBHQVMgZnVuY3Rpb24gY2FsbGVkOicsIHByb3AsIGFyZ3MpOwogICAgICAgIGlmIChzdWNjZXNzSGFuZGxlcikgc3VjY2Vzc0hhbmRsZXIoeyBzdWNjZXNzOiB0cnVlLCBtZXNzYWdlOiAn4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4Lij4Liq4Liz4LmA4Lij4LmH4LiKJyB9KTsKICAgICAgfTsKICAgIH0KICB9KTsKfQ==";
+const replaceStr2 = Buffer.from(replaceStr2Base64, 'base64').toString('utf8');
+
+c = c.substring(0, start2) + replaceStr2 + '\n\n' + c.substring(end2);
+fs.writeFileSync('js/firebase-db.js', c);
