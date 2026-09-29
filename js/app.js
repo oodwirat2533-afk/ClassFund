@@ -1671,7 +1671,10 @@
               timestamp: t.timestamp,
               week_id: t.week_id,
               type: 'income',
-              baseDescription: t.description || (t.week_id ? `เงินห้องประจำ ${t.week_id}` : 'รายรับ'),
+              baseDescription: t.description || (() => {
+                const wObj = (appData.weeks || []).find(w => w.week_id === t.week_id);
+                return wObj ? `เงินห้องประจำครั้งที่ ${wObj.week_number}` : (t.week_id ? `เงินห้องประจำ ${t.week_id}` : 'รายรับ');
+              })(),
               amount: 0,
               count: 0,
               recorded_by: t.recorded_by
@@ -3023,8 +3026,8 @@
       const totalAmount = studentIds.length * amountPerStudent;
       const selectedWeekObj = appData.weeks.find(w => w.week_id === selectedCollectWeekId);
       const weekLabel = selectedWeekObj ? `ครั้งที่ ${selectedWeekObj.week_number}` : selectedCollectWeekId;
-      const termStr = (appData.settings && appData.settings.current_semester && appData.settings.current_academic_year) ? ` ภาคเรียนที่ ${appData.settings.current_semester}/${appData.settings.current_academic_year}` : '';
-      const note = `เงินห้องประจำ${weekLabel}${termStr}`;
+      const termStr = '';
+      const note = `เงินห้องประจำ${weekLabel}`;
 
       Swal.fire({
         title: 'ยืนยันการบันทึกเก็บเงิน?',

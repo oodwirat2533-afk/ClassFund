@@ -687,6 +687,7 @@ const API = {
            student_id: sid,
            amount: parseFloat(amount),
            recorded_by: recordedBy,
+           description: payload.description || '',
            academic_year: payload.academic_year || '2569',
            semester: payload.semester || '1',
            isBatch: true
