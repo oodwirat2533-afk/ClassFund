@@ -8,7 +8,7 @@ const firebaseConfig = {
       measurementId: "G-ZLLBVGBWN1"
     };
     firebase.initializeApp(firebaseConfig);
-    // Enable offline persistence � cached data loads instantly on refresh
+    // Enable offline persistence - cached data loads instantly on refresh
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(err) {
       if (err.code === 'failed-precondition') {
         console.warn('Firestore persistence: multiple tabs open');
