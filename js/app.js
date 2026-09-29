@@ -41,7 +41,7 @@
     const isMock = typeof google === 'undefined';
 
     // === Initialization ===
-    window.onload = () => {
+    const initApp = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const urlRoomId = urlParams.get('room');
       
@@ -3360,3 +3360,12 @@
 
 
 
+
+
+
+
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  setTimeout(initApp, 1);
+} else {
+  window.addEventListener("DOMContentLoaded", initApp);
+}
