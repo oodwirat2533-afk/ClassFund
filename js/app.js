@@ -137,8 +137,22 @@
         centerSyncTimeout = null;
       }
 
-      // Do NOT show any popup before success/error!
-      if (type === 'loading' || type === 'hide' || !type) {
+      if (type === 'hide' || !type) {
+        Swal.close();
+        return;
+      }
+      
+      if (type === 'loading') {
+        Swal.fire({
+          title: title || '\xe0\xb8\x81\xe0\xb8\xb3\xe0\xb8\xa5\xe0\xb8\xb1\xe0\xb8\x87\xe0\xb9\x82\xe0\xb8\xab\xe0\xb8\xa5\xe0\xb8\x94...',
+          text: subtitle || '\xe0\xb8\x81\xe0\xb8\xa3\xe0\xb8\xb8\xe0\xb8\x93\xe0\xb8\xb2\xe0\xb8\xa3\xe0\xb8\xad\xe0\xb8\xaa\xe0\xb8\xb1\xe0\xb8\x81\xe0\xb8\x84\xe0\xb8\xa3\xe0\xb8\xb9\xe0\xb9\x88',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
         return;
       }
 
