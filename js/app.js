@@ -1989,7 +1989,7 @@
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
 
-      if (chartInstance) { chartInstance.data.datasets[0].data = [totalIncomes]; chartInstance.data.datasets[1].data = [totalExpenses]; chartInstance.update(); return; }
+      if (chartInstance) { chartInstance.data.datasets[0].data = [totalIncomes]; chartInstance.data.datasets[1].data = [totalExpenses]; chartInstance.update('none'); return; }
 
       const isMobile = window.innerWidth < 640;
 
@@ -2020,7 +2020,7 @@
             }
           ]
         },
-        options: { animation: false,
+        options: { animation: { duration: 1500, easing: 'easeOutQuart' },
           responsive: true,
           maintainAspectRatio: false,
           layout: {
@@ -3369,3 +3369,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 } else {
   window.addEventListener("DOMContentLoaded", initApp);
 }
+
